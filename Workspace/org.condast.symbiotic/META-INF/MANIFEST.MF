@@ -8,3 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tinkerpop.blueprints,
  org.condast.commons.graph,
  org.condast.commons.range
+Export-Package: org.condast.symbiotic.core,
+ org.condast.symbiotic.core.environment,
+ org.condast.symbiotic.def,
+ org.condast.symbiotic.ecosystem
