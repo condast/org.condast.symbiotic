@@ -8,27 +8,33 @@ import org.condast.symbiotic.def.IStressListener;
 import org.condast.symbiotic.def.ISymbiot;
 import org.condast.symbiotic.def.StressEvent;
 
-public abstract class AbstractSymbiot implements ISymbiot{
+public abstract class AbstractSymbiot<M extends Object> implements ISymbiot<M>{
 
 	private float stress;
 	private boolean isActive;
 
 	private Collection<IStressListener> listeners;
 
+	/**
+	 * Ther model that drives the symbiot
+	 */
+	private M model;
+	
 	//the name of this symbiot
 	private String name;
 	private IntRange range;
 
-	protected AbstractSymbiot( String name, int maxStrategy ) {
-		this( name, new IntRange(0, maxStrategy), true );
+	protected AbstractSymbiot( M model, String name, int maxStrategy ) {
+		this( model, name, new IntRange(0, maxStrategy), true );
 	}
 
-	protected AbstractSymbiot( String name, IntRange range ) {
-		this( name, range, true );
+	protected AbstractSymbiot( M model, String name, IntRange range ) {
+		this( model, name, range, true );
 	}
 	
-	protected AbstractSymbiot( String name, IntRange range, boolean active ) {
+	protected AbstractSymbiot( M model, String name, IntRange range, boolean active ) {
 		this.name = name;
+		this.model = model;
 		this.range = range;
 		listeners = new ArrayList<IStressListener>();
 		this.isActive = active;
@@ -40,6 +46,11 @@ public abstract class AbstractSymbiot implements ISymbiot{
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public M getModel() {
+		return model;
 	}
 
 	public boolean isActive() {

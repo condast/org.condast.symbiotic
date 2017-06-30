@@ -2,13 +2,19 @@ package org.condast.symbiotic.def;
 
 import org.condast.commons.range.IntRange;
 
-public interface ISymbiot{
+public interface ISymbiot<M extends Object>{
 
 	/**
 	 * A descriptive name for this symbiot
 	 * @return
 	 */
 	public String getName();
+	
+	/**
+	 * Get the model for this symbiot
+	 * @return
+	 */
+	public M getModel();
 	
 	/**
 	 * Returns true if this symbiot is active. If not, the

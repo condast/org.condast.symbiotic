@@ -25,7 +25,7 @@ public class Environment {
 	}
 	
 	public void addNeighbourhood( ISymbiot sym1, ISymbiot sym2, INeighbourhood nb ){
-		graph.addEdge(nb, addSymbiot( sym1 ), addSymbiot( sym2 ), nb.getName());
+		//graph.addEdge(nb, addSymbiot( sym1 ), addSymbiot( sym2 ), nb.getName());
 	}
 
 }
