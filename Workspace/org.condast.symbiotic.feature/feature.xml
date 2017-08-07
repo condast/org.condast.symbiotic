@@ -17,8 +17,8 @@
    </license>
 
    <requires>
-      <import plugin="org.condast.commons.graph"/>
       <import plugin="org.condast.commons"/>
+      <import plugin="org.condast.commons.data"/>
    </requires>
 
    <plugin
