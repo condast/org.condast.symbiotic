@@ -1,6 +1,6 @@
 package org.condast.symbiotic.core.environment;
 
-import org.condast.commons.graph.EdgeList;
+import org.condast.commons.data.graph.EdgeList;
 import org.condast.symbiotic.def.INeighbourhood;
 import org.condast.symbiotic.def.ISymbiot;
 
