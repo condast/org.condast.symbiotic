@@ -2,7 +2,7 @@ package org.condast.symbiotic.core;
 
 import org.condast.symbiotic.def.ISymbiot;
 
-public abstract class AbstractSymbiotTransformation<I,O extends Object> extends AbstractTransformation<I,O> {
+public abstract class AbstractSymbiotTransformation<I,O,M extends Object> extends AbstractTransformation<I,O,M> {
 
 	private ISymbiot symbiot;
 	

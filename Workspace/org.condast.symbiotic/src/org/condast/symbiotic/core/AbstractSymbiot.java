@@ -3,12 +3,12 @@ package org.condast.symbiotic.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.condast.commons.range.IntRange;
 import org.condast.symbiotic.def.IStressListener;
 import org.condast.symbiotic.def.ISymbiot;
+import org.condast.symbiotic.def.ITransformation;
 import org.condast.symbiotic.def.StressEvent;
 
-public abstract class AbstractSymbiot<M extends Object> implements ISymbiot<M>{
+public abstract class AbstractSymbiot<I,O,M extends Object> implements ISymbiot{
 
 	private float stress;
 	private boolean isActive;
@@ -16,25 +16,21 @@ public abstract class AbstractSymbiot<M extends Object> implements ISymbiot<M>{
 	private Collection<IStressListener> listeners;
 
 	/**
-	 * Ther model that drives the symbiot
+	 * The model that drives the symbiot
 	 */
-	private M model;
+	private ITransformation<I,O> transform;
 	
 	//the name of this symbiot
 	private String name;
-	private IntRange range;
+	private int range;
 
-	protected AbstractSymbiot( M model, String name, int maxStrategy ) {
-		this( model, name, new IntRange(0, maxStrategy), true );
-	}
-
-	protected AbstractSymbiot( M model, String name, IntRange range ) {
-		this( model, name, range, true );
+	protected AbstractSymbiot( ITransformation<I,O> transformation, String name, int range ) {
+		this( transformation, name, range, true );
 	}
 	
-	protected AbstractSymbiot( M model, String name, IntRange range, boolean active ) {
+	protected AbstractSymbiot( ITransformation<I,O> transformation, String name, int range, boolean active ) {
 		this.name = name;
-		this.model = model;
+		this.transform = transformation;
 		this.range = range;
 		listeners = new ArrayList<IStressListener>();
 		this.isActive = active;
@@ -48,11 +44,11 @@ public abstract class AbstractSymbiot<M extends Object> implements ISymbiot<M>{
 		return name;
 	}
 
-	@Override
-	public M getModel() {
-		return model;
+	protected ITransformation<I,O> getTransformation(){
+		return this.transform;
 	}
-
+	
+	
 	public boolean isActive() {
 		return isActive;
 	}
@@ -85,7 +81,7 @@ public abstract class AbstractSymbiot<M extends Object> implements ISymbiot<M>{
 	}
 
 	@Override
-	public IntRange getRange() {
+	public int getRange() {
 		return range;
 	}
 

@@ -13,7 +13,7 @@ public interface ITransformation<I,O extends Object> {
 	 * Get the name of the transformation
 	 * @return
 	 */
-	String getName();
+	public String getName();
 
 	/**
 	 * Transform the given input to an output signal
