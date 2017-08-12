@@ -22,7 +22,12 @@ public interface ITransformation<I,O extends Object> {
 	 */
 	public O transform();
 
-	public void addInput(I input);
+	/**
+	 * Add an input. Returns true if this was done succesfully
+	 * @param input
+	 * @return
+	 */
+	public boolean addInput(I input);
 
 	public void removeInput(I input);
 	

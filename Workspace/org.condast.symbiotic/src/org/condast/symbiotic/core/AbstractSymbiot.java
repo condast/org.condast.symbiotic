@@ -3,34 +3,29 @@ package org.condast.symbiotic.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.def.IStressListener;
 import org.condast.symbiotic.def.ISymbiot;
 import org.condast.symbiotic.def.ITransformation;
 import org.condast.symbiotic.def.StressEvent;
 
-public abstract class AbstractSymbiot<I,O,M extends Object> implements ISymbiot{
+public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 
 	private float stress;
 	private boolean isActive;
 
 	private Collection<IStressListener> listeners;
-
-	/**
-	 * The model that drives the symbiot
-	 */
-	private ITransformation<I,O> transform;
 	
 	//the name of this symbiot
 	private String name;
 	private int range;
 
-	protected AbstractSymbiot( ITransformation<I,O> transformation, String name, int range ) {
-		this( transformation, name, range, true );
+	protected AbstractSymbiot( String name, int range ) {
+		this( name, range, true );
 	}
 	
-	protected AbstractSymbiot( ITransformation<I,O> transformation, String name, int range, boolean active ) {
+	protected AbstractSymbiot( String name, int range, boolean active ) {
 		this.name = name;
-		this.transform = transformation;
 		this.range = range;
 		listeners = new ArrayList<IStressListener>();
 		this.isActive = active;
@@ -44,11 +39,6 @@ public abstract class AbstractSymbiot<I,O,M extends Object> implements ISymbiot{
 		return name;
 	}
 
-	protected ITransformation<I,O> getTransformation(){
-		return this.transform;
-	}
-	
-	
 	public boolean isActive() {
 		return isActive;
 	}
@@ -71,6 +61,12 @@ public abstract class AbstractSymbiot<I,O,M extends Object> implements ISymbiot{
 		for( IStressListener listener: listeners )
 			listener.notifyStressChanged( new StressEvent(this));
 	}
+	
+	/**
+	 * Create the transformation for this symbiot
+	 * @return
+	 */
+	protected abstract ITransformation<I,O> createTransformation();
 
 	/* (non-Javadoc)
 	 * @see org.condast.symbiotic.core.ISymbiot#getStress()
@@ -78,6 +74,28 @@ public abstract class AbstractSymbiot<I,O,M extends Object> implements ISymbiot{
 	@Override
 	public float getStress() {
 		return stress;
+	}
+
+	@Override
+	public void setStress(float stress) {
+		this.stress = NumberUtils.clip( 1f, stress);
+	}
+	
+	@Override	
+	public void clearStress(){
+		this.stress = 0f;
+	}
+	
+	@Override
+	public float increaseStress(){
+		this.stress = NumberUtils.clip(this.range, this.stress + 1/range);
+		return this.stress;
+	}
+
+	@Override
+	public float decreaseStress(){
+		this.stress = NumberUtils.clip(this.range, this.stress - 1/range);
+		return this.stress;
 	}
 
 	@Override

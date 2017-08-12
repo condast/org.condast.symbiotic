@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.condast.symbiotic.def.ITransformation;
 
-public abstract class AbstractTransformation<I,O,M extends Object> implements ITransformation<I,O> {
+public abstract class AbstractTransformation<I,O extends Object> implements ITransformation<I,O> {
 
 	private Collection<I> inputs;
 	private O output;
@@ -24,8 +24,8 @@ public abstract class AbstractTransformation<I,O,M extends Object> implements IT
 	}
 
 	@Override
-	public void addInput( I input ){
-		this.inputs.add( input );
+	public boolean addInput( I input ){
+		return this.inputs.add( input );
 	}
 
 	@Override

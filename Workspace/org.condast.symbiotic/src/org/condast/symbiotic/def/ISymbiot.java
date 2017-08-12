@@ -23,6 +23,12 @@ public interface ISymbiot{
 	public float getStress();
 	
 	/**
+	 * Set the stress
+	 * @param stress
+	 */
+	public void setStress(float stress);
+
+	/**
 	 * The symbiot offers a number of possibilities to influence
 	 * the behaviour. Broadly speaking this  can 
 	 * be done in two ways:
@@ -40,5 +46,10 @@ public interface ISymbiot{
 	
 	public void addStressListener( IStressListener listener );
 	public void removeStressListener( IStressListener listener );
-	
+
+	void clearStress();
+
+	float increaseStress();
+
+	float decreaseStress();	
 }
