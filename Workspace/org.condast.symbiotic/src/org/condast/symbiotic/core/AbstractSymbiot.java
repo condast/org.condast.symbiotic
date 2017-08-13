@@ -2,6 +2,8 @@ package org.condast.symbiotic.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.def.IStressListener;
@@ -9,7 +11,7 @@ import org.condast.symbiotic.def.ISymbiot;
 import org.condast.symbiotic.def.ITransformation;
 import org.condast.symbiotic.def.StressEvent;
 
-public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
+public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot<I,O>{
 
 	private float stress;
 	private boolean isActive;
@@ -19,6 +21,10 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 	//the name of this symbiot
 	private String name;
 	private int range;
+	
+	private ITransformation<I,O> transformation;
+	
+	private Map<ISymbiot<?,?>, Float> levels;
 
 	protected AbstractSymbiot( String name, int range ) {
 		this( name, range, true );
@@ -27,8 +33,10 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 	protected AbstractSymbiot( String name, int range, boolean active ) {
 		this.name = name;
 		this.range = range;
-		listeners = new ArrayList<IStressListener>();
 		this.isActive = active;
+		this.levels = new HashMap<ISymbiot<?,?>, Float>();
+		listeners = new ArrayList<IStressListener>();
+		this.transformation = this.createTransformation();
 	}
 
 	/* (non-Javadoc)
@@ -47,6 +55,17 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 		this.isActive = active;
 	}
 
+	/**
+	 * Create the transformation for this symbiot
+	 * @return
+	 */
+	protected abstract ITransformation<I,O> createTransformation();
+
+	@Override
+	public ITransformation<I, O> getTransformation() {
+		return transformation;
+	}
+
 	@Override
 	public void addStressListener(IStressListener listener) {
 		this.listeners.add(listener );
@@ -62,23 +81,20 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 			listener.notifyStressChanged( new StressEvent(this));
 	}
 	
-	/**
-	 * Create the transformation for this symbiot
-	 * @return
-	 */
-	protected abstract ITransformation<I,O> createTransformation();
-
+	protected abstract float onChangeLevel( ISymbiot<?,?> symbiot, float current );
+	
+	@Override
+	public void updateLevel( ISymbiot<?,?> symbiot ){
+		float current = levels.get( symbiot );
+		levels.put( symbiot, onChangeLevel( symbiot, current));
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.condast.symbiotic.core.ISymbiot#getStress()
 	 */
 	@Override
 	public float getStress() {
 		return stress;
-	}
-
-	@Override
-	public void setStress(float stress) {
-		this.stress = NumberUtils.clip( 1f, stress);
 	}
 	
 	@Override	
@@ -88,12 +104,16 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 	
 	@Override
 	public float increaseStress(){
+		if(!isActive )
+			return 0f;
 		this.stress = NumberUtils.clip(this.range, this.stress + 1/range);
 		return this.stress;
 	}
 
 	@Override
 	public float decreaseStress(){
+		if(!isActive )
+			return 0f;
 		this.stress = NumberUtils.clip(this.range, this.stress - 1/range);
 		return this.stress;
 	}
@@ -102,14 +122,4 @@ public abstract class AbstractSymbiot<M,I,O extends Object> implements ISymbiot{
 	public int getRange() {
 		return range;
 	}
-
-	protected abstract void onSetStrategy(int strategy);
-
-	@Override
-	public void setStrategy(int strategy) {
-		if(!isActive )
-			return;
-		this.onSetStrategy( strategy );
-		
-	}	
 }

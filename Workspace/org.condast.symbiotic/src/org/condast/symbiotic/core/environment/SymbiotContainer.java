@@ -19,8 +19,8 @@ public class SymbiotContainer {
 		@Override
 		public void notifyStressChanged(StressEvent event) {
 			for( ISymbiot symbiot: symbiots){
-				if( !symbiot.equals( event.getSource() ))
-					symbiot.setStrategy(reasoner.setStrategy((ISymbiot) event.getSource()));
+				//if( !symbiot.equals( event.getSource() ))
+				//	symbiot.setStrategy(reasoner.setStrategy((ISymbiot) event.getSource()));
 			}	
 		}
 	};

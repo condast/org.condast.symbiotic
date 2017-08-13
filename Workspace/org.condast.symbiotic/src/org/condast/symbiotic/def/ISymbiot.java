@@ -1,6 +1,6 @@
 package org.condast.symbiotic.def;
 
-public interface ISymbiot{
+public interface ISymbiot<I,O extends Object>{
 
 	/**
 	 * A descriptive name for this symbiot
@@ -23,22 +23,6 @@ public interface ISymbiot{
 	public float getStress();
 	
 	/**
-	 * Set the stress
-	 * @param stress
-	 */
-	public void setStress(float stress);
-
-	/**
-	 * The symbiot offers a number of possibilities to influence
-	 * the behaviour. Broadly speaking this  can 
-	 * be done in two ways:
-	 * - analogous: an integer range
-	 * - discrete: every value is a code for a certain behaviour 
-	 * @param strategy
-	 */
-	public void setStrategy( int strategy );
-	
-	/**
 	 * Get the range of the strategiess
 	 * @return
 	 */
@@ -51,5 +35,13 @@ public interface ISymbiot{
 
 	float increaseStress();
 
-	float decreaseStress();	
+	float decreaseStress();
+
+	ITransformation<I, O> getTransformation();
+
+	/**
+	 * Update the stress level for the given symbiot
+	 * @param symbiot
+	 */
+	public void updateLevel(ISymbiot<?, ?> symbiot);	
 }
