@@ -2,17 +2,14 @@ package org.condast.symbiotic.core.environment;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.TreeSet;
 
-import org.condast.symbiotic.core.IStressReasoner;
 import org.condast.symbiotic.def.IStressListener;
 import org.condast.symbiotic.def.ISymbiot;
 import org.condast.symbiotic.def.StressEvent;
 
-public class SymbiotContainer {
+public class SymbiotContainer<I,O extends Object> {
 
 	private Collection<ISymbiot> symbiots;
-	private IStressReasoner reasoner;
 	
 	private IStressListener listener = new IStressListener() {
 		
@@ -24,12 +21,7 @@ public class SymbiotContainer {
 			}	
 		}
 	};
-	
-	public SymbiotContainer( IStressReasoner reasoner ) {
-		this.reasoner = reasoner;
-		symbiots = new TreeSet<ISymbiot>();
-	}
-	
+		
 	public void addSymbiot( ISymbiot symbiot ){
 		symbiots.add( symbiot);
 		symbiot.addStressListener(listener);

@@ -1,12 +1,6 @@
 package org.condast.symbiotic.def;
 
-public interface ISymbiot<I,O extends Object>{
-
-	/**
-	 * A descriptive name for this symbiot
-	 * @return
-	 */
-	public String getName();
+public interface ISymbiot{
 		
 	/**
 	 * Returns true if this symbiot is active. If not, the
@@ -37,11 +31,9 @@ public interface ISymbiot<I,O extends Object>{
 
 	float decreaseStress();
 
-	ITransformation<I, O> getTransformation();
-
 	/**
 	 * Update the stress level for the given symbiot
 	 * @param symbiot
 	 */
-	public void updateLevel(ISymbiot<?, ?> symbiot);	
+	public void updateStressLevels(ISymbiot symbiot);	
 }

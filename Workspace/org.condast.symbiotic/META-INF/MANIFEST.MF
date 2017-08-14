@@ -10,6 +10,8 @@ Import-Package: com.tinkerpop.blueprints,
  org.condast.commons.number,
  org.condast.commons.range
 Export-Package: org.condast.symbiotic.core,
+ org.condast.symbiotic.core.collection,
  org.condast.symbiotic.core.environment,
+ org.condast.symbiotic.core.transformation,
  org.condast.symbiotic.def,
  org.condast.symbiotic.ecosystem

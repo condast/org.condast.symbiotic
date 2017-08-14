@@ -1,5 +1,7 @@
 package org.condast.symbiotic.def;
 
+import org.condast.symbiotic.core.transformation.ITransformListener;
+
 /**
  * A transformation is a base function that transforms a
  * given input to a given output. It can be given an name
@@ -31,6 +33,16 @@ public interface ITransformation<I,O extends Object> {
 
 	public void removeInput(I input);
 	
+	/**
+	 * Get the number of inputs added
+	 * @return
+	 */
+	public int getInputSize();
+	
 	public O getOutput();
+
+	void addTransformationListener(ITransformListener<O> listener);
+
+	void removeTransformationListener(ITransformListener<O> listener);
 
 }

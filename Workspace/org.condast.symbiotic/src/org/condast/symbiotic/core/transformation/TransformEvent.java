@@ -1,4 +1,4 @@
-package org.condast.symbiotic.core;
+package org.condast.symbiotic.core.transformation;
 
 import java.util.EventObject;
 

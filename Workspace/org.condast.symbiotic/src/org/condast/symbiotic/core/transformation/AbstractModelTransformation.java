@@ -1,4 +1,4 @@
-package org.condast.symbiotic.core;
+package org.condast.symbiotic.core.transformation;
 
 public abstract class AbstractModelTransformation<I,O,M extends Object> extends AbstractTransformation<I,O> {
 

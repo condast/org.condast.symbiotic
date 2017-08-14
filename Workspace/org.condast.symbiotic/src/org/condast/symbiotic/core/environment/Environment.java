@@ -21,8 +21,8 @@ public class Environment {
 			for( Vertex vertex: vertices ){
 				if( event.getSource().equals( vertex.getId()))
 					continue;
-				ISymbiot<?,?> symbiot = (ISymbiot<?,?>) vertex.getId();
-				symbiot.updateLevel(symbiot);
+				ISymbiot symbiot = (ISymbiot) vertex.getId();
+				symbiot.updateStressLevels(symbiot);
 			}
 			
 		}
@@ -30,21 +30,21 @@ public class Environment {
 	};
 	
 	public Environment() {
-		graph = new EdgeList<ISymbiot<?,?>, String>();
+		graph = new EdgeList<ISymbiot, String>();
 	}
 	
-	public Vertex addSymbiot( ISymbiot<?,?> symbiot ){
+	public Vertex addSymbiot( ISymbiot symbiot ){
 		symbiot.addStressListener(listener);
 		return graph.addVertex( symbiot);
 	}
 
-	public void removeSymbiot( ISymbiot<?,?> symbiot ){
+	public void removeSymbiot( ISymbiot symbiot ){
 		symbiot.removeStressListener(listener);
 		Vertex vertex = graph.getVertex(symbiot);
 		graph.removeVertex( vertex );
 	}
 	
-	public void addNeighbourhood( ISymbiot<?,?> sym1, ISymbiot<?,?> sym2, INeighbourhood<?,?> nb ){
+	public void addNeighbourhood( ISymbiot sym1, ISymbiot sym2, INeighbourhood<?,?> nb ){
 		//graph.addEdge(nb, addSymbiot( sym1 ), addSymbiot( sym2 ), nb.getName());
 	}
 
