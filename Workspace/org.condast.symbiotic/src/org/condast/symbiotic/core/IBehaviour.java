@@ -5,6 +5,21 @@ import org.condast.symbiotic.def.ISymbiot;
 public interface IBehaviour<I,O extends Object> {
 
 	/**
+	 * Get or set the symbiot that owns this behaviour
+	 * @return
+	 */
+	public ISymbiot getOwner();
+	public void setOwner(ISymbiot owner);
+
+	/**
+	 * By default, a possibility is included to add a range
+	 * to the behaviour. This range transforms a float value <-1, 1> to
+	 * an integer <-range, range>
+	 * @return
+	 */
+	public int getRange();
+		
+	/**
 	 * Update the stress level of the given input symbiot. 
 	 * Returns true if the update went successfully
 	 * @param symbiot
@@ -17,6 +32,4 @@ public interface IBehaviour<I,O extends Object> {
 	 * @return
 	 */
 	public O calculate( I input );
-
-	void setOwner(ISymbiot owner);
 }

@@ -8,7 +8,6 @@ import org.condast.symbiotic.def.ISymbiot;
 
 public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Integer> {
 
-	private int range;
 	private Map<ISymbiot, Float> weights;
 	
 	public DefaultBehaviour( int range ) {
@@ -16,15 +15,14 @@ public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Inte
 	}
 
 	public DefaultBehaviour( int range, boolean includeOwner) {
-		super(includeOwner);
-		this.range = range;
+		super( range, includeOwner);
 		weights = new HashMap<ISymbiot, Float>();
 	}
 
 	@Override
 	protected float onUpdate(ISymbiot symbiot, float currentStress) {
 		float weight = weights.get( symbiot );
-		float retval = ( symbiot.getStress() - currentStress )/range;
+		float retval = ( symbiot.getStress() - currentStress )/getRange();
 		retval = NumberUtils.clip(1f, retval );
 		return weight;
 	}
@@ -32,7 +30,7 @@ public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Inte
 	@Override
 	protected Integer onUpdateValue(ISymbiot symbiot, Integer current) {
 		float weight = weights.get( symbiot );
-		return ( int )( weight * range );
+		return ( int )( weight * getRange() );
 	}
 
 

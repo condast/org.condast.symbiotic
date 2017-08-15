@@ -16,12 +16,6 @@ public interface ISymbiot{
 	 */
 	public float getStress();
 	
-	/**
-	 * Get the range of the strategiess
-	 * @return
-	 */
-	public int getRange();
-	
 	public void addStressListener( IStressListener listener );
 	public void removeStressListener( IStressListener listener );
 

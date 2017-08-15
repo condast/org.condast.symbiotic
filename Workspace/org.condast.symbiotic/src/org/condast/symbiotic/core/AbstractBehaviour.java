@@ -8,17 +8,31 @@ import org.condast.symbiotic.def.ISymbiot;
 
 public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviour<I,O> {
 
+	public static final int DEFAULT_RANGE = 10;
+	
 	private Map<ISymbiot, Float> symbiots;
 	private boolean includeOwner;
 	private ISymbiot owner;
+	private int range;
 
 	protected AbstractBehaviour() {
-		this( false );
+		this( DEFAULT_RANGE, false );
 	}
 	
-	protected AbstractBehaviour( boolean includeOwner ) {
+	protected AbstractBehaviour( int range, boolean includeOwner ) {
 		symbiots = new HashMap<ISymbiot, Float>();
+		this.range = range;
 		this.includeOwner = includeOwner;
+	}
+
+	@Override
+	public int getRange() {
+		return range;
+	}
+
+	@Override
+	public ISymbiot getOwner() {
+		return owner;
 	}
 
 	@Override

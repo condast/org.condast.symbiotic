@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.condast.symbiotic.core.IBehaviour;
+import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.def.IStressListener;
 import org.condast.symbiotic.def.ISymbiot;
 import org.condast.symbiotic.def.StressEvent;
@@ -24,7 +26,14 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 	public SymbiotCollection() {
 		symbiots = new ArrayList<ISymbiot>();
 	}
-	
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ISymbiot add( IBehaviour<?,?> behaviour ){
+		ISymbiot symbiot = new Symbiot( behaviour);
+		this.add( symbiot );
+		return symbiot;
+	}
+
 	public boolean add( ISymbiot symbiot ){
 		symbiot.addStressListener(listener);
 		return symbiots.add( symbiot);

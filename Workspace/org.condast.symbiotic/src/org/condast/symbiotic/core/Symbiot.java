@@ -16,17 +16,15 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	private Collection<IStressListener> listeners;
 	
 	//the name of this symbiot
-	private int range;
 	private float stress;
 	private boolean isActive;
 	private IBehaviour<I,O> behaviour;
 		
-	public Symbiot( IBehaviour<I,O> behaviour, int range ) {
-		this( behaviour, range, true );
+	public Symbiot( IBehaviour<I,O> behaviour ) {
+		this( behaviour, true );
 	}
 	
-	public Symbiot( IBehaviour<I,O> behaviour, int range, boolean active ) {
-		this.range = range;
+	public Symbiot( IBehaviour<I,O> behaviour, boolean active ) {
 		this.isActive = active;
 		this.behaviour = behaviour;
 		this.behaviour.setOwner(this);
@@ -73,6 +71,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	public float increaseStress(){
 		if(!isActive )
 			return 0f;
+		int range = behaviour.getRange();
 		this.stress = NumberUtils.clip(1f, this.stress + 1/range);
 		this.notifyStressChanged();
 		return this.stress;
@@ -82,6 +81,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	public float decreaseStress(){
 		if(!isActive )
 			return 0f;
+		int range = behaviour.getRange();
 		this.stress = NumberUtils.clip(1f, this.stress - 1/range);
 		this.notifyStressChanged();
 		return this.stress;
@@ -98,10 +98,5 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	@Override
 	public void updateStressLevels(ISymbiot symbiot) {
 		this.behaviour.updateStress(symbiot);
-	}
-
-	@Override
-	public int getRange() {
-		return range;
 	}
 }
