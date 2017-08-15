@@ -34,6 +34,12 @@ public interface ITransformation<I,O extends Object> {
 	public void removeInput(I input);
 	
 	/**
+	 * Get the input
+	 * @return
+	 */
+	public I[] getInput();
+	
+	/**
 	 * Get the number of inputs added
 	 * @return
 	 */

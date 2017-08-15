@@ -7,7 +7,7 @@ package org.condast.symbiotic.def;
  * @author Kees
  *
  */
-public interface ISymbiotTransformation<I,O extends Object> extends ITransformation<I,O>{
+public interface ISymbiotTransformer<I,O extends Object> extends ITransformer<I,O>{
 
-	void updateStress(ISymbiot symbiot);
+	public void updateStress(ISymbiot symbiot);
 }
