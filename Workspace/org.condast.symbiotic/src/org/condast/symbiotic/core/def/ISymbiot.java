@@ -1,4 +1,4 @@
-package org.condast.symbiotic.def;
+package org.condast.symbiotic.core.def;
 
 public interface ISymbiot{
 		
@@ -29,5 +29,7 @@ public interface ISymbiot{
 	 * Update the stress level for the given symbiot
 	 * @param symbiot
 	 */
-	public void updateStressLevels(ISymbiot symbiot);	
+	public void updateStressLevels(ISymbiot symbiot);
+
+	String getId();	
 }

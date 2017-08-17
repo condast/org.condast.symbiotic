@@ -1,10 +1,10 @@
-package org.condast.symbiotic.ecosystem;
+package org.condast.symbiotic.core.ecosystem;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.condast.symbiotic.def.IActor;
-import org.condast.symbiotic.def.INeighbourhood;
+import org.condast.symbiotic.core.def.IActor;
+import org.condast.symbiotic.core.def.INeighbourhood;
 
 public class EcoSystem<I,O extends Object> {
 

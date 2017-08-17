@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.def.ISymbiot;
+import org.condast.symbiotic.core.def.ISymbiot;
 
 public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Integer> {
 

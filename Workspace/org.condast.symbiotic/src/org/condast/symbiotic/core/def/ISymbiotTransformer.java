@@ -1,4 +1,4 @@
-package org.condast.symbiotic.def;
+package org.condast.symbiotic.core.def;
 
 /**
  * A transformation is a base function that transforms a

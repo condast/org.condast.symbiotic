@@ -1,4 +1,4 @@
-package org.condast.symbiotic.def;
+package org.condast.symbiotic.core.def;
 
 import java.util.Iterator;
 

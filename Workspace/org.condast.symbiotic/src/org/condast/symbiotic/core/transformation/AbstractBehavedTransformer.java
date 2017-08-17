@@ -3,9 +3,9 @@ package org.condast.symbiotic.core.transformation;
 import java.util.Iterator;
 
 import org.condast.symbiotic.core.IBehaviour;
-import org.condast.symbiotic.def.ISymbiot;
-import org.condast.symbiotic.def.ISymbiotTransformer;
-import org.condast.symbiotic.def.ITransformer;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.def.ISymbiotTransformer;
+import org.condast.symbiotic.core.def.ITransformer;
 
 public abstract class AbstractBehavedTransformer<I,O,B extends Object> implements ISymbiotTransformer<I, O>{
 

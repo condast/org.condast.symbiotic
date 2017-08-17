@@ -3,8 +3,8 @@ package org.condast.symbiotic.core.transformation;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.condast.symbiotic.def.ITransformation;
-import org.condast.symbiotic.def.ITransformer;
+import org.condast.symbiotic.core.def.ITransformation;
+import org.condast.symbiotic.core.def.ITransformer;
 
 public class Transformation<I,O extends Object> implements ITransformation<I,O> {
 

@@ -6,9 +6,9 @@ import java.util.Iterator;
 
 import org.condast.symbiotic.core.IBehaviour;
 import org.condast.symbiotic.core.Symbiot;
-import org.condast.symbiotic.def.IStressListener;
-import org.condast.symbiotic.def.ISymbiot;
-import org.condast.symbiotic.def.StressEvent;
+import org.condast.symbiotic.core.def.IStressListener;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.def.StressEvent;
 
 public class SymbiotCollection implements Collection<ISymbiot>{
 
@@ -20,16 +20,36 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 		public void notifyStressChanged(StressEvent event) {
 			for( ISymbiot symbiot: symbiots )
 				symbiot.updateStressLevels(symbiot);
+			notifyStressChanged(event);
 		}
 	};
-	
+
+	/**
+	 * Listeners to a change in the stress levels
+	 */
+	private Collection<IStressListener> listeners;
+
 	public SymbiotCollection() {
 		symbiots = new ArrayList<ISymbiot>();
+		listeners = new ArrayList<IStressListener>();
+	}
+
+	public void addStressListener(IStressListener listener) {
+		this.listeners.add(listener );
+	}
+
+	public void removeStressListener(IStressListener listener) {
+		this.listeners.remove( listener );
+	}
+	
+	protected void notifyStressChanged( StressEvent event){
+		for( IStressListener listener: listeners )
+			listener.notifyStressChanged( event );
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ISymbiot add( IBehaviour<?,?> behaviour ){
-		ISymbiot symbiot = new Symbiot( behaviour);
+	public ISymbiot add( String id, IBehaviour<?,?> behaviour ){
+		ISymbiot symbiot = new Symbiot( id, behaviour);
 		this.add( symbiot );
 		return symbiot;
 	}

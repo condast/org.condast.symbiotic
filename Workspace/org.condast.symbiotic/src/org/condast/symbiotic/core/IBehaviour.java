@@ -1,6 +1,6 @@
 package org.condast.symbiotic.core;
 
-import org.condast.symbiotic.def.ISymbiot;
+import org.condast.symbiotic.core.def.ISymbiot;
 
 public interface IBehaviour<I,O extends Object> {
 

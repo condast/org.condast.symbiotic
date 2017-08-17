@@ -1,10 +1,10 @@
 package org.condast.symbiotic.core.environment;
 
 import org.condast.commons.data.graph.EdgeList;
-import org.condast.symbiotic.def.INeighbourhood;
-import org.condast.symbiotic.def.IStressListener;
-import org.condast.symbiotic.def.ISymbiot;
-import org.condast.symbiotic.def.StressEvent;
+import org.condast.symbiotic.core.def.INeighbourhood;
+import org.condast.symbiotic.core.def.IStressListener;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.def.StressEvent;
 
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;

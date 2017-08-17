@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.symbiotic.def.ISymbiot;
+import org.condast.symbiotic.core.def.ISymbiot;
 
 public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviour<I,O> {
 

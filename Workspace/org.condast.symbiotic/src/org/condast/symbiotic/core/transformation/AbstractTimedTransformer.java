@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.symbiotic.def.ITransformer;
+import org.condast.symbiotic.core.def.ITransformer;
 
 public abstract class AbstractTimedTransformer<M, I, O, B extends Object> implements ITransformer<Map.Entry<I,Date>, O> {
 

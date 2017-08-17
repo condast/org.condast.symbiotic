@@ -1,4 +1,4 @@
-package org.condast.symbiotic.def;
+package org.condast.symbiotic.core.def;
 
 public interface INeighbourhood<I,O extends Object> extends ITransformation<O,I> {
 

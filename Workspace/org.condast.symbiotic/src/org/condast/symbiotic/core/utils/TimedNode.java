@@ -3,7 +3,7 @@ package org.condast.symbiotic.core.utils;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.condast.symbiotic.def.ITransformer;
+import org.condast.symbiotic.core.def.ITransformer;
 
 public class TimedNode implements ITransformer<Date, Boolean>{
 

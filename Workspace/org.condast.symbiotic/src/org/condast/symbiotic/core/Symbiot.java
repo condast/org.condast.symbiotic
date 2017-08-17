@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.def.IStressListener;
-import org.condast.symbiotic.def.ISymbiot;
-import org.condast.symbiotic.def.StressEvent;
+import org.condast.symbiotic.core.def.IStressListener;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.def.StressEvent;
 
 public class Symbiot<I,O extends Object> implements ISymbiot{
 
@@ -16,19 +16,26 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	private Collection<IStressListener> listeners;
 	
 	//the name of this symbiot
+	private String id;
 	private float stress;
 	private boolean isActive;
 	private IBehaviour<I,O> behaviour;
 		
-	public Symbiot( IBehaviour<I,O> behaviour ) {
-		this( behaviour, true );
+	public Symbiot( String id, IBehaviour<I,O> behaviour ) {
+		this( id, behaviour, true );
 	}
 	
-	public Symbiot( IBehaviour<I,O> behaviour, boolean active ) {
+	public Symbiot( String id, IBehaviour<I,O> behaviour, boolean active ) {
+		this.id = id;
 		this.isActive = active;
 		this.behaviour = behaviour;
 		this.behaviour.setOwner(this);
 		listeners = new ArrayList<IStressListener>();
+	}
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	public boolean isActive() {
