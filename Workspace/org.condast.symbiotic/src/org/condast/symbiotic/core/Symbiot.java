@@ -8,8 +8,9 @@ import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.StressEvent;
 
-public class Symbiot<I,O extends Object> implements ISymbiot{
+public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbiot>{
 
+	public static final String S_ERR_NO_ID = "A symbiot must have a valid id!";
 	/**
 	 * Listeners to a change in the stress levels
 	 */
@@ -26,6 +27,8 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	}
 	
 	public Symbiot( String id, IBehaviour<I,O> behaviour, boolean active ) {
+		if( id == null )
+			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.isActive = active;
 		this.behaviour = behaviour;
@@ -79,8 +82,13 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 		if(!isActive )
 			return 0f;
 		int range = behaviour.getRange();
-		this.stress = NumberUtils.clip(1f, this.stress + 1/range);
-		this.notifyStressChanged();
+		this.stress = NumberUtils.clip(1f, this.stress + 1f/range);
+		try{
+			this.notifyStressChanged();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+		}
 		return this.stress;
 	}
 
@@ -90,7 +98,12 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 			return 0f;
 		int range = behaviour.getRange();
 		this.stress = NumberUtils.clip(1f, this.stress - 1/range);
-		this.notifyStressChanged();
+		try{
+			this.notifyStressChanged();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+		}
 		return this.stress;
 	}
 	
@@ -106,4 +119,9 @@ public class Symbiot<I,O extends Object> implements ISymbiot{
 	public void updateStressLevels(ISymbiot symbiot) {
 		this.behaviour.updateStress(symbiot);
 	}
+
+	@Override
+	public int compareTo(ISymbiot arg0) {
+		return this.id.compareTo(arg0.getId());
+	}	
 }

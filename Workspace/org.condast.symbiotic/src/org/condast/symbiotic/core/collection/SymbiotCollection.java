@@ -20,7 +20,7 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 		public void notifyStressChanged(StressEvent event) {
 			for( ISymbiot symbiot: symbiots )
 				symbiot.updateStressLevels(symbiot);
-			notifyStressChanged(event);
+			notifyStressLevels(event);
 		}
 	};
 
@@ -42,7 +42,7 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 		this.listeners.remove( listener );
 	}
 	
-	protected void notifyStressChanged( StressEvent event){
+	protected void notifyStressLevels( StressEvent event){
 		for( IStressListener listener: listeners )
 			listener.notifyStressChanged( event );
 	}

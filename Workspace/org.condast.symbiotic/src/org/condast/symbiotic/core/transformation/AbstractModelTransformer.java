@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.condast.symbiotic.core.IBehaviour;
 
-public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends AbstractBehavedTransformer<I,O,B> {
+public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends AbstractBehavedTransformer<I,O,B> implements IModelTransformer<M, I, O> {
 
 	private M model;
 	
@@ -13,7 +13,7 @@ public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends A
 		this.model = model;
 	}
 
-	protected M getModel() {
+	public M getModel() {
 		return model;
 	}
 	

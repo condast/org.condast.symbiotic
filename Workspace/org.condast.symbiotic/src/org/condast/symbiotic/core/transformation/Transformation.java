@@ -30,6 +30,10 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		return name;
 	}
 
+	protected ITransformer<I, O> getTransformer() {
+		return transformer;
+	}
+
 	protected void setTransformer( ITransformer<I, O> transformer) {
 		this.transformer = transformer;
 	}
