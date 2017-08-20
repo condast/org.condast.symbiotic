@@ -64,6 +64,11 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	}
 	
 	@Override
+	public boolean isEmpty() {
+		return inputs.isEmpty();
+	}
+
+	@Override
 	public O getOutput() {
 		return output;
 	}
@@ -86,11 +91,15 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		this.listeners.remove( listener );
 	}
 	
+	protected void onTransform( O output ){
+		for( ITransformListener<O> listener: listeners )
+			listener.notifyChange( new TransformEvent<O>(this, output ));		
+	}
+	
 	@Override
 	public O transform() {
 		output = transformer.transform(inputs.iterator());
-		for( ITransformListener<O> listener: listeners )
-			listener.notifyChange( new TransformEvent<O>(this, output ));
+		this.onTransform(output);
 		return output;
 	}
 	

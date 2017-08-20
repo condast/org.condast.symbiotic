@@ -45,6 +45,12 @@ public interface ITransformation<I,O extends Object> {
 	 */
 	public int getInputSize();
 	
+	/**
+	 * Retuens true if the inputs are mepty
+	 * @return
+	 */
+	public boolean isEmpty();
+	
 	public O getOutput();
 
 	void addTransformationListener(ITransformListener<O> listener);

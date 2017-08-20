@@ -12,7 +12,7 @@ public class TransformEvent<O extends Object> extends EventObject {
 		this.output = output;
 	}
 
-	protected O getOutput() {
+	public O getOutput() {
 		return output;
 	}
 }
