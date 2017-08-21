@@ -32,4 +32,6 @@ public interface IBehaviour<I,O extends Object> {
 	 * @return
 	 */
 	public O calculate( I input );
+	
+	public O getOutput();
 }

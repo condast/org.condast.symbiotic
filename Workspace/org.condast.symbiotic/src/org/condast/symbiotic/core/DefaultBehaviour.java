@@ -56,4 +56,14 @@ public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Inte
 		}
 		return overall;
 	}
+
+	@Override
+	public Integer getOutput() {
+		float total = 0;
+		for( float weight: weights.values() )
+			total += weight;
+		return (int) (total * this.getRange());
+	}
+	
+	
 }

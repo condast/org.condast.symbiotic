@@ -42,7 +42,7 @@ public abstract class AbstractBehavedTransformer<I,O,B extends Object> implement
 		return transformer.getInputs();
 	}
 
-	protected IBehaviour<I, B> getBehaviour() {
+	public IBehaviour<I, B> getBehaviour() {
 		return behaviour;
 	}
 
