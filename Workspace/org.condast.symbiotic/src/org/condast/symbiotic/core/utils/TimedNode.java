@@ -17,7 +17,15 @@ public class TimedNode implements ITransformer<Date, Boolean>{
 		this.time = time;
 		this.completed = false;
 	}
+
 	
+	@Override
+	public void clearInputs() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	@Override
 	public boolean addInput(Date input) {
 		return true;

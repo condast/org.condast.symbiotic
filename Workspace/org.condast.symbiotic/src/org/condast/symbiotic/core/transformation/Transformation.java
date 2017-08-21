@@ -38,6 +38,13 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		this.transformer = transformer;
 	}
 
+	/**
+	 * Allow clearing of the inputs
+	 */
+	public void clearInputs(){
+		this.transformer.clearInputs();
+	}
+
 	@Override
 	public boolean addInput( I input ){
 		return this.transformer.addInput(input);

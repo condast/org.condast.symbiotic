@@ -1,5 +1,6 @@
 package org.condast.symbiotic.core.transformation;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.condast.symbiotic.core.IBehaviour;
@@ -22,6 +23,11 @@ public abstract class AbstractBehavedTransformer<I,O,B extends Object> implement
 	}
 
 	@Override
+	public void clearInputs() {
+		transformer.clearInputs();
+	}
+
+	@Override
 	public boolean addInput(I input) {
 		return true;
 	}
@@ -29,6 +35,11 @@ public abstract class AbstractBehavedTransformer<I,O,B extends Object> implement
 	@Override
 	public boolean removeInput(I input) {
 		return true;
+	}
+
+	@Override
+	public Collection<I> getInputs() {
+		return transformer.getInputs();
 	}
 
 	protected IBehaviour<I, B> getBehaviour() {

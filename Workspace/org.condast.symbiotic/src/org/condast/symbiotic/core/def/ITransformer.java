@@ -13,6 +13,11 @@ import java.util.Iterator;
 public interface ITransformer<I, O extends Object> {
 
 	/**
+	 * Allow clearing of the inputs
+	 */
+	public void clearInputs();
+
+	/**
 	 * allow additional operations when adding and removing inputs,
 	 * such as initialisation
 	 * @param input

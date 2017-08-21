@@ -13,6 +13,13 @@ public abstract class AbstractTransformer<I, O extends Object> implements ITrans
 		inputs = new ArrayList<I>();
 	}
 
+	/**
+	 * Allow clearing of the inputs
+	 */
+	public void clearInputs(){
+		this.inputs.clear();
+	}
+
 	@Override
 	public boolean addInput(I input) {
 		return inputs.add(input);

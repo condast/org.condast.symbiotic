@@ -25,6 +25,11 @@ public interface ITransformation<I,O extends Object> {
 	public O transform();
 
 	/**
+	 * Allow clearing of the inputs
+	 */
+	public void clearInputs();
+	
+	/**
 	 * Add an input. Returns true if this was done succesfully
 	 * @param input
 	 * @return
