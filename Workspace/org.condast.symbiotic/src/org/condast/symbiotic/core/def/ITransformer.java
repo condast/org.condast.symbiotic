@@ -1,5 +1,6 @@
 package org.condast.symbiotic.core.def;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -18,6 +19,12 @@ public interface ITransformer<I, O extends Object> {
 	 */
 	public boolean addInput( I input );
 	public boolean removeInput( I input );
+	
+	/**
+	 * Get the inputs
+	 * @return
+	 */
+	public Collection<I> getInputs();
 	
 	/**
 	 * Transform the given input to an output signal

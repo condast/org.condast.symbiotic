@@ -2,7 +2,9 @@ package org.condast.symbiotic.core.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.condast.symbiotic.core.IBehaviour;
 import org.condast.symbiotic.core.Symbiot;
@@ -47,6 +49,17 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 			listener.notifyStressChanged( event );
 	}
 
+	/**
+	 * Get the cumulated stress from the symbiots
+	 * @return
+	 */
+	public Map<String,Float> getCumultatedStress(){
+		Map<String, Float> stress = new HashMap<String, Float>();
+		for( ISymbiot symbiot: this.symbiots )
+			stress.put( symbiot.getId(), symbiot.getStress() );
+		return stress;
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ISymbiot add( String id, IBehaviour<?,?> behaviour ){
 		ISymbiot symbiot = new Symbiot( id, behaviour);

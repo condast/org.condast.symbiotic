@@ -2,16 +2,17 @@ package org.condast.symbiotic.core.transformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
+import org.condast.commons.Utils;
 import org.condast.symbiotic.core.def.ITransformation;
 import org.condast.symbiotic.core.def.ITransformer;
 
 public class Transformation<I,O extends Object> implements ITransformation<I,O> {
 
-	private Collection<I> inputs;
-	private O output;
 	private String name;
 	private ITransformer<I,O> transformer; 
+	private O output;
 	
 	private Collection<ITransformListener<O>> listeners;
 
@@ -20,7 +21,6 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	}
 	
 	public  Transformation( String name, ITransformer<I,O> transformer ) {
-		inputs = new ArrayList<I>();
 		listeners = new ArrayList<ITransformListener<O>>();
 		this.name = name;
 		this.transformer = transformer;
@@ -40,18 +40,17 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 
 	@Override
 	public boolean addInput( I input ){
-		this.transformer.addInput(input);
-		return this.inputs.add( input );
+		return this.transformer.addInput(input);
 	}
 
 	@Override
 	public void removeInput( I input ){
 		this.transformer.removeInput(input);
-		this.inputs.remove( input );
 	}
 
 	@SuppressWarnings("unchecked")
 	public I[] getInput() {
+		Collection<I> inputs = transformer.getInputs();
 		return (I[]) inputs.toArray( new Object[ inputs.size() ]);
 	}
 
@@ -60,12 +59,12 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	 * @return
 	 */
 	public int getInputSize(){
-		return inputs.size();
+		return transformer.getInputs().size();
 	}
 	
 	@Override
 	public boolean isEmpty() {
-		return inputs.isEmpty();
+		return transformer.getInputs().isEmpty();
 	}
 
 	@Override
@@ -98,10 +97,10 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	
 	@Override
 	public O transform() {
-		output = transformer.transform(inputs.iterator());
+		Collection<I> inputs = transformer.getInputs();
+		Iterator<I> iterator =  Utils.assertNull(inputs )? null: inputs.iterator();
+		output = transformer.transform( iterator );
 		this.onTransform(output);
 		return output;
 	}
-	
-	
 }

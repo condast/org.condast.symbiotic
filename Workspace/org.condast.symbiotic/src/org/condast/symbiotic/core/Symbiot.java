@@ -72,6 +72,17 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 		return stress;
 	}
 	
+	@Override
+	public void setStress(float stress) {
+		this.stress = stress;
+		try{
+			this.notifyStressChanged();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+		}
+	}
+
 	@Override	
 	public void clearStress(){
 		this.stress = 0f;
@@ -83,12 +94,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 			return 0f;
 		int range = behaviour.getRange();
 		this.stress = NumberUtils.clip(1f, this.stress + 1f/range);
-		try{
-			this.notifyStressChanged();
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-		}
+		setStress(stress);
 		return this.stress;
 	}
 
@@ -98,12 +104,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 			return 0f;
 		int range = behaviour.getRange();
 		this.stress = NumberUtils.clip(1f, this.stress - 1/range);
-		try{
-			this.notifyStressChanged();
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-		}
+		setStress(stress);
 		return this.stress;
 	}
 	

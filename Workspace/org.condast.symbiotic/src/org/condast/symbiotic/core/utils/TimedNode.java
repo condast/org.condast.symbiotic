@@ -1,5 +1,6 @@
 package org.condast.symbiotic.core.utils;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -51,5 +52,11 @@ public class TimedNode implements ITransformer<Date, Boolean>{
 	@Override
 	public Boolean transform( Iterator<Date> inputs) {
 		return this.completed;
+	}
+
+	@Override
+	public Collection<Date> getInputs() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

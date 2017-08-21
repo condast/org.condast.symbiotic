@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tinkerpop.blueprints,
+ org.condast.commons,
  org.condast.commons.data.graph,
  org.condast.commons.number,
  org.condast.commons.range
