@@ -8,7 +8,7 @@ public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends A
 
 	private M model;
 	
-	protected AbstractModelTransformer( String id, M model, IBehaviour<I,B> behaviour ) {
+	protected AbstractModelTransformer( M model, IBehaviour<I,B> behaviour ) {
 		super( behaviour );
 		this.model = model;
 	}
