@@ -67,4 +67,11 @@ public class TimedNode implements ITransformer<Date, Boolean>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public boolean isInputAllowed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

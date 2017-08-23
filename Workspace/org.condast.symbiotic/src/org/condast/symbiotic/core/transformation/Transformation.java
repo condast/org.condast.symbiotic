@@ -46,6 +46,11 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	}
 
 	@Override
+	public boolean isInputAllowed() {
+		return this.transformer.isInputAllowed();
+	}
+
+	@Override
 	public boolean addInput( I input ){
 		return this.transformer.addInput(input);
 	}

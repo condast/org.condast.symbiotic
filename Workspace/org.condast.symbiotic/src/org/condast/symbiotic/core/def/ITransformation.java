@@ -28,7 +28,7 @@ public interface ITransformation<I,O extends Object> {
 	 * Allow clearing of the inputs
 	 */
 	public void clearInputs();
-	
+		
 	/**
 	 * Add an input. Returns true if this was done succesfully
 	 * @param input
@@ -61,5 +61,7 @@ public interface ITransformation<I,O extends Object> {
 	void addTransformationListener(ITransformListener<O> listener);
 
 	void removeTransformationListener(ITransformListener<O> listener);
+
+	boolean isInputAllowed();
 
 }

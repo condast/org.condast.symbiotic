@@ -1,4 +1,4 @@
-package org.condast.symbiotic.core.transformation;
+package org.condast.symbiotic.core.transformer;
 
 import java.util.Iterator;
 
@@ -28,8 +28,9 @@ public abstract class AbstractBehavedTransformer<I,O,B extends Object> extends A
 	
 	@Override
 	public O transform( Iterator<I> inputs) {
+		O retval = onTransform( inputs );
 		onUpdateStress(inputs, this.behaviour.getOwner());
-		return onTransform( inputs );
+		return retval;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package org.condast.symbiotic.core.transformation;
+package org.condast.symbiotic.core.transformer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +21,11 @@ public abstract class AbstractTransformer<I, O extends Object> implements ITrans
 	}
 
 	@Override
+	public boolean isInputAllowed() {
+		return true;
+	}
+
+	@Override
 	public boolean addInput(I input) {
 		return inputs.add(input);
 	}
@@ -33,5 +38,9 @@ public abstract class AbstractTransformer<I, O extends Object> implements ITrans
 	@Override
 	public Collection<I> getInputs() {
 		return inputs;
+	}
+	
+	protected int getInputSize(){
+		return this.inputs.size();
 	}
 }

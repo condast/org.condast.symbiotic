@@ -18,6 +18,12 @@ public interface ITransformer<I, O extends Object> {
 	public void clearInputs();
 
 	/**
+	 * returns true if inputs may be added to the transformer
+	 * @return
+	 */
+	public boolean isInputAllowed();
+
+	/**
 	 * allow additional operations when adding and removing inputs,
 	 * such as initialisation
 	 * @param input
