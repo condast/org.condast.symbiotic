@@ -24,6 +24,11 @@ public class LinkedTransformation<I, O extends Object> extends Transformation<I,
 		this.outputNode = outputNode;
 	}
 
+	/**
+	 * This transformation returns null if the linked
+	 * node does not accept the transformation
+	 * 
+	 */
 	@Override
 	public O transform() {
 		if( outputNode == null ){
@@ -31,7 +36,7 @@ public class LinkedTransformation<I, O extends Object> extends Transformation<I,
 			return null;
 		}
 		O output = super.transform();
-		outputNode.addInput( output );
-		return output;
+		boolean result = outputNode.addInput( output );
+		return result? output: null;
 	}
 }

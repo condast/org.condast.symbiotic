@@ -61,7 +61,4 @@ public interface ITransformation<I,O extends Object> {
 	void addTransformationListener(ITransformListener<O> listener);
 
 	void removeTransformationListener(ITransformListener<O> listener);
-
-	boolean isInputAllowed();
-
 }

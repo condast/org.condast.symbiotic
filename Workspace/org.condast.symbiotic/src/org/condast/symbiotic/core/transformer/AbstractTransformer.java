@@ -20,7 +20,6 @@ public abstract class AbstractTransformer<I, O extends Object> implements ITrans
 		this.inputs.clear();
 	}
 
-	@Override
 	public boolean isInputAllowed() {
 		return true;
 	}
