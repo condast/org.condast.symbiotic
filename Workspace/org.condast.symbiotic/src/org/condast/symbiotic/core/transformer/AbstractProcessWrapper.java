@@ -5,15 +5,19 @@ import java.util.Iterator;
 
 import org.condast.symbiotic.core.def.ITransformer;
 
-public class TransformerWrapper<I, O extends Object> implements ITransformer<I, O> {
+public abstract class AbstractProcessWrapper<I, O extends Object> implements ITransformer<I, O> {
 
-	private ITransformer<I, O> transformer;
+	private ITransformer<I, I> transformer;
 	
-	protected TransformerWrapper( ITransformer<I, O> transformer) {
+	protected AbstractProcessWrapper( ITransformer<I, I> transformer) {
 		this.transformer = transformer;
 	}
 
-	public void setTransformer(ITransformer<I, O> transformer) {
+	protected ITransformer<I, I> getTransformer() {
+		return transformer;
+	}
+
+	public void setTransformer(ITransformer<I, I> transformer) {
 		this.transformer = transformer;
 	}
 
@@ -39,8 +43,10 @@ public class TransformerWrapper<I, O extends Object> implements ITransformer<I, 
 		return this.transformer.getInputs();
 	}
 
+	protected abstract O onTransform( Iterator<I> inputs );
+	
 	@Override
-	public O transform(Iterator<I> inputs) {
-		return this.transformer.transform(inputs);
+	public O transform( Iterator<I> inputs ) {
+		return this.onTransform( inputs );
 	}
 }

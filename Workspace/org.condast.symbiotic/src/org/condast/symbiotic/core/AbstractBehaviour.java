@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviour<I,O> {
@@ -23,6 +24,25 @@ public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviou
 		symbiots = new HashMap<ISymbiot, Float>();
 		this.range = range;
 		this.includeOwner = includeOwner;
+	}
+
+	/**
+	 * Get the id of the symbiot
+	 * @return
+	 */
+	@Override
+	public String getId(){
+		return owner.getId();
+	}
+	
+	@Override
+	public void addStressListener(IStressListener listener) {
+		this.owner.addStressListener(listener );
+	}
+
+	@Override
+	public void removeStressListener(IStressListener listener) {
+		this.owner.removeStressListener( listener );
 	}
 
 	@Override

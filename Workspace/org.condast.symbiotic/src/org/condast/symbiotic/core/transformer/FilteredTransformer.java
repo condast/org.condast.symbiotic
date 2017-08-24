@@ -7,22 +7,17 @@ import java.util.Iterator;
 import org.condast.symbiotic.core.def.ITransformer;
 import org.condast.symbiotic.core.filter.ITransformFilter;
 
-public class FilteredTransformer<I, O extends Object> extends AbstractTransformer<I, O> {
+public class FilteredTransformer<I, O extends Object> extends TransformerWrapper<I, O> {
 
 	private Collection<ITransformFilter<I,O>> filters;
-	private ITransformer<I,O> transformer;
 
 	public FilteredTransformer() {
 		this( null );	
 	}
 	
 	public FilteredTransformer( ITransformer<I,O> transformer ) {
+		super( transformer );
 		filters = new ArrayList<ITransformFilter<I,O>>();
-		this.transformer = transformer;
-	}
-
-	public void setTransformer(ITransformer<I, O> transformer) {
-		this.transformer = transformer;
 	}
 
 	public void addFilter( ITransformFilter<I,O> filter ){
@@ -39,7 +34,7 @@ public class FilteredTransformer<I, O extends Object> extends AbstractTransforme
 			if( !filter.accept(input))
 				return false;
 		}
-		return this.transformer.addInput(input);
+		return super.addInput(input);
 	}
 
 	/**
@@ -55,7 +50,7 @@ public class FilteredTransformer<I, O extends Object> extends AbstractTransforme
 		for( ITransformFilter<I,O> filter: filters ){
 			if( !filter.acceptTransform(inputs))
 				return null;
-			output = transformer.transform(inputs);
+			output = super.transform(inputs);
 			if( output != null )
 				return output;
 		}

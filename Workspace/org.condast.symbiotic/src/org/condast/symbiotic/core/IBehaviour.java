@@ -1,5 +1,6 @@
 package org.condast.symbiotic.core;
 
+import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public interface IBehaviour<I,O extends Object> {
@@ -34,4 +35,8 @@ public interface IBehaviour<I,O extends Object> {
 	public O calculate( I input );
 	
 	public O getOutput();
+	
+	public void addStressListener(IStressListener listener);
+	public void removeStressListener(IStressListener listener);
+	String getId();
 }

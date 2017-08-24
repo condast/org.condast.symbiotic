@@ -26,6 +26,8 @@ public abstract class AbstractTransformer<I, O extends Object> implements ITrans
 
 	@Override
 	public boolean addInput(I input) {
+		if( input == null )
+			return false;
 		return inputs.add(input);
 	}
 

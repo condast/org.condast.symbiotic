@@ -11,6 +11,7 @@ import org.condast.symbiotic.core.def.StressEvent;
 public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbiot>{
 
 	public static final String S_ERR_NO_ID = "A symbiot must have a valid id!";
+
 	/**
 	 * Listeners to a change in the stress levels
 	 */
