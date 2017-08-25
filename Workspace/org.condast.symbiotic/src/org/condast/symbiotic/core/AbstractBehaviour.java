@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.condast.commons.number.NumberUtils;
+import org.condast.symbiotic.core.def.IBehaviour;
+import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
@@ -60,6 +63,23 @@ public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviou
 		this.owner = owner;
 	}
 
+	/**
+	 * Get the overall stress
+	 * @return
+	 */
+	public float getOverallStress(){
+		return this.owner.getOverallStress();
+	}
+
+	/**
+	 * Get the stress data of the owner for the given symbiot
+	 * @param symbiot
+	 * @return
+	 */
+	protected IStressData getStressData( ISymbiot symbiot ){
+		return this.owner.getStressData(symbiot);
+	}
+	
 	protected abstract float onUpdate( ISymbiot symbiot, float currentStress );
 	
 	@Override
@@ -70,7 +90,9 @@ public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviou
 		}else if( !this.includeOwner && ( this.owner.equals( symbiot ))){
 			return false;
 		}
-		symbiots.put(symbiot, onUpdate( symbiot, symbiots.get( symbiot )));
+		
+		Float stress = NumberUtils.assertNull( symbiots.get( symbiot )); 
+		symbiots.put(symbiot, onUpdate( symbiot, stress));
 		return true;
 	}
 

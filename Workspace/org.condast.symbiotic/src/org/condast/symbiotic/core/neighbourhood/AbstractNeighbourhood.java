@@ -1,4 +1,4 @@
-package org.condast.symbiotic.core;
+package org.condast.symbiotic.core.neighbourhood;
 
 import org.condast.symbiotic.core.def.INeighbourhood;
 import org.condast.symbiotic.core.def.ITransformation;

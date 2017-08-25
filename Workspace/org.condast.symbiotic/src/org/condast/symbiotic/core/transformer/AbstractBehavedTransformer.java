@@ -2,7 +2,7 @@ package org.condast.symbiotic.core.transformer;
 
 import java.util.Iterator;
 
-import org.condast.symbiotic.core.IBehaviour;
+import org.condast.symbiotic.core.def.IBehaviour;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.ISymbiotTransformer;
 

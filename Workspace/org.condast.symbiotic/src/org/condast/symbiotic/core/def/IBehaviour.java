@@ -1,7 +1,4 @@
-package org.condast.symbiotic.core;
-
-import org.condast.symbiotic.core.def.IStressListener;
-import org.condast.symbiotic.core.def.ISymbiot;
+package org.condast.symbiotic.core.def;
 
 public interface IBehaviour<I,O extends Object> {
 

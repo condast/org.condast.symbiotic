@@ -33,5 +33,26 @@ public interface ISymbiot{
 
 	String getId();
 
-	void setStress(float stress);	
+	void setStress(float stress);
+
+	/**
+	 * Get the overall stress
+	 * @param symbiot
+	 * @return
+	 */
+	public IStressData getStressData(ISymbiot symbiot);
+
+	/**
+	 * Get the overall stress
+	 * @param symbiot
+	 * @return
+	 */
+	float getOverallStress();
+
+	/**
+	 * Get the overall weight
+	 * @param symbiot
+	 * @return
+	 */
+	float getOverallWeight();	
 }

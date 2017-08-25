@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.symbiotic.core.IBehaviour;
 import org.condast.symbiotic.core.Symbiot;
+import org.condast.symbiotic.core.def.IBehaviour;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.StressEvent;

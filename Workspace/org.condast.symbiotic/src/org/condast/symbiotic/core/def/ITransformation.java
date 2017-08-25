@@ -1,5 +1,7 @@
 package org.condast.symbiotic.core.def;
 
+import java.util.Collection;
+
 import org.condast.symbiotic.core.transformation.ITransformListener;
 
 /**
@@ -42,7 +44,7 @@ public interface ITransformation<I,O extends Object> {
 	 * Get the input
 	 * @return
 	 */
-	public I[] getInput();
+	public Collection<I> getInput();
 	
 	/**
 	 * Get the number of inputs added

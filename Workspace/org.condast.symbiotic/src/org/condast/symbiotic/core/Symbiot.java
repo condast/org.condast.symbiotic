@@ -2,8 +2,12 @@ package org.condast.symbiotic.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
+import org.condast.symbiotic.core.def.IBehaviour;
+import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.StressEvent;
@@ -22,6 +26,8 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	private float stress;
 	private boolean isActive;
 	private IBehaviour<I,O> behaviour;
+	
+	private Map<ISymbiot, IStressData> signals;
 		
 	public Symbiot( String id, IBehaviour<I,O> behaviour ) {
 		this( id, behaviour, true );
@@ -34,6 +40,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 		this.isActive = active;
 		this.behaviour = behaviour;
 		this.behaviour.setOwner(this);
+		this.signals = new HashMap<ISymbiot, IStressData>();
 		listeners = new ArrayList<IStressListener>();
 	}
 
@@ -42,6 +49,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 		return id;
 	}
 
+	@Override
 	public boolean isActive() {
 		return isActive;
 	}
@@ -60,7 +68,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 		this.listeners.remove( listener );
 	}
 	
-	protected void notifyStressChanged(){
+	protected synchronized void notifyStressChanged(){
 		for( IStressListener listener: listeners )
 			listener.notifyStressChanged( new StressEvent (this));
 	}
@@ -116,6 +124,43 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	protected void setBehaviour(IBehaviour<I, O> behaviour) {
 		this.behaviour = behaviour;
 	}
+	
+	@Override
+	public IStressData getStressData( ISymbiot symbiot ){
+		IStressData data = this.signals.get(symbiot );
+		if( data == null ){
+			data = new StressData(symbiot);
+			signals.put( symbiot, data);
+		}
+		return data;
+	}
+	
+	/**
+	 * Get the overall stress <-1,1>
+	 * @return
+	*/
+	@Override
+	public float getOverallStress(){
+		float overall = 0f;
+		for( IStressData sd: this.signals.values() ){
+			overall += sd.getCurrentStress();
+		}
+		return ( overall/this.signals.size() );
+	}
+
+	/**
+	 * Get the overall weight <-1,1>
+	 * @return
+	*/
+	@Override
+	public float getOverallWeight(){
+		float overall = 0f;
+		for( IStressData sd: this.signals.values() ){
+			overall += sd.getWeight();
+		}
+		return overall/signals.size();
+	}
+
 
 	@Override
 	public void updateStressLevels(ISymbiot symbiot) {
@@ -126,4 +171,47 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	public int compareTo(ISymbiot arg0) {
 		return this.id.compareTo(arg0.getId());
 	}	
+	
+	private class StressData implements IStressData{
+		
+		private float weight;
+		private float currentStress;
+		private ISymbiot symbiot;
+		
+		private StressData(ISymbiot symbiot) {
+			this( symbiot, 0f, 0f );
+		}
+		
+		private StressData(ISymbiot symbiot, float weight, float currentStress) {
+			super();
+			this.weight = weight;
+			this.currentStress = currentStress;
+			this.symbiot = symbiot;
+		}
+
+		@Override
+		public float getWeight() {
+			return weight;
+		}
+		
+		@Override
+		public float getCurrentStress() {
+			return currentStress;
+		}
+		
+		/**
+		 * Get the delta between the new stress and the currently stored stress
+		 * @return
+		 */
+		@Override
+		public float getDelta(){
+			return this.symbiot.getStress() - this.currentStress;
+		}
+
+		@Override
+		public void setData( float weight ){
+			this.currentStress = symbiot.getStress();
+			this.weight = NumberUtils.clip(1f, weight );
+		}
+	}
 }

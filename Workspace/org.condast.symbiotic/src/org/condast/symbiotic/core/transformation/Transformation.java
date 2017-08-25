@@ -14,6 +14,10 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 	private ITransformer<I,O> transformer; 
 	private O output;
 	
+	//optional flag to signify that the output was not accepted
+	//by the other nodes
+	private boolean acceptOutput;
+	
 	private Collection<ITransformListener<O>> listeners;
 
 	protected  Transformation( String name ) {
@@ -24,6 +28,7 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		listeners = new ArrayList<ITransformListener<O>>();
 		this.name = name;
 		this.transformer = transformer;
+		this.acceptOutput = false;
 	}
 
 	public String getName() {
@@ -55,10 +60,9 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		this.transformer.removeInput(input);
 	}
 
-	@SuppressWarnings("unchecked")
-	public I[] getInput() {
+	public Collection<I> getInput() {
 		Collection<I> inputs = transformer.getInputs();
-		return (I[]) inputs.toArray( new Object[ inputs.size() ]);
+		return inputs;
 	}
 
 	/**
@@ -97,9 +101,27 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		this.listeners.remove( listener );
 	}
 	
+	protected boolean isAcceptOutput() {
+		return acceptOutput;
+	}
+
+	/**
+	 * Handle completion when an event has been handled
+	 * @param event
+	 */
+	protected void onHandleOutput( ITransformListener<O> listener, TransformEvent<O> event ){
+		/* DEFAULT NOTHING */
+	}
+
 	protected void onTransform( O output ){
-		for( ITransformListener<O> listener: listeners )
-			listener.notifyChange( new TransformEvent<O>(this, output ));		
+		this.acceptOutput = false;
+		for( ITransformListener<O> listener: listeners ){
+			TransformEvent<O> event = new TransformEvent<O>(this, output );
+			listener.notifyChange( event );
+			if( event.isAccept() )
+				this.acceptOutput = true;
+			onHandleOutput( listener, event);
+		}
 	}
 	
 	@Override
