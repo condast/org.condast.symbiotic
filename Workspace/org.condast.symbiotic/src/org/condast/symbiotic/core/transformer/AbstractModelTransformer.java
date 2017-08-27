@@ -2,11 +2,11 @@ package org.condast.symbiotic.core.transformer;
 
 import org.condast.symbiotic.core.def.IBehaviour;
 
-public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends AbstractBehavedTransformer<I,O,B> implements IModelTransformer<M, I, O> {
+public abstract class AbstractModelTransformer<M,I,O,B extends Object> extends AbstractBehavedTransformer<I,O> implements IModelTransformer<M, I, O> {
 
 	private M model;
 	
-	protected AbstractModelTransformer( M model, IBehaviour<I,B> behaviour ) {
+	protected AbstractModelTransformer( M model, IBehaviour behaviour ) {
 		super( behaviour );
 		this.model = model;
 	}

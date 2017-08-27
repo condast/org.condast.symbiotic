@@ -6,16 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.core.def.IBehaviour;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.StressEvent;
 
-public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbiot>{
+public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 
 	public static final String S_ERR_NO_ID = "A symbiot must have a valid id!";
 
+	public static final float DEFAULT_STEP = 0.1f;
 	/**
 	 * Listeners to a change in the stress levels
 	 */
@@ -25,21 +25,24 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	private String id;
 	private float stress;
 	private boolean isActive;
-	private IBehaviour<I,O> behaviour;
+	private float step;
 	
 	private Map<ISymbiot, IStressData> signals;
-		
-	public Symbiot( String id, IBehaviour<I,O> behaviour ) {
-		this( id, behaviour, true );
+
+	public Symbiot( String id) {
+		this( id, DEFAULT_STEP, true );
+	}
+
+	public Symbiot( String id, float step ) {
+		this( id, step, true );
 	}
 	
-	public Symbiot( String id, IBehaviour<I,O> behaviour, boolean active ) {
+	public Symbiot( String id, float step, boolean active ) {
 		if( id == null )
 			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.isActive = active;
-		this.behaviour = behaviour;
-		this.behaviour.setOwner(this);
+		this.step = step;
 		this.signals = new HashMap<ISymbiot, IStressData>();
 		listeners = new ArrayList<IStressListener>();
 	}
@@ -101,8 +104,7 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	public float increaseStress(){
 		if(!isActive )
 			return 0f;
-		int range = behaviour.getRange();
-		this.stress = NumberUtils.clip(1f, this.stress + 1f/range);
+		this.stress = NumberUtils.clip(1f, this.stress + this.step);
 		setStress(stress);
 		return this.stress;
 	}
@@ -111,20 +113,11 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 	public float decreaseStress(){
 		if(!isActive )
 			return 0f;
-		int range = behaviour.getRange();
-		this.stress = NumberUtils.clip(1f, this.stress - 1/range);
+		this.stress = NumberUtils.clip(1f, this.stress - this.step);
 		setStress(stress);
 		return this.stress;
 	}
-	
-	/**
-	 * allow dynamically changing the behaviour
-	 * @param behaviour
-	 */
-	protected void setBehaviour(IBehaviour<I, O> behaviour) {
-		this.behaviour = behaviour;
-	}
-	
+		
 	@Override
 	public IStressData getStressData( ISymbiot symbiot ){
 		IStressData data = this.signals.get(symbiot );
@@ -159,12 +152,6 @@ public class Symbiot<I,O extends Object> implements ISymbiot, Comparable<ISymbio
 			overall += sd.getWeight();
 		}
 		return overall/signals.size();
-	}
-
-
-	@Override
-	public void updateStressLevels(ISymbiot symbiot) {
-		this.behaviour.updateStress(symbiot);
 	}
 
 	@Override

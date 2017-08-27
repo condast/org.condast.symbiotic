@@ -1,6 +1,19 @@
 package org.condast.symbiotic.core.def;
 
-public interface IBehaviour<I,O extends Object> {
+public interface IBehaviour {
+
+	/**
+	 * Get the id of the owner (symbiot)
+	 * @return
+	 */
+	public String getId();
+
+	/**
+	 * Pass the stress listener of the owner
+	 * @param listener
+	 */
+	public void addStressListener(IStressListener listener);
+	public void removeStressListener(IStressListener listener);
 
 	/**
 	 * Get or set the symbiot that owns this behaviour
@@ -25,15 +38,13 @@ public interface IBehaviour<I,O extends Object> {
 	public boolean updateStress( ISymbiot symbiot );
 	
 	/**
-	 * Calculate an output based on the stress levels. 
-	 * Provide the input in case this is required
+	 * Calculate an integer based on the stress levels,  
+	 * This output should fall within the range of the behaviour
+	 * @param revert: if there is an external reason to revert the 
+	 * current action pattenr
 	 * @return
 	 */
-	public O calculate( I input );
+	public int calculate( boolean revert );
 	
-	public O getOutput();
-	
-	public void addStressListener(IStressListener listener);
-	public void removeStressListener(IStressListener listener);
-	String getId();
+	public int getValue();
 }

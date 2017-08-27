@@ -10,7 +10,7 @@ import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
-public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviour<I,O> {
+public abstract class AbstractBehaviour implements IBehaviour {
 
 	public static final int DEFAULT_RANGE = 10;
 	
@@ -96,15 +96,15 @@ public abstract class AbstractBehaviour<I,O extends Object> implements IBehaviou
 		return true;
 	}
 
-	protected abstract O onUpdateValue( ISymbiot symbiot, O current );
+	protected abstract int onUpdateValue( ISymbiot symbiot, int current, boolean revert );
 
 	@Override
-	public O calculate(I input) {
+	public int calculate( boolean revert ) {
 		Iterator<Map.Entry<ISymbiot, Float>> iterator = symbiots.entrySet().iterator();
-		O retval = null;
+		int retval = 0;
 		while( iterator.hasNext()){
 			Map.Entry<ISymbiot, Float> entry = iterator.next();
-			retval = onUpdateValue( entry.getKey(), retval);
+			retval += onUpdateValue( entry.getKey(), retval, revert );
 		}
 		return retval;
 	}

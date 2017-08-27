@@ -7,16 +7,16 @@ import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.ISymbiotTransformer;
 import org.condast.symbiotic.core.def.ITransformer;
 
-public abstract class AbstractBehavedTransformerWrapper<I,O,B extends Object> extends TransformerWrapper<I,O> implements ISymbiotTransformer<I, O>{
+public abstract class AbstractBehavedTransformerWrapper<I,O extends Object> extends TransformerWrapper<I,O> implements ISymbiotTransformer<I, O>{
 
-	private IBehaviour<I, B> behaviour;
+	private IBehaviour behaviour;
 
-	protected AbstractBehavedTransformerWrapper( ITransformer<I,O> transformer, IBehaviour<I, B> behaviour ) {
+	protected AbstractBehavedTransformerWrapper( ITransformer<I,O> transformer, IBehaviour behaviour ) {
 		super( transformer );
 		this.behaviour = behaviour;
 	}
 
-	public IBehaviour<I, B> getBehaviour() {
+	public IBehaviour getBehaviour() {
 		return behaviour;
 	}
 

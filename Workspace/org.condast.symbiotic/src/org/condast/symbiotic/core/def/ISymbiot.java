@@ -25,12 +25,6 @@ public interface ISymbiot{
 
 	float decreaseStress();
 
-	/**
-	 * Update the stress level for the given symbiot
-	 * @param symbiot
-	 */
-	public void updateStressLevels(ISymbiot symbiot);
-
 	String getId();
 
 	void setStress(float stress);

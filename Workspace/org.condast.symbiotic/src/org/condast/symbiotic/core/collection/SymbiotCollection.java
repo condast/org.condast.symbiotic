@@ -16,16 +16,6 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 
 	private Collection<ISymbiot> symbiots;
 	
-	private IStressListener listener = new IStressListener(){
-
-		@Override
-		public void notifyStressChanged(StressEvent event) {
-			for( ISymbiot symbiot: symbiots )
-				symbiot.updateStressLevels(symbiot);
-			notifyStressLevels(event);
-		}
-	};
-
 	/**
 	 * Listeners to a change in the stress levels
 	 */
@@ -60,20 +50,18 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 		return stress;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ISymbiot add( String id, IBehaviour<?,?> behaviour ){
-		ISymbiot symbiot = new Symbiot( id, behaviour);
+	public ISymbiot add( String id, IBehaviour behaviour ){
+		ISymbiot symbiot = new Symbiot( id );
+		behaviour.setOwner(symbiot);
 		this.add( symbiot );
 		return symbiot;
 	}
 
 	public boolean add( ISymbiot symbiot ){
-		symbiot.addStressListener(listener);
 		return symbiots.add( symbiot);
 	}
 
 	public boolean remove( Object symbiot ){
-		((ISymbiot) symbiot).removeStressListener(listener);
 		return symbiots.remove( symbiot );
 	}
 	

@@ -4,7 +4,7 @@ import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
 
-public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Integer> {
+public class DefaultBehaviour extends AbstractBehaviour {
 
 	private float overall;
 	
@@ -28,7 +28,7 @@ public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Inte
 	}
 
 	@Override
-	protected Integer onUpdateValue( ISymbiot symbiot, Integer current ) {
+	protected int onUpdateValue( ISymbiot symbiot, int current, boolean revert ) {
 		IStressData sd = getStressData(symbiot);
 		float weight = NumberUtils.assertNull( sd.getWeight());
 		return ( int )( weight * getRange() );
@@ -51,7 +51,7 @@ public class DefaultBehaviour<I extends Object> extends AbstractBehaviour<I,Inte
 	}
 
 	@Override
-	public Integer getOutput() {
+	public int getValue() {
 		float total = super.getOwner().getOverallWeight();
 		return (int) (total * this.getRange());
 	}

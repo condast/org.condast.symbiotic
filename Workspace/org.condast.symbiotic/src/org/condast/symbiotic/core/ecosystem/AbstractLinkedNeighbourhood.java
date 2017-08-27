@@ -8,7 +8,7 @@ import org.condast.symbiotic.core.def.ITransformation;
 import org.condast.symbiotic.core.transformation.ITransformListener;
 import org.condast.symbiotic.core.transformation.TransformEvent;
 
-public abstract class AbstractLinkedNeighbourhood<I,O extends Object> implements ITransformListener<I> {
+public abstract class AbstractLinkedNeighbourhood<I,O extends Object> implements ITransformListener<I>, ILinkedNeighbourhood<I, O> {
 
 	private Collection<ITransformation<O,?>> transformations;
 	
@@ -16,10 +16,18 @@ public abstract class AbstractLinkedNeighbourhood<I,O extends Object> implements
 		this.transformations = new ArrayList<ITransformation<O,?>>();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.condast.symbiotic.core.ecosystem.ILinkedNeighbourhood#addTransformation(org.condast.symbiotic.core.def.ITransformation)
+	 */
+	@Override
 	public void addTransformation( ITransformation<O,?> transformation ){
 		this.transformations.add(  transformation );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.condast.symbiotic.core.ecosystem.ILinkedNeighbourhood#removeTransformation(org.condast.symbiotic.core.def.ITransformation)
+	 */
+	@Override
 	public void removeTransformation( ITransformation<O,?> transformation ){
 		this.transformations.remove( transformation );
 	}
