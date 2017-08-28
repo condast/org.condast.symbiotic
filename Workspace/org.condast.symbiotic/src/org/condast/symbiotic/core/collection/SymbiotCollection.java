@@ -124,4 +124,22 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 	public <T> T[] toArray(T[] a) {
 		return symbiots.toArray(a);
 	}
+	
+	/**
+	 *Get the overall stress levels of all the symbiots in the collection
+	 * @return
+	 */
+	public Map<String, Map<String,Float>> getStress(){
+		Map<String, Map<String,Float>> results = new HashMap<String, Map<String,Float>>();
+		for( ISymbiot symbiot: symbiots ){
+			Map<String, Float> stress = new HashMap<String, Float>();
+			for( ISymbiot child: symbiots ){
+				Float strss = symbiot.getStressData( child ).getCurrentStress();
+				stress.put( child.getId(), strss);
+				symbiot.getStressData( symbiot );
+			}
+			results.put(symbiot.getId(), stress);
+		}
+		return results;
+	}
 }
