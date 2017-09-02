@@ -142,4 +142,18 @@ public class SymbiotCollection implements Collection<ISymbiot>{
 		}
 		return results;
 	}
+
+	/**
+	 *Get the overall stress levels of all the symbiots in the collection
+	 * @return
+	 */
+	public Map<String, Float> getOverallWeight(){
+		Map<String, Float> weights = new HashMap<String, Float>();
+		for( ISymbiot symbiot: symbiots ){
+			Float weight = symbiot.getOverallWeight();
+			weights.put( symbiot.getId(), weight);
+			symbiot.getStressData( symbiot );
+		}
+		return weights;
+	}
 }

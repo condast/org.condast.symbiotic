@@ -55,6 +55,4 @@ public class DefaultBehaviour extends AbstractBehaviour {
 		float total = super.getOwner().getOverallWeight();
 		return (int) (total * this.getRange());
 	}
-	
-	
 }
