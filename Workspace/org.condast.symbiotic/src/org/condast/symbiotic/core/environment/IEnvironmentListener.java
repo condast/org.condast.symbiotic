@@ -1,11 +1,12 @@
 package org.condast.symbiotic.core.environment;
 
-public interface IEnvironmentListener {
+public interface IEnvironmentListener<D extends Object> {
 
 	public enum EventTypes{
 		INITIALSED,
-		CHANGED;
+		CHANGED,
+		OUT_OF_BOUNDS;
 	}
 	
-	public void notifyEnvironmentChanged( EnvironmentEvent event );
+	public void notifyEnvironmentChanged( EnvironmentEvent<D> event );
 }
