@@ -22,7 +22,7 @@ public class DefaultBehaviour extends AbstractBehaviour {
 		IStressData sd = getStressData(symbiot);
 		float weight = NumberUtils.assertNull( sd.getWeight());
 		float retval = ( symbiot.getStress() - currentStress )/getRange();
-		retval = NumberUtils.clip( 1f, retval );
+		retval = (float) NumberUtils.clip( 1f, retval );
 		overall = getOverallStress();
 		return weight;
 	}

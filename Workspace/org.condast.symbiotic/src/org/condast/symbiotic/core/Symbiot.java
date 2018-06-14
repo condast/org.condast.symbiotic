@@ -104,7 +104,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public float increaseStress(){
 		if(!isActive )
 			return 0f;
-		this.stress = NumberUtils.clip(1f, this.stress + this.step);
+		this.stress = (float) NumberUtils.clip(1f, this.stress + this.step);
 		setStress(stress);
 		return this.stress;
 	}
@@ -113,7 +113,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public float decreaseStress(){
 		if(!isActive )
 			return 0f;
-		this.stress = NumberUtils.clip(1f, this.stress - this.step);
+		this.stress = (float) NumberUtils.clip(1f, this.stress - this.step);
 		setStress(stress);
 		return this.stress;
 	}
@@ -198,7 +198,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		@Override
 		public void setData( float weight ){
 			this.currentStress = symbiot.getStress();
-			this.weight = NumberUtils.clip(1f, weight );
+			this.weight = (float) NumberUtils.clip(1f, weight );
 		}
 	}
 }
