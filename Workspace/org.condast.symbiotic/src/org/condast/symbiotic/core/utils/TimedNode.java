@@ -21,8 +21,7 @@ public class TimedNode implements ITransformer<Date, Boolean>{
 	
 	@Override
 	public void clearInputs() {
-		// TODO Auto-generated method stub
-		
+		//NOTHING
 	}
 
 
