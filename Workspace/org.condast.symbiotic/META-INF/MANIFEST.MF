@@ -20,3 +20,4 @@ Export-Package: org.condast.symbiotic.core,
  org.condast.symbiotic.core.transformation,
  org.condast.symbiotic.core.transformer,
  org.condast.symbiotic.core.utils
+Automatic-Module-Name: org.condast.symbiotic
