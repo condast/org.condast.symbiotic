@@ -12,34 +12,18 @@
     <packaging>pom</packaging>
 
     <properties>
-        <tycho.version>0.26.0</tycho.version>
-        <generics>P:/GitHub</generics>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<tycho.version>2.3.0</tycho.version>
+         <generics>P:/GitHub</generics>
         <project-root>P:/GitHub/org.condast.symbiotic</project-root>
         <workspace-root>P:/Windows/Condast/Workspace/org.condast.symbiotic</workspace-root>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
-        <eclipse-update-repo.url>http://download.eclipse.org/eclipse/updates/4.7</eclipse-update-repo.url>
-        <rap-repo.url>http://download.eclipse.org/rt/rap/3.4/</rap-repo.url>
         <condast-commons>file:${generics}/org.condast.commons/Workspace/</condast-commons>
         <condast-js>file:${generics}/org.condast.js/Workspace/</condast-js>
-        <condast-repo.url>file:${generics}/Root/Workspace/Virgo/alpha.condast.root.update/</condast-repo.url>
     </properties>
 
     <repositories>
-        <repository>
-            <id>eclipse-update</id>
-            <url>${eclipse-update-repo.url}</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>rap-update</id>
-            <url>${rap-repo.url}</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>condast-repo</id>
-            <url>${condast-repo.url}</url>
-            <layout>p2</layout>
-        </repository>
          <repository>
             <id>org-condast-commons</id>
             <url>${condast-commons}/org.condast.commons.update/target/site</url>
@@ -53,6 +37,7 @@
     </repositories>
 
   <modules>
+   <module>../org.condast.symbiotic.target</module>
     <module>../org.condast.symbiotic</module>
     <module>../org.condast.symbiotic.feature</module>
     <module>../org.condast.symbiotic.update</module>
@@ -72,6 +57,14 @@
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tycho.version}</version>
                 <configuration>
+					<pomDependencies>consider</pomDependencies>
+					<target>
+						<artifact>
+							<groupId>org.condast.symbiotic</groupId>
+							<artifactId>symbiotic.target</artifactId>
+							<version>${project.version}</version>
+						</artifact>
+					</target>
                       <environments>
                         <environment>
                             <os>linux</os>
