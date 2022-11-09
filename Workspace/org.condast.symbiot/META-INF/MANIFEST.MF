@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symbiot
+Bundle-SymbolicName: org.condast.symbiot
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Automatic-Module-Name: org.condast.symbiot
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="[3.0.0,4.0.0)"
+Service-Component: OSGI-INF/contribution.xml
+Bundle-ActivationPolicy: lazy
+Import-Package: org.condast.commons.ui.player,
+ org.condast.symbiot.core,
+ org.condast.symbiot.core.env,
+ org.condast.symbiot.ui,
+ org.condast.symbiotic.core.environment

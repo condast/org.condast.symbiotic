@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symbiot Core
+Bundle-SymbolicName: org.condast.symbiot.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Automatic-Module-Name: org.condast.symbiot.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.condast.symbiotic.core,
+ org.condast.symbiotic.core.collection,
+ org.condast.symbiotic.core.def
+Export-Package: org.condast.symbiot.core,
+ org.condast.symbiot.core.env
