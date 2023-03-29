@@ -5,11 +5,11 @@ import java.util.EventObject;
 public class OrganismEvent extends EventObject {
 	private static final long serialVersionUID = 1L;
 	
-	public OrganismEvent(Organism source) {
+	public OrganismEvent(IOrganism source) {
 		super(source);
 	}
 
-	public Organism getOrganism() {
-		return (Organism) super.getSource();
+	public IOrganism getOrganism() {
+		return (IOrganism) super.getSource();
 	}
 }

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.condast.symbiot.core.Food;
+import org.condast.symbiot.core.ILocation;
+import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.Location;
 import org.condast.symbiot.core.Organism;
 
@@ -50,6 +52,7 @@ public class Environment {
 	}
 
 	public void clear() {
+		setOrganism( null );
 		this.field.clear();
 	}
 	
@@ -57,7 +60,7 @@ public class Environment {
 		return field.add( new Food( x, y));
 	}
 
-	public Organism getOrganism() {
+	public IOrganism getOrganism() {
 		return organism;
 	}
 
@@ -65,13 +68,12 @@ public class Environment {
 		if( this.organism != null )
 			this.remove(this.organism);
 		this.organism = organism;
-		this.organism = organism;
 		this.field.add(organism);
 		notifyListeners( new EnvironmentEvent<Organism>( this, organism ));
 		return true;
 	}
 	
-	public Location get( int x, int y ) {
+	public ILocation get( int x, int y ) {
 		for( Location l: this.field ) {
 			if( l.equals(x,y))
 				return l;
@@ -79,14 +81,14 @@ public class Environment {
 		return null;		
 	}
 
-	public Location remove( int x, int y ) {
-		Location loc = get( x, y );
+	public ILocation remove( int x, int y ) {
+		ILocation loc = get( x, y );
 		if( loc == null )
 			field.remove(loc);
 		return loc;
 	}
 
-	public boolean remove( Location obj ) {
+	public boolean remove( ILocation obj ) {
 		return field.remove(obj);
 	}
 
@@ -94,19 +96,22 @@ public class Environment {
 		return field.iterator();		
 	}
 
-	public void init() {
+	public void init( int amountFood) {
         this.clear();
 		int x, y;
-        for( int i=0; i<100;i++) {
+        for( int i=0; i<amountFood;i++) {
         	x = (int) (getX() * Math.random());
         	y = (int) (getY() * Math.random());
         	addFood(x, y);
         }
         Organism organism = new Organism();
         Object food = null;
+        int list = 10;
+        int length = getX() - 2*list;
         do{
-        	x = (int) (getX() * Math.random());
-        	y = (int) (getY() * Math.random());
+        	x = (int) (list + length * Math.random());
+            length = getY() - 2*list;
+        	y = (int) (list+length * Math.random());
         	food = get(x, y);
         }while( food != null );
         organism.setLocation(x, y);
@@ -116,21 +121,38 @@ public class Environment {
 	
 	public int getNearestFoodDistance( int x, int y ) {
 		double nearest = Double.MAX_VALUE;
-		for( Location location: field ) {
+		for( ILocation location: field ) {
 			if(!( location instanceof Food ))
 				continue;
-			double distance = Math.sqrt( Math.pow(2,location.getX() - x ) + Math.pow(2,location.getY() - y ));
+			double distance = Math.sqrt( Math.pow(location.getX() - x, 2 ) + Math.pow(location.getY() - y,2 ));
 			if( distance >= nearest )
 				continue;
 			nearest = distance;
 		}
 		return (int) nearest;
 	}
-	
+
+	public ILocation getNearestFood( int x, int y ) {
+		ILocation result = null;
+		double nearest = Double.MAX_VALUE;
+		for( ILocation location: field ) {
+			if(!( location instanceof Food ))
+				continue;
+			if( result == null )
+				result = location;
+			double distance = Math.sqrt( Math.pow(location.getX() - x, 2 ) + Math.pow(location.getY() - y,2 ));
+			if( distance >= nearest )
+				continue;
+			nearest = distance;
+			result = location;
+		}
+		return result;
+	}
+
 	public void update() {
 		try {
 			int[] location = this.organism.getLocation();
-			logger.info("Position organism: (" + location[0] + ", " + location[1] + ")" );
+			logger.info("Position organism:" + this.getOrganism().toString() + "(" + location[0] + ", " + location[1] + ")" );
 			this.remove(organism);
 			this.organism.update( this );
 			this.setOrganism(organism);

@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.condast.commons.thread.AbstractExecuteThread;
+import org.condast.commons.ui.logger.LogComposite;
 import org.condast.commons.ui.player.PlayerComposite;
 import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
@@ -18,18 +19,23 @@ import org.condast.symbiot.core.env.EnvironmentEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Spinner;
 
 public class EnvironmentComposite extends Composite {
 	private static final long serialVersionUID = 1L;
 
 	private Dashboard dashboard;
 	private SymbiotCanvas canvas;
+	private Spinner foodSpinner;
+	private LogComposite logComposite;
 	private Player<Organism> player;
 	
 	private ExecuteThread executor;
@@ -37,16 +43,27 @@ public class EnvironmentComposite extends Composite {
 
 	public EnvironmentComposite(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new GridLayout(4, false ));
+		setLayout(new GridLayout(3, true ));
         
 		dashboard = new Dashboard(this, SWT.BORDER);
-        dashboard.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ));
+        dashboard.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		
 		canvas = new SymbiotCanvas(this, SWT.BORDER);
-        canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,3,1 ));
+        canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,2,2 ));
+        
+        logComposite = new LogComposite(this, SWT.BORDER);
+        logComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
+        logComposite.activate(true);
 
         player = new Player<Organism >( this, SWT.BORDER );
-        player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, true, false,4,1 ));
+        player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ));
+        
+        Group foodGroup = new Group(this, SWT.NONE );
+        foodGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false,2,1 ));
+        foodGroup.setLayout(new FillLayout());
+        foodSpinner = new Spinner( foodGroup, SWT.BORDER);
+        foodSpinner.setMaximum(100);
+        foodSpinner.setSelection(1);
         handler = new Handler(getDisplay());
 	}
 
@@ -126,7 +143,7 @@ public class EnvironmentComposite extends Composite {
 						switch( image ){
 						case START:
 							//environment.addListener( handler);
-
+							logComposite.clear();
 							executor.start();
 							getButton( PlayerImages.Images.STOP).setEnabled(true);
 							button.setEnabled(false);
@@ -179,7 +196,7 @@ public class EnvironmentComposite extends Composite {
 
 		@Override
 		public boolean onInitialise() {
-			environment.init();
+			environment.init( foodSpinner.getSelection());
 	        dashboard.setInput(environment.getOrganism());
 			return false;
 		}

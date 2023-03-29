@@ -1,13 +1,17 @@
 package org.condast.symbiot.symbiot;
 
-import org.condast.symbiot.core.Organism;
+import org.condast.symbiot.core.IOrganism;
 
-public class Stomach extends AbstractSymbiot {
+public class Stomach extends AbstractSymbioticEntity<Double> {
 
-	public static final String S_STOMACH = "Stomach";
+	private IOrganism.Form form;
 	
-	public Stomach( Organism organism, float step, boolean active) {
-		super( S_STOMACH, organism, step, active);
+	public Stomach( IOrganism.Form form, IOrganism organism, float step, boolean active) {
+		super( form.name(), organism, step, active);
+	}
+
+	public IOrganism.Form getForm() {
+		return form;
 	}
 
 	public void useEnergy() {

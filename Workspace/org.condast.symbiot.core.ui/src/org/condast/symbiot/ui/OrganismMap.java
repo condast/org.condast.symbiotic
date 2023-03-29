@@ -3,8 +3,8 @@ package org.condast.symbiot.ui;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.xy.AbstractXYGraph;
+import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganismListener;
-import org.condast.symbiot.core.Organism;
 import org.condast.symbiot.core.OrganismEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Display;
 public class OrganismMap extends AbstractXYGraph<Double> {
 	private static final long serialVersionUID = 1L;
 
-	private Organism organism;
+	private IOrganism organism;
 
 	private Handler handler;
 
@@ -31,7 +31,7 @@ public class OrganismMap extends AbstractXYGraph<Double> {
 		handler.addData(organism);
 	}
 	
-	public void setInput( Organism organism ) {
+	public void setInput( IOrganism organism ) {
 		if( this.organism != null )
 			this.organism.removeListener(listener);
 		this.organism = organism;
@@ -70,14 +70,14 @@ public class OrganismMap extends AbstractXYGraph<Double> {
 		// TODO Auto-generated method stub	
 	}
 	
-	private class Handler extends AbstractSessionHandler<Organism>{
+	private class Handler extends AbstractSessionHandler<IOrganism>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<Organism> sevent) {
+		protected void onHandleSession(SessionEvent<IOrganism> sevent) {
 			redraw();
 		}	
 	}

@@ -1,6 +1,6 @@
 package org.condast.symbiot.core;
 
-public class Location {
+public class Location implements ILocation {
 
 	private int x, y;
 	
@@ -13,6 +13,7 @@ public class Location {
 		this.y = y;
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
@@ -21,6 +22,7 @@ public class Location {
 		this.x = x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -29,6 +31,7 @@ public class Location {
 		this.y = y;
 	}
 
+	@Override
 	public int[] getLocation() {
 		int[] result = new int[2];
 		result[0] = x;

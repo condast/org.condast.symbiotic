@@ -2,6 +2,8 @@ package org.condast.symbiot.ui;
 
 import java.util.Iterator;
 
+import org.condast.symbiot.core.ILocation;
+import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.Location;
 import org.condast.symbiot.core.Organism;
 import org.condast.symbiot.core.env.Environment;
@@ -110,12 +112,22 @@ public class SymbiotCanvas extends Canvas{
 		try {
 			//The raster
 			Iterator<Location> iterator = this.environment.iterator();
+			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_MAGENTA ));					
+			IOrganism place = environment.getOrganism();
+			int[] pos;
+			ILocation food = null;
+			if( place != null ) {
+				food = environment.getNearestFood(place.getX(), place.getY());
+				pos = scale( food );
+				gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);					
+			}
+
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_GREEN ));
 			while( iterator.hasNext() ) {			
-				Location loc = iterator.next();
-				if( loc instanceof Organism )
+				ILocation loc = iterator.next();
+				if(( loc.equals(food )) || ( loc instanceof Organism ))
 					continue;					
-				int[] pos = scale( loc );
+				pos = scale( loc );
 				gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);					
 			}
 		}catch( Exception ex ) {
@@ -131,14 +143,11 @@ public class SymbiotCanvas extends Canvas{
 
 		try {
 			//The raster
-			Iterator<Location> iterator = this.environment.iterator();
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED ));					
-			while( iterator.hasNext() ) {			
-				Location place = iterator.next();
-				if(!(place instanceof Organism ))
-					continue;					
+			IOrganism place = environment.getOrganism();
+			if( place != null ) {
 				int[] pos = scale( place );
-				gc.fillOval( pos[0]-10, pos[1]-10, 20, 20);					
+				gc.fillOval( pos[0]-10, pos[1]-10, 20, 20);
 			}
 		}catch( Exception ex ) {
 			ex.printStackTrace();
@@ -147,7 +156,7 @@ public class SymbiotCanvas extends Canvas{
 	}
 
 
-	private int[] scale( Location place ) {
+	private int[] scale( ILocation place ) {
 		return scale( place.getX(), place.getY() );
 	}
 	
