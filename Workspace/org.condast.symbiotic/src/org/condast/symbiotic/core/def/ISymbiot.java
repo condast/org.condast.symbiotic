@@ -1,7 +1,10 @@
 package org.condast.symbiotic.core.def;
 
 public interface ISymbiot{
-		
+
+
+	String getId();
+
 	/**
 	 * Returns true if this symbiot is active. If not, the
 	 * symbiot will not be included in the calculations
@@ -10,24 +13,28 @@ public interface ISymbiot{
 	 */
 	public boolean isActive();
 
+	void clearStress();
+
+
 	/**
 	 * A symbiot emits a stress signal
 	 * @return
 	 */
-	public float getStress();
-	
+	double getStress();
+	void setStress(double stress);
+
+	/**
+	 * Get the (previous stress - current stress) as determined by the last setStress operation
+	 * @return
+	 */
+	double getDeltaStress();	
+
 	public void addStressListener( IStressListener listener );
 	public void removeStressListener( IStressListener listener );
 
-	void clearStress();
+	double increaseStress();
 
-	float increaseStress();
-
-	float decreaseStress();
-
-	String getId();
-
-	void setStress(float stress);
+	double decreaseStress();
 
 	/**
 	 * Get the overall stress
@@ -41,12 +48,12 @@ public interface ISymbiot{
 	 * @param symbiot
 	 * @return
 	 */
-	float getOverallStress();
+	double getOverallStress();
 
 	/**
 	 * Get the overall weight
 	 * @param symbiot
 	 * @return
 	 */
-	float getOverallWeight();	
+	double getOverallWeight();
 }

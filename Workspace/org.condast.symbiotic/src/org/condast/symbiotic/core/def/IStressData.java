@@ -2,12 +2,12 @@ package org.condast.symbiotic.core.def;
 
 public interface IStressData {
 
-	float getWeight();
+	double getWeight();
 
-	float getCurrentStress();
+	double getCurrentStress();
 
-	void setData(float weight);
+	void setData(double weight);
 
-	float getDelta();
+	double getDelta();
 
 }

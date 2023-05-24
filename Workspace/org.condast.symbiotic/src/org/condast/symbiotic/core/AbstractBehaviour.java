@@ -68,7 +68,7 @@ public abstract class AbstractBehaviour implements IBehaviour {
 	 * @return
 	 */
 	public float getOverallStress(){
-		return this.owner.getOverallStress();
+		return (float) this.owner.getOverallStress();
 	}
 
 	/**

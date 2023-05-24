@@ -20,8 +20,8 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	@Override
 	protected float onUpdate(ISymbiot symbiot, float currentStress) {
 		IStressData sd = getStressData(symbiot);
-		float weight = NumberUtils.assertNull( sd.getWeight());
-		float retval = ( symbiot.getStress() - currentStress )/getRange();
+		float weight = NumberUtils.assertNull( (float) sd.getWeight());
+		double retval = ( symbiot.getStress() - currentStress )/getRange();
 		retval = (float) NumberUtils.clip( 1f, retval );
 		overall = getOverallStress();
 		return weight;
@@ -30,7 +30,7 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	@Override
 	protected int onUpdateValue( ISymbiot symbiot, int current, boolean revert ) {
 		IStressData sd = getStressData(symbiot);
-		float weight = NumberUtils.assertNull( sd.getWeight());
+		float weight = NumberUtils.assertNull( (float) sd.getWeight());
 		return ( int )( weight * getRange() );
 	}
 	
@@ -47,12 +47,12 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	 * @return
 	 */
 	public float getOverallStress(){
-		return super.getOwner().getOverallStress();
+		return (float) super.getOwner().getOverallStress();
 	}
 
 	@Override
 	public int getValue() {
-		float total = super.getOwner().getOverallWeight();
+		float total = (float) super.getOwner().getOverallWeight();
 		return (int) (total * this.getRange());
 	}
 }

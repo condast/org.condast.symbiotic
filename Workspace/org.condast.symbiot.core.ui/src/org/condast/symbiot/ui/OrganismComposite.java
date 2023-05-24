@@ -11,7 +11,7 @@ import org.condast.commons.ui.table.AbstractTableComposite;
 import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
-import org.condast.symbiot.symbiot.ISymbioticEntity;
+import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -30,8 +30,9 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 
 	private enum Columns{
 		NAME,
-		DATA,
-		STRESS;
+		DISTANCE,
+		STRESS,
+		STRESS_DELTA;
 
 		@Override
 		public String toString() {
@@ -134,6 +135,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	private class SymbiotLabelProvider extends LabelProvider implements ITableLabelProvider{
 		private static final long serialVersionUID = 1L;
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public String getColumnText( Object element, int columnIndex ) {
 			String retval = null;
@@ -143,13 +145,18 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 			case NAME:
 				retval = symbiot.getId();
 				break;
-			case DATA:
-				ISymbioticEntity<?> sm  = (ISymbioticEntity<?>) symbiot;
-				if( sm.getData() != null )
-					retval = sm.getData().toString();
+			case DISTANCE:
+				if( symbiot instanceof IInputSymbiot ) {
+				IInputSymbiot<Integer> is  = (IInputSymbiot<Integer>) symbiot;
+				if( is.getInput() != null )
+					retval = is.getInput().toString();
+				}
 				break;
 			case STRESS:
-				retval = String.format("%,.2f", symbiot.getStress());
+				retval = String.format("%,.4f", symbiot.getStress());
+				break;
+			case STRESS_DELTA:
+				retval = String.format("%,.8f", symbiot.getDeltaStress());
 				break;
 			default:
 				break;

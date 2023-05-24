@@ -1,13 +1,14 @@
 package org.condast.symbiot.symbiot;
 
 import org.condast.symbiot.core.IOrganism;
+import org.condast.symbiotic.core.Symbiot;
 
-public class Stomach extends AbstractSymbioticEntity<Double> {
+public class Stomach extends Symbiot {
 
 	private IOrganism.Form form;
 	
-	public Stomach( IOrganism.Form form, IOrganism organism, float step, boolean active) {
-		super( form.name(), organism, step, active);
+	public Stomach( IOrganism.Form form, float step, boolean active) {
+		super( form.name(), step, active);
 	}
 
 	public IOrganism.Form getForm() {
@@ -18,12 +19,6 @@ public class Stomach extends AbstractSymbioticEntity<Double> {
 		increaseStress();
 	}
 	
-	@Override
-	public void update( double distance) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void update( boolean hasfood) {
 		if( hasfood )
 			clearStress();

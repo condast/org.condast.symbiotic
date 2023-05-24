@@ -118,8 +118,10 @@ public class SymbiotCanvas extends Canvas{
 			ILocation food = null;
 			if( place != null ) {
 				food = environment.getNearestFood(place.getX(), place.getY());
-				pos = scale( food );
-				gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);					
+				if( food != null ) {
+					pos = scale( food );
+					gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);	
+				}
 			}
 
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_GREEN ));

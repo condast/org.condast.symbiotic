@@ -3,6 +3,7 @@ package org.condast.symbiot.core;
 import java.util.Collection;
 
 import org.condast.commons.strings.StringStyler;
+import org.condast.symbiot.core.Organism.Angle;
 import org.condast.symbiot.core.env.Environment;
 import org.condast.symbiotic.core.def.ISymbiot;
 
@@ -30,5 +31,7 @@ public interface IOrganism extends ILocation {
 	double geDistance(Form form);
 
 	Collection<ISymbiot> getSymbiots();
+
+	Angle getAngle();
 
 }

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Label;
 
 public class EnvironmentComposite extends Composite {
 	private static final long serialVersionUID = 1L;
@@ -50,7 +51,7 @@ public class EnvironmentComposite extends Composite {
 		
 		canvas = new SymbiotCanvas(this, SWT.BORDER);
         canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,2,2 ));
-        
+       
         logComposite = new LogComposite(this, SWT.BORDER);
         logComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
         logComposite.activate(true);
@@ -59,7 +60,8 @@ public class EnvironmentComposite extends Composite {
         player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ));
         
         Group foodGroup = new Group(this, SWT.NONE );
-        foodGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false,2,1 ));
+        foodGroup.setText("Food");
+        foodGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2,1 ));
         foodGroup.setLayout(new FillLayout());
         foodSpinner = new Spinner( foodGroup, SWT.BORDER);
         foodSpinner.setMaximum(100);
@@ -137,6 +139,7 @@ public class EnvironmentComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try{
+						Environment environment = getInput();
 						Button button = (Button) e.getSource();
 						PlayerImages.Images image = (PlayerImages.Images) button.getData();
 						Button clear;
@@ -161,6 +164,7 @@ public class EnvironmentComposite extends Composite {
 						case RESET:
 							environment.clear();
 							getButton( PlayerImages.Images.RESET).setEnabled(false);
+							break;
 						default:
 							break;
 						}
@@ -212,6 +216,8 @@ public class EnvironmentComposite extends Composite {
 		@Override
 		public void onExecute() {
 			environment.update();
+			if( environment.noFood())
+				stop();
 		}
 		
 	}

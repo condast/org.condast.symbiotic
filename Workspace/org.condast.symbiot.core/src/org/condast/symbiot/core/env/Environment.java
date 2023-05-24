@@ -13,7 +13,12 @@ import org.condast.symbiot.core.Organism;
 
 public class Environment {
 
+	public static final int DEFAULT_BORDER = 5;
+	
 	private int x, y;
+	
+	private int border;
+	
 	private Collection<Location> field;
 	
 	private Organism organism;
@@ -22,11 +27,15 @@ public class Environment {
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	
 	public Environment( int x, int y) {
+		this( x, y, DEFAULT_BORDER );
+	}
+	
+	public Environment( int x, int y, int border) {
 		super();
 		this.x = x;
 		this.y = y;
+		this.border = border;
 		field = new ArrayList<>();
 		this.listeners = new ArrayList<>();
 	}
@@ -99,19 +108,19 @@ public class Environment {
 	public void init( int amountFood) {
         this.clear();
 		int x, y;
-        for( int i=0; i<amountFood;i++) {
-        	x = (int) (getX() * Math.random());
-        	y = (int) (getY() * Math.random());
-        	addFood(x, y);
-        }
+    	int range = 2*this.border;
+    	int lengthx = getX() - range;
+    	int lengthy = getY() - range;
+    	for( int i=0; i<amountFood;i++) {
+    		x = this.border + (int) ( lengthx * Math.random());
+    		y = this.border + (int) (lengthy * Math.random());
+    		addFood(x, y);
+    	}
         Organism organism = new Organism();
         Object food = null;
-        int list = 10;
-        int length = getX() - 2*list;
         do{
-        	x = (int) (list + length * Math.random());
-            length = getY() - 2*list;
-        	y = (int) (list+length * Math.random());
+        	x = this.border + (int) (lengthx * Math.random());
+        	y = this.border + (int) (lengthy * Math.random());
         	food = get(x, y);
         }while( food != null );
         organism.setLocation(x, y);
@@ -132,6 +141,15 @@ public class Environment {
 		return (int) nearest;
 	}
 
+	/**
+	 * Get the diagonal of the field
+	 * @param distance
+	 * @return
+	 */
+	public int getDiagonal() {
+		return (int) Math.sqrt(getX()* getX() + getY()*getY());
+	}
+
 	public ILocation getNearestFood( int x, int y ) {
 		ILocation result = null;
 		double nearest = Double.MAX_VALUE;
@@ -149,10 +167,18 @@ public class Environment {
 		return result;
 	}
 
+	public boolean noFood(  ) {
+		for( ILocation location: field ) {
+			if( location instanceof Food )
+				return false;
+		}
+		return true;
+	}
+
 	public void update() {
 		try {
 			int[] location = this.organism.getLocation();
-			logger.info("Position organism:" + this.getOrganism().toString() + "(" + location[0] + ", " + location[1] + ")" );
+			logger.fine("Position organism:" + this.getOrganism().toString() + "(" + location[0] + ", " + location[1] + ")" );
 			this.remove(organism);
 			this.organism.update( this );
 			this.setOrganism(organism);
