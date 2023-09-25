@@ -15,14 +15,8 @@ public class Stomach extends Symbiot {
 		return form;
 	}
 
-	public void useEnergy() {
-		increaseStress();
-	}
-	
 	public void update( boolean hasfood) {
 		if( hasfood )
 			clearStress();
-		else
-			increaseStress();
 	}
 }

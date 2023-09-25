@@ -32,7 +32,7 @@ public interface ITransformation<I,O extends Object> {
 	public void clearInputs();
 		
 	/**
-	 * Add an input. Returns true if this was done succesfully
+	 * Add an input. Returns true if this was done successfully
 	 * @param input
 	 * @return
 	 */
@@ -53,7 +53,7 @@ public interface ITransformation<I,O extends Object> {
 	public int getInputSize();
 	
 	/**
-	 * Retuens true if the inputs are mepty
+	 * Returns true if the inputs are mepty
 	 * @return
 	 */
 	public boolean isEmpty();

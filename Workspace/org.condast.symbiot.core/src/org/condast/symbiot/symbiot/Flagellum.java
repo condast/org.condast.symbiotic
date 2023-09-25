@@ -1,28 +1,41 @@
 package org.condast.symbiot.symbiot;
 
 import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiotic.core.Symbiot;
+import org.condast.symbiot.core.IOrganism.Form;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
-public class Flagellum extends Symbiot {
-
-	private IOrganism.Form form;
+public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 
 	public Flagellum( IOrganism.Form form, float step, boolean active) {
-		super( form.name(), step, active);
-		this.form = form;
-	}
-
-	public IOrganism.Form getForm() {
-		return form;
+		super( form, step, active);
 	}
 
 	@Override
-	public double getDeltaStress() {
-		double delta = super.getDeltaStress();
-		if(Math.abs(delta)< Double.MIN_VALUE) {
-			delta = super.getStress();
+	protected boolean enableSymbiot(ISymbiot reference) {
+		IOrganism.Form refForm = IOrganism.Form.valueOf(reference.getId());
+		boolean retval = false;
+		switch( super.getForm() ) {
+		case LEFT_FLAGELLUM:
+			retval = Form.LEFT_EYE.equals(refForm);
+			break;
+		case RIGHT_FLAGELLUM:
+			retval =Form.RIGHT_EYE.equals(refForm);
+			break;
+		default:
+			break;
 		}
-		return delta;
+		return retval;
 	}
-	
+
+	@Override
+	public void updateStress() {
+		super.updateStress();
+		if( getOverallWeight() > Double.MIN_VALUE)
+			setOutput(1);
+		else if ( getOverallWeight() < -Double.MIN_VALUE)
+			setOutput( -1 );
+		else
+			setOutput(0);
+	}	
 }

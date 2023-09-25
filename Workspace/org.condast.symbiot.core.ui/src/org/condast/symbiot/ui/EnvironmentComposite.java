@@ -28,13 +28,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Label;
 
 public class EnvironmentComposite extends Composite {
 	private static final long serialVersionUID = 1L;
 
 	private Dashboard dashboard;
-	private SymbiotCanvas canvas;
+	private EnvironmentCanvas canvas;
 	private Spinner foodSpinner;
 	private LogComposite logComposite;
 	private Player<Organism> player;
@@ -49,7 +48,7 @@ public class EnvironmentComposite extends Composite {
 		dashboard = new Dashboard(this, SWT.BORDER);
         dashboard.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		
-		canvas = new SymbiotCanvas(this, SWT.BORDER);
+		canvas = new EnvironmentCanvas(this, SWT.BORDER);
         canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,2,2 ));
        
         logComposite = new LogComposite(this, SWT.BORDER);
@@ -130,6 +129,7 @@ public class EnvironmentComposite extends Composite {
 				button.setEnabled(( environment != null ) && executor.isRunning());
 				break;
 			default:
+				button.setEnabled(false);
 				break;
 			}
 			button.setData(type);
@@ -149,11 +149,13 @@ public class EnvironmentComposite extends Composite {
 							logComposite.clear();
 							executor.start();
 							getButton( PlayerImages.Images.STOP).setEnabled(true);
+							getButton( PlayerImages.Images.NEXT).setEnabled(false);
 							button.setEnabled(false);
 							clear = (Button) getButton( PlayerImages.Images.RESET);
 							clear.setEnabled( false );//!environment.isRunning() || environment.isPaused());
 							break;
 						case STOP:
+							getButton( PlayerImages.Images.NEXT).setEnabled(true);
 							stop();
 							break;
 						case NEXT:

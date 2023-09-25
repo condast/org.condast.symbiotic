@@ -34,4 +34,6 @@ public interface IOrganism extends ILocation {
 
 	Angle getAngle();
 
+	ISymbiot toSymbiot();
+
 }

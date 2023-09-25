@@ -12,20 +12,22 @@ import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.def.StressEvent;
 
-public abstract class AbstractSymbiotCollection implements ISymbiotCollection{
+public class SymbiotCollection implements ISymbiotCollection{
 
 	private Collection<ISymbiot> symbiots;
-	private double averageStress;
-	private double deltaStress;//current stress - previous stress
+	
+	/**
+	 * The average stress of all the symbiots
+	 */
+	private double stress;
 
 	/**
 	 * Listeners to a change in the stress levels
 	 */
 	private Collection<IStressListener> listeners;
 
-	public AbstractSymbiotCollection() {
-		this.averageStress = 0;
-		this.deltaStress = 0;
+	public SymbiotCollection() {
+		this.stress = 0;
 		symbiots = new ArrayList<ISymbiot>();
 		listeners = new ArrayList<IStressListener>();
 	}
@@ -63,39 +65,12 @@ public abstract class AbstractSymbiotCollection implements ISymbiotCollection{
 	}
 
 	/**
-	 * Current stress - previous stress
-	 * @return
-	 */
-	@Override
-	public double getDeltaStress() {
-		return deltaStress;
-	}
-
-	/**
 	 *Get the average stress levels of all the symbiots in the collection
 	 * @return
 	 */
 	@Override
 	public double getAverageStress(){
-		double result = 0;
-		for( ISymbiot symbiot: symbiots )
-			result += symbiot.getStress();
-		return result/symbiots.size();
-	}
-
-	/**
-	 *Get the overall stress levels of all the symbiots in the collection
-	 * @return
-	 */
-	@Override
-	public Map<String, Double> getOverallWeight(){
-		Map<String, Double> weights = new HashMap<>();
-		for( ISymbiot symbiot: symbiots ){
-			Double weight = symbiot.getOverallWeight();
-			weights.put( symbiot.getId(), weight);
-			symbiot.getStressData( symbiot );
-		}
-		return weights;
+		return this.stress;
 	}
 
 	/**
@@ -187,29 +162,30 @@ public abstract class AbstractSymbiotCollection implements ISymbiotCollection{
 	}
 
 	/**
-	 * Update the given symbiot, based on the reference symbiot
-	 * @param symbiots
-	 */
-	public abstract void updateSymbiot( ISymbiot symbiot, ISymbiot reference );
-
-	/**
-	 * update the current
+	 * update the symbiots
 	 */
 	@Override
 	public void updateSymbiots() {
 		if(( symbiots == null ) || symbiots.isEmpty())
 			return;
+		double result = 0;
 
 		Iterator<ISymbiot> iterator = symbiots.iterator();
 		while( iterator.hasNext() ) {
 			ISymbiot source = iterator.next();
-			symbiots.forEach( s->{
-				if( !source.equals(s))
-					updateSymbiot(source, s);
-			});	
+			result += source.getStress();
+			source.updateStress();
 		}
-		double stress=  getAverageStress();
-		this.deltaStress = this.averageStress - stress;
-		this.averageStress = stress;
+		result/=symbiots.size();
+		this.stress= result;
 	}
+	
+	public static double getStress( double reference ) {
+		double result = reference;
+		if( Math.abs( reference )< Double.MIN_VALUE ) {
+			result = ( reference < 0)? -Double.MIN_VALUE: Double.MIN_VALUE;			
+		}
+		return result;
+	}
+
 }

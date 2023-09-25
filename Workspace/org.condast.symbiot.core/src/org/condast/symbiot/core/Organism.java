@@ -9,11 +9,16 @@ import org.condast.commons.strings.StringStyler;
 import org.condast.symbiot.core.env.Environment;
 import org.condast.symbiot.symbiot.Eye;
 import org.condast.symbiot.symbiot.Flagellum;
-import org.condast.symbiotic.core.collection.AbstractSymbiotCollection;
+import org.condast.symbiotic.core.StressData;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
+import org.condast.symbiotic.core.collection.SymbiotCollection;
+import org.condast.symbiotic.core.def.IStressData;
+import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public class Organism extends Location implements IOrganism{
+
+	public static final String S_ORGANISM = "ORGANISM";
 
 	public enum Angle{
 		ZERO(0),
@@ -70,7 +75,8 @@ public class Organism extends Location implements IOrganism{
 	public enum Behaviour{
 		SIMPLE,
 		ON_STRESS,
-		ON_DELTA;
+		ON_DELTA,
+		ON_WEIGHT;
 
 		@Override
 		public String toString() {
@@ -85,27 +91,29 @@ public class Organism extends Location implements IOrganism{
 	private Collection<IOrganismListener> listeners;
 
 	private Angle angle;
-	
+
 	private Behaviour behaviour;
 
 	public Organism() {
 		super();
 		this.angle = Angle.ZERO;
-		this.behaviour = Behaviour.SIMPLE;
+		this.behaviour = Behaviour.ON_WEIGHT;
 		symbiots = new SymbiotCollection();
 		float step = 0.01f;
-		Eye eye = new Eye( Form.LEFT_EYE, step, true);
-		symbiots.add(eye);
+		Eye leftEye = new Eye( Form.LEFT_EYE, step, true);
+		symbiots.add(leftEye);
 		design = new HashMap<>();
-		design.put(Form.LEFT_EYE, eye);
-		eye = new Eye( Form.RIGHT_EYE, step, true);
-		symbiots.add(eye);
-		design.put(Form.RIGHT_EYE, eye);
+		design.put(Form.LEFT_EYE, leftEye);
+		Eye rightEye = new Eye( Form.RIGHT_EYE, step, true);
+		symbiots.add(rightEye);
+		design.put(Form.RIGHT_EYE, rightEye);
 		Flagellum flagellum = new Flagellum( Form.LEFT_FLAGELLUM, step, true);
 		symbiots.add(flagellum);
+		flagellum.addInfluence(leftEye);
 		design.put(Form.LEFT_FLAGELLUM, flagellum);
 		flagellum = new Flagellum(Form.RIGHT_FLAGELLUM, step, true);
 		symbiots.add(flagellum);
+		flagellum.addInfluence(rightEye);
 		design.put(Form.RIGHT_FLAGELLUM, flagellum);
 		this.listeners = new ArrayList<>();
 	}
@@ -173,94 +181,89 @@ public class Organism extends Location implements IOrganism{
 		default:
 			break;
 		}
-		super.setX( x);			
-		super.setY(y);			
+		super.setX( x);
+		super.setY(y);
 	}
 
 	@Override
 	public double geDistance( Form form ) {
 		Eye eye = (Eye) design.get( form );
-		return eye.getInput(); 
+		return eye.getInput();
 	}
 
+
 	/**
-	 * Get the angle, based on the two stress signals
-	 * @param leftFlagellum
-	 * @param rightFlagellum
+	 * Get the angle, based on the a move left and move right:
+	 * | 10  |  11  | 01  |
+	 * | 1-1 |  00  | -11 |
+	 * | -10 | -1-1 | 0-1 |
+	 *
+	 * -1 means <0 and +1 > 0
+	 *
+	 * @param moveLeft
+	 * @param moveRight
 	 * @return
 	 */
-	protected Angle getSimpleAngle( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		double moveLeft = leftFlagellum.getStress();
-		double moveRight = rightFlagellum.getStress(); 
-		if(( Math.abs( moveLeft - moveRight) < Double.MIN_VALUE ))
+	protected Angle getSimpleAngle( double moveLeft, double moveRight ) {
+		boolean leftZero = Math.abs( moveLeft ) < Double.MIN_VALUE ;
+		boolean rightZero = Math.abs( moveRight ) < Double.MIN_VALUE ;
+		if( leftZero && rightZero )
 			return Angle.ZERO;
-		Angle horizontal = Angle.ZERO;
-		if( moveLeft > moveRight )
-			horizontal = Angle.EAST;
-		else if( moveLeft < moveRight )
-			horizontal = Angle.WEST;
-		double delta = leftFlagellum.getDeltaStress();
-		Angle vertical = this.angle;
-		if(( Math.abs( delta) >= 0 ))
-			return angle;
-		
-		
-		return angle;
-	}
-
-	/**
-	 * Get the angle, based on the two stress signals
-	 * @param leftFlagellum
-	 * @param rightFlagellum
-	 * @return
-	 */
-	protected Angle getAngle( Flagellum leftFlagellum, Flagellum rightFlagellum, Angle current ) {
-		double moveLeft = leftFlagellum.getStress();
-		double moveRight = rightFlagellum.getStress(); 
-		if(( Math.abs( moveLeft - moveRight) < Double.MIN_VALUE ))
-			return current;
-		Angle angle = current;
-		if( moveLeft > moveRight )
-			angle = Angle.right(this.angle);
-		else if( moveLeft < moveRight )
-			angle = Angle.left(this.angle);
-		return angle;
+		//West
+		if(rightZero) {
+			if( moveLeft > Double.MIN_VALUE)
+				return Angle.NORTH_WEST;
+			if( moveLeft < -Double.MIN_VALUE)
+				return Angle.SOUTH_WEST;
+		//East
+		}else if( leftZero) {
+			if( moveRight > Double.MIN_VALUE)
+				return Angle.NORTH_EAST;
+			if( moveRight < -Double.MIN_VALUE)
+				return Angle.SOUTH_EAST;
+		}else if( moveLeft > Double.MIN_VALUE)
+			return ( moveRight > Double.MIN_VALUE)? Angle.NORTH: Angle.EAST;
+		return ( moveRight > Double.MIN_VALUE)? Angle.WEST: Angle.SOUTH;
 	}
 
 	protected void stressBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		this.angle = getAngle( leftFlagellum, rightFlagellum, this.angle);
 		double moveLeft = leftFlagellum.getStress();
-		double moveRight = rightFlagellum.getStress(); 
-		if(( Math.abs( moveLeft ) < Double.MIN_VALUE ) && ( Math.abs( moveRight ) < Double.MIN_VALUE ))
-			this.angle = Angle.ZERO;
-
+		double moveRight = rightFlagellum.getStress();
+		this.angle = getSimpleAngle(moveLeft, moveRight);
 		move(this.angle);
 	}
 
 	protected void deltaStressBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		double stressLeft = leftFlagellum.getDeltaStress();
-		double stressRight = rightFlagellum.getDeltaStress(); 
-		if(( stressLeft < 0 ) && ( stressRight < 0 ))
-			this.angle = Angle.swap(this.angle);
-		if(( stressLeft <= 0 ) && ( stressRight > 0 ))
-			this.angle = Angle.left(this.angle);
-		else if(( stressRight <= 0 ) && ( stressLeft > 0 ))
-			this.angle = Angle.right(this.angle);
+		double moveLeft = leftFlagellum.getDeltaStress( false);
+		double moveRight = rightFlagellum.getDeltaStress( false );
+		this.angle = getSimpleAngle(moveLeft, moveRight);
+		move(this.angle);
+	}
+
+	protected void weightBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
+		double moveLeft = leftFlagellum.getFactor();
+		double moveRight = rightFlagellum.getFactor();
+		this.angle = getSimpleAngle(moveLeft, moveRight);
 		move(this.angle);
 	}
 
 	@Override
-	public void update( Environment environment ) {		
-		int maxVision = environment.getDiagonal();
+	public ISymbiot toSymbiot() {
+		return new OrganismSymbiot( this.symbiots );
+	}
+
+	@Override
+	public void update( Environment environment ) {
+		int maxVision = environment.getDiagonal()+5;//add a ceiling
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
 		leftEye.setMaxVision(maxVision);
 
-		int distance = environment.getNearestFoodDistance(getX()-1, getY());
+		int distance = environment.getNearestFoodDistance(getX(), getY());
 		leftEye.setInput( distance);
 
 		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
 		rightEye.setMaxVision(maxVision);
-		distance = environment.getNearestFoodDistance(getX()+1, getY());
+		distance = environment.getNearestFoodDistance(getX(), getY());
 		rightEye.setInput(distance);
 
 		if( environment.noFood())
@@ -270,8 +273,11 @@ public class Organism extends Location implements IOrganism{
 
 		Flagellum rightFlagellum = (Flagellum) design.get(Form.RIGHT_FLAGELLUM);
 		this.symbiots.updateSymbiots();
-		
+
 		switch( this.behaviour ) {
+		case ON_WEIGHT:
+			weightBehaviour(leftFlagellum, rightFlagellum);
+			break;
 		case ON_DELTA:
 			deltaStressBehaviour(leftFlagellum, rightFlagellum);
 			break;
@@ -282,34 +288,97 @@ public class Organism extends Location implements IOrganism{
 		notifyListeners( new OrganismEvent(this));
 	}
 
-	private class SymbiotCollection extends AbstractSymbiotCollection{
-		
-		@Override
-		public void updateSymbiot(ISymbiot symbiot, ISymbiot reference) {
-			IOrganism.Form form = IOrganism.Form.valueOf(symbiot.getId());
-			IOrganism.Form refForm = IOrganism.Form.valueOf(reference.getId());
-			switch( form ) {
-			case LEFT_FLAGELLUM:
-				if( Form.LEFT_EYE.equals(refForm)) {
-					symbiot.setStress( getStress( reference.getStress()));
-				}
-				break;
-			case RIGHT_FLAGELLUM:
-				if( Form.RIGHT_EYE.equals(refForm)) {
-					symbiot.setStress( getStress( reference.getStress()));
-				}
-				break;
-			default:
-				break;
-			}
+	/**
+	 * This symbiot is mainly intended for purposes of visualisation, and does not contribute to the activities
+	 */
+	private static class OrganismSymbiot implements ISymbiot{
+
+		private ISymbiotCollection symbiots;
+		private double stress;
+
+		public OrganismSymbiot( ISymbiotCollection organism ) {
+			super();
+			this.symbiots = organism;
+			this.stress = 0;
 		}
 
-		private double getStress( double reference ) {
-			double result = reference;
-			if( Math.abs( reference )< Float.MIN_VALUE ) {
-				result = ( reference < 0)? -Float.MIN_VALUE: Float.MIN_VALUE;			
-			}
-			return result;
+		@Override
+		public String getId() {
+			return S_ORGANISM;
 		}
+
+		@Override
+		public boolean isActive() {
+			return true;
+		}
+
+		@Override
+		public void clearStress() {
+			this.symbiots.forEach((s) -> s.clearStress());
+		}
+
+		@Override
+		public double getStress() {
+			return this.symbiots.getAverageStress();
+		}
+
+		@Override
+		public void setStress(double stress) {
+			this.stress = stress;
+
+		}
+
+		@Override
+		public double getDeltaStress( boolean strict ) {
+			return this.stress - this.symbiots.getAverageStress();
+		}
+
+		@Override
+		public void addStressListener(IStressListener listener) {
+			// NOTHING
+		}
+
+		@Override
+		public void removeStressListener(IStressListener listener) {
+			// NOTHING
+		}
+	
+		@Override
+		public void addInfluence(ISymbiot symbiot) {
+			this.symbiots.add(symbiot);
+		}
+
+		@Override
+		public IStressData getStressData(ISymbiot symbiot) {
+			return new StressData( symbiot );
+		}
+		
+		@Override
+		public void updateStress() {
+			this.symbiots.forEach((s) -> s.updateStress());			
+		}
+
+		@Override
+		public double getOverallStress() {
+			return this.symbiots.getAverageStress();
+		}
+
+		@Override
+		public double getOverallWeight() {
+			return 0;
+		}
+
+		@Override
+		public double getFactor() {
+			return 0;
+		}
+
+		@Override
+		public Map<ISymbiot, IStressData> getSignals() {
+			Map<ISymbiot, IStressData> results = new HashMap<>();
+			this.symbiots.forEach((s) -> results.put(s, new StressData( s )));
+			return results;
+		}
+
 	}
 }

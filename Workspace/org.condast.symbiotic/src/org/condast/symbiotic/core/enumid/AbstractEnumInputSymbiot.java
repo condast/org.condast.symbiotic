@@ -1,22 +1,22 @@
-package org.condast.symbiotic.core;
+package org.condast.symbiotic.core.enumid;
 
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
 
-public abstract class AbstractInputSymbiot<I extends Object> extends Symbiot implements IInputSymbiot<I> {
+public abstract class AbstractEnumInputSymbiot<E extends Enum<E>, I extends Object> extends EnumSymbiot<E> implements IInputSymbiot<I> {
 
 	private I input;
 	
-	protected AbstractInputSymbiot(String id) {
-		super(id);
+	protected AbstractEnumInputSymbiot(E form) {
+		super(form);
 	}
 
-	protected AbstractInputSymbiot(String id, float step) {
-		super(id, step);
+	protected AbstractEnumInputSymbiot(E form, float step) {
+		super(form, step);
 	}
 
-	protected AbstractInputSymbiot(String id, float step, boolean active) {
-		super(id, step, active);
+	protected AbstractEnumInputSymbiot(E form, float step, boolean active) {
+		super(form, step, active);
 	}
 
 	@Override

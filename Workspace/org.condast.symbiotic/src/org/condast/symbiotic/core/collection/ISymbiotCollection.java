@@ -6,7 +6,7 @@ import java.util.Map;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public interface ISymbiotCollection extends Collection<ISymbiot>{
-
+	
 	/**
 	 * Get the cumulated stress from the symbiots
 	 * @return
@@ -22,28 +22,16 @@ public interface ISymbiotCollection extends Collection<ISymbiot>{
 	 * @return
 	 */
 	Map<String, Map<String, Double>> getStress();
-
-	/**
-	 *Get the overall stress levels of all the symbiots in the collection
-	 * @return
-	 */
-	Map<String, Double> getOverallWeight();
 	
-	/**
-	 *Get the average stress levels of all the symbiots in the collection
-	 * @return
-	 */
-	double getAverageStress();
-
-	/**
-	 * Current stress - previous stress
-	 * @return
-	 */
-	double getDeltaStress();
-
 	/**
 	 * Update the cell based on the other symbiots
 	 * @param symbiots
 	 */
 	void updateSymbiots();
+
+	/**
+	 *Get the average stress levels of all the symbiots in the collection
+	 * @return
+	 */
+	double getAverageStress();
 }

@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-public class SymbiotCanvas extends Canvas{
+public class EnvironmentCanvas extends Canvas{
 	private static final long serialVersionUID = 1L;
 
 	public static final int GRIDX = 100;//meters
@@ -32,7 +32,7 @@ public class SymbiotCanvas extends Canvas{
 	 * @param parent
 	 * @param style
 	 */
-	public SymbiotCanvas(Composite parent, Integer style) {
+	public EnvironmentCanvas(Composite parent, Integer style) {
 		super(parent, style);
 		this.disposed = false;
 		setBackground(Display.getCurrent().getSystemColor( SWT.COLOR_WHITE));
@@ -84,18 +84,28 @@ public class SymbiotCanvas extends Canvas{
 	protected void drawField( GC gc ){
 		if( environment == null )
 			return;
-		Rectangle clientArea = getClientArea();
+		Rectangle clientArea = getBounds();
 		Color color = gc.getForeground();
 
 		try {
 			//The raster
 			gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
+			double rasterx = (double)clientArea.width/(2*this.environment.getX());
 			for( int i=0; i<this.environment.getX(); i++ ) {
-				int xstep = (int)((double)(i*clientArea.width/this.environment.getY()));
-				gc.drawLine( xstep, 0, xstep, clientArea.height );			
+				int xstep = (int)(i*rasterx);
+				if( i%10==0) {
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_GRAY));
+				}else
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
+				gc.drawLine( xstep, 0, xstep, clientArea.height );
 			}
+			double rastery = (double)clientArea.height/this.environment.getY();
 			for( int i=0; i<this.environment.getY(); i++ ) {
-				int ystep = (int)((double)(i*clientArea.height/this.environment.getY()));
+				int ystep = (int)(i*rastery);
+				if( i%10==0) {
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_GRAY));
+				}else
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
 				gc.drawLine( 0, ystep, clientArea.width, ystep );					
 			}
 		}catch( Exception ex ) {
@@ -144,7 +154,6 @@ public class SymbiotCanvas extends Canvas{
 		Color color = gc.getForeground();
 
 		try {
-			//The raster
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED ));					
 			IOrganism place = environment.getOrganism();
 			if( place != null ) {
@@ -163,10 +172,10 @@ public class SymbiotCanvas extends Canvas{
 	}
 	
 	private int[] scale( int x, int y ) {
-		Rectangle clientArea = getClientArea();
+		Rectangle clientArea = this.getClientArea();
 		int[] result = new int[2];
-		result[0] = (int)((float)(( 0.5f + x ) * clientArea.width)/this.environment.getX());
-		result[1] = (int)((float)(( 0.5f + y ) * clientArea.height)/this.environment.getY());
+		result[0] = (int)((double)(( 0.5d + x ) * clientArea.width)/(2*this.environment.getX()));
+		result[1] = (int)((double)(( 0.5d + y ) * clientArea.height)/this.environment.getY());
 		return result;
 	}
 	

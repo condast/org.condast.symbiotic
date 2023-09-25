@@ -13,7 +13,7 @@ import org.condast.symbiot.core.Organism;
 
 public class Environment {
 
-	public static final int DEFAULT_BORDER = 5;
+	public static final int DEFAULT_BORDER = 10;
 	
 	private int x, y;
 	
@@ -66,6 +66,7 @@ public class Environment {
 	}
 	
 	public boolean addFood( int x, int y ) {
+		logger.info("Food added at: {" + x + ", " + y + "}");
 		return field.add( new Food( x, y));
 	}
 
@@ -106,24 +107,26 @@ public class Environment {
 	}
 
 	public void init( int amountFood) {
-        this.clear();
-		int x, y;
+       this.clear();
+		logger.info("Environment: {" + x + ", " + y + "}");
+		int xo, yo;
     	int range = 2*this.border;
     	int lengthx = getX() - range;
     	int lengthy = getY() - range;
     	for( int i=0; i<amountFood;i++) {
-    		x = this.border + (int) ( lengthx * Math.random());
-    		y = this.border + (int) (lengthy * Math.random());
-    		addFood(x, y);
+    		xo = this.border + (int) ( lengthx * Math.random());
+    		yo = this.border + (int) (lengthy * Math.random());
+    		addFood(xo, yo);
     	}
         Organism organism = new Organism();
         Object food = null;
         do{
-        	x = this.border + (int) (lengthx * Math.random());
-        	y = this.border + (int) (lengthy * Math.random());
-        	food = get(x, y);
+        	xo = this.border + (int) (lengthx * Math.random());
+        	yo = this.border + (int) (lengthy * Math.random());
+        	food = get(xo, yo);
         }while( food != null );
-        organism.setLocation(x, y);
+        organism.setLocation(xo, yo);
+		logger.info("Organism added at: {" + xo + ", " + yo + "}");
         setOrganism(organism);
 
 	}
@@ -178,7 +181,7 @@ public class Environment {
 	public void update() {
 		try {
 			int[] location = this.organism.getLocation();
-			logger.fine("Position organism:" + this.getOrganism().toString() + "(" + location[0] + ", " + location[1] + ")" );
+			logger.info("Organism at: {" + location[0] + ", " + location[1] + ")" );
 			this.remove(organism);
 			this.organism.update( this );
 			this.setOrganism(organism);

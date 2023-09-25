@@ -4,16 +4,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.ArrayList;
 import org.condast.commons.strings.StringStyler;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.table.AbstractTableComposite;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.IOrganismListener;
-import org.condast.symbiot.core.OrganismEvent;
-import org.condast.symbiotic.core.def.IInputSymbiot;
+import org.condast.symbiotic.core.def.IStressData;
+import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.def.StressEvent;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -26,16 +26,14 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import org.eclipse.swt.graphics.Image;
 
-public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
+public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 	private static final long serialVersionUID = 1L;
 
 	private enum Columns{
 		NAME,
-		DISTANCE,
 		WEIGHT,
 		STRESS,
-		STRESS_DELTA,
-		FACTOR;
+		STRESS_DELTA;
 
 		@Override
 		public String toString() {
@@ -56,15 +54,15 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	}
 	
 	private Handler handler;
-	private IOrganism organism;
+	private ISymbiot symbiot;
 	
-	private IOrganismListener listener = e-> onOrganismChanged(e);
+	private IStressListener listener = e-> onSymbiotChanged(e);
 	
-	private void onOrganismChanged( OrganismEvent event) {
-		handler.addData(organism);
+	private void onSymbiotChanged( StressEvent event) {
+		handler.addData(symbiot);
 	}
 	
-	public OrganismComposite(Composite parent, int style) {
+	public SymbiotComposite(Composite parent, int style) {
 		super(parent, style);
 		setContentProvider( ArrayContentProvider.getInstance() );
 		SymbiotLabelProvider provider = new SymbiotLabelProvider();
@@ -103,7 +101,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	}
 
 	@Override
-	protected void onSetInput(ISymbiot[] leaf) {
+	protected void onSetInput(IStressData[] leaf) {
 		//Map<Form, ISymbiot> design = this.organism.getDesign();
 		
 	}
@@ -115,59 +113,47 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	}
 
 	@Override
-	protected int compareTables(int columnIndex, ISymbiot o1, ISymbiot o2) {
+	protected int compareTables(int columnIndex, IStressData o1, IStressData o2) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	
-	public IOrganism getOrganism() {
-		return organism;
+	public ISymbiot getSymbiot() {
+		return symbiot;
 	}
 
-	public void setInput(IOrganism organism) {
-		if( this.organism != null )
-			this.organism.removeListener(listener);
-		this.organism = organism;
-		if( this.organism != null ) {
-			this.organism.addListener(listener);
-			Collection<ISymbiot> symbiots = new ArrayList<>( this.organism.getSymbiots());
-			symbiots.add(this.organism.toSymbiot());
-			super.setInput( symbiots.toArray( new ISymbiot[ symbiots.size() ]));
+	public void setInput(ISymbiot symbiot) {
+		if( this.symbiot != null )
+			this.symbiot.removeStressListener(listener);
+		this.symbiot = symbiot;
+		if( this.symbiot != null ) {
+			this.symbiot.addStressListener(listener);
+			Map<ISymbiot, IStressData> signals = this.symbiot.getSignals();
+			Collection<IStressData> symbiots = new ArrayList<>(signals.values() );
+			super.setInput( symbiots.toArray( new IStressData[ symbiots.size() ]));
 		}
 	}
 
 	private class SymbiotLabelProvider extends LabelProvider implements ITableLabelProvider{
 		private static final long serialVersionUID = 1L;
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public String getColumnText( Object element, int columnIndex ) {
 			String retval = null;
 			Columns column = Columns.values()[ columnIndex ];
-			ISymbiot symbiot = (ISymbiot) element;
+			IStressData stress = (IStressData) element;
 			switch( column){
 			case NAME:
-				retval = symbiot.getId();
-				break;
-			case DISTANCE:
-				if( symbiot instanceof IInputSymbiot ) {
-				IInputSymbiot<Integer> is  = (IInputSymbiot<Integer>) symbiot;
-				if( is.getInput() != null )
-					retval = is.getInput().toString();
-				}
+				retval = stress.getReference().getId();
 				break;
 			case WEIGHT:
-				retval = String.format("%,.4f", symbiot.getOverallWeight());
+				retval = String.format("%,.4f", stress.getWeight());
 				break;
 			case STRESS:
-				retval = String.format("%,.4f", symbiot.getStress());
+				retval = String.format("%,.4f", stress.getCurrentStress());
 				break;
 			case STRESS_DELTA:
-				retval = String.format("%,.8f", symbiot.getDeltaStress( true));
-				break;
-			case FACTOR:
-				retval = String.format("%,.8f", symbiot.getFactor());
+				retval = String.format("%,.8f", stress.getDelta());
 				break;
 			default:
 				break;
@@ -188,14 +174,14 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 
 	}
 
-	private class Handler extends AbstractSessionHandler<IOrganism>{
+	private class Handler extends AbstractSessionHandler<ISymbiot>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<IOrganism> sevent) {
+		protected void onHandleSession(SessionEvent<ISymbiot> sevent) {
 			refresh();
 		}	
 	}	
