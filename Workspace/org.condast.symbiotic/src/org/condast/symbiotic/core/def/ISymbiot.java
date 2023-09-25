@@ -40,6 +40,10 @@ public interface ISymbiot{
 	public void removeStressListener( IStressListener listener );
 
 
+	/**
+	 * add a symbiot that influences the behaviour
+	 * @param symbiot
+	 */
 	void addInfluence(ISymbiot symbiot);
 
 	/**

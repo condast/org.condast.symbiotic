@@ -60,16 +60,16 @@ public class Dashboard extends Composite {
 		tabFolder.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ));
 
 		TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Organism");
-		om = new OrganismMap(tabFolder, SWT.BORDER);
-		om.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
-		tabItem.setControl(om);
-
-		tabItem = new TabItem(tabFolder, SWT.NULL);
 		tabItem.setText("Selected");
 		sm = new SymbiotComposite(tabFolder, SWT.BORDER);
 		sm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(sm);
+
+		tabItem = new TabItem(tabFolder, SWT.NULL);
+		tabItem.setText("Organism");
+		om = new OrganismMap(tabFolder, SWT.BORDER);
+		om.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
+		tabItem.setControl(om);
 	}
 	
 	private void onSymbiotSelected( TableEvent<ISymbiot> event) {

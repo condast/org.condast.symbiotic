@@ -13,6 +13,7 @@ import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
 import org.condast.symbiotic.core.def.IInputSymbiot;
+import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -35,7 +36,8 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
-		FACTOR;
+		FACTOR,
+		OUTPUT;
 
 		@Override
 		public String toString() {
@@ -152,9 +154,9 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				break;
 			case DISTANCE:
 				if( symbiot instanceof IInputSymbiot ) {
-				IInputSymbiot<Integer> is  = (IInputSymbiot<Integer>) symbiot;
-				if( is.getInput() != null )
-					retval = is.getInput().toString();
+					IInputSymbiot<Integer> is  = (IInputSymbiot<Integer>) symbiot;
+					if( is.getInput() != null )
+						retval = is.getInput().toString();
 				}
 				break;
 			case WEIGHT:
@@ -168,6 +170,14 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				break;
 			case FACTOR:
 				retval = String.format("%,.8f", symbiot.getFactor());
+				break;
+			case OUTPUT:
+				if( symbiot instanceof IOutputSymbiot ) {
+					IOutputSymbiot<Integer> is  = (IOutputSymbiot<Integer>) symbiot;
+					if(( is==null ) || ( is.getOutput() == null ))
+						return retval;
+					retval = is.getOutput().toString();
+				}
 				break;
 			default:
 				break;

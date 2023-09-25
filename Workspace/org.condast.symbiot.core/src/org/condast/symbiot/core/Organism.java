@@ -100,24 +100,35 @@ public class Organism extends Location implements IOrganism{
 		this.behaviour = Behaviour.ON_WEIGHT;
 		symbiots = new SymbiotCollection();
 		float step = 0.01f;
+		design( step );
+		this.listeners = new ArrayList<>();
+	}
+
+	protected void design( float step ) {
 		Eye leftEye = new Eye( Form.LEFT_EYE, step, true);
 		symbiots.add(leftEye);
 		design = new HashMap<>();
 		design.put(Form.LEFT_EYE, leftEye);
+		
 		Eye rightEye = new Eye( Form.RIGHT_EYE, step, true);
 		symbiots.add(rightEye);
 		design.put(Form.RIGHT_EYE, rightEye);
-		Flagellum flagellum = new Flagellum( Form.LEFT_FLAGELLUM, step, true);
-		symbiots.add(flagellum);
-		flagellum.addInfluence(leftEye);
-		design.put(Form.LEFT_FLAGELLUM, flagellum);
-		flagellum = new Flagellum(Form.RIGHT_FLAGELLUM, step, true);
-		symbiots.add(flagellum);
-		flagellum.addInfluence(rightEye);
-		design.put(Form.RIGHT_FLAGELLUM, flagellum);
-		this.listeners = new ArrayList<>();
-	}
+		
+		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, step, true);
+		symbiots.add(leftFlagellum);
+		leftFlagellum.addInfluence(leftEye);
+		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
+		
+		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, step, true);
+		symbiots.add(  rightFlagellum);
+		rightFlagellum.addInfluence(rightEye);
+		rightFlagellum.addInfluence(leftFlagellum);
+		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		
 
+		leftFlagellum.addInfluence(rightFlagellum);
+
+	}
+	
 	@Override
 	public Angle getAngle() {
 		return angle;
@@ -240,7 +251,7 @@ public class Organism extends Location implements IOrganism{
 		move(this.angle);
 	}
 
-	protected void weightBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
+	protected void outputBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
 		double moveLeft = leftFlagellum.getFactor();
 		double moveRight = rightFlagellum.getFactor();
 		this.angle = getSimpleAngle(moveLeft, moveRight);
@@ -252,18 +263,33 @@ public class Organism extends Location implements IOrganism{
 		return new OrganismSymbiot( this.symbiots );
 	}
 
+	protected int getDistance( Form eye, Environment environment ) {
+		int retval = environment.getNearestFoodDistance(getX(), getY());
+		switch( angle ) {
+		case NORTH:
+			retval = Form.LEFT_EYE.equals(eye)? retval+1: retval-1;
+			break;
+		case SOUTH:
+			retval = Form.LEFT_EYE.equals(eye)? retval-1: retval+1;
+			break;
+		default:
+			break;
+		}
+		return retval;
+	}
+	
 	@Override
 	public void update( Environment environment ) {
 		int maxVision = environment.getDiagonal()+5;//add a ceiling
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
 		leftEye.setMaxVision(maxVision);
 
-		int distance = environment.getNearestFoodDistance(getX(), getY());
+		int distance =  getDistance(leftEye.getForm(), environment);
 		leftEye.setInput( distance);
 
 		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
 		rightEye.setMaxVision(maxVision);
-		distance = environment.getNearestFoodDistance(getX(), getY());
+		distance = getDistance( rightEye.getForm(), environment );
 		rightEye.setInput(distance);
 
 		if( environment.noFood())
@@ -276,7 +302,7 @@ public class Organism extends Location implements IOrganism{
 
 		switch( this.behaviour ) {
 		case ON_WEIGHT:
-			weightBehaviour(leftFlagellum, rightFlagellum);
+			outputBehaviour(leftFlagellum, rightFlagellum);
 			break;
 		case ON_DELTA:
 			deltaStressBehaviour(leftFlagellum, rightFlagellum);

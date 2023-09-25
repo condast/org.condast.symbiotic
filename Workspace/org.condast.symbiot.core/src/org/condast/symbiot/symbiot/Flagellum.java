@@ -7,6 +7,8 @@ import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
 public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 
+	public static final double DEFAULT_FACTOR_STEP = 0.00001d;
+	
 	public Flagellum( IOrganism.Form form, float step, boolean active) {
 		super( form, step, active);
 	}
@@ -17,10 +19,10 @@ public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 		boolean retval = false;
 		switch( super.getForm() ) {
 		case LEFT_FLAGELLUM:
-			retval = Form.LEFT_EYE.equals(refForm);
+			retval = Form.LEFT_EYE.equals(refForm) || Form.RIGHT_FLAGELLUM.equals(refForm);
 			break;
 		case RIGHT_FLAGELLUM:
-			retval =Form.RIGHT_EYE.equals(refForm);
+			retval =Form.RIGHT_EYE.equals(refForm) || Form.LEFT_FLAGELLUM.equals(refForm);
 			break;
 		default:
 			break;
@@ -31,11 +33,15 @@ public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 	@Override
 	public void updateStress() {
 		super.updateStress();
-		if( getOverallWeight() > Double.MIN_VALUE)
+		if( getFactor() > DEFAULT_FACTOR_STEP) {
 			setOutput(1);
-		else if ( getOverallWeight() < -Double.MIN_VALUE)
+			setStress(DEFAULT_WEIGHT_STEP);
+		}else if ( getFactor() < -DEFAULT_FACTOR_STEP) {
 			setOutput( -1 );
-		else
+			setStress(-DEFAULT_WEIGHT_STEP);
+		}else {
 			setOutput(0);
+			setStress(0);
+		}
 	}	
 }
