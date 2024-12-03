@@ -72,18 +72,6 @@ public class Organism extends Location implements IOrganism{
 		}
 	}
 
-	public enum Behaviour{
-		SIMPLE,
-		ON_STRESS,
-		ON_DELTA,
-		ON_WEIGHT;
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString(name());
-		}
-	}
-
 	private Map<Form, ISymbiot> design;
 
 	private ISymbiotCollection symbiots;
@@ -92,18 +80,19 @@ public class Organism extends Location implements IOrganism{
 
 	private Angle angle;
 
-	private Behaviour behaviour;
-
 	public Organism() {
 		super();
 		this.angle = Angle.ZERO;
-		this.behaviour = Behaviour.ON_WEIGHT;
 		symbiots = new SymbiotCollection();
 		float step = 0.01f;
 		design( step );
 		this.listeners = new ArrayList<>();
 	}
 
+	/**
+	 * Design the organism
+	 * @param step
+	 */
 	protected void design( float step ) {
 		Eye leftEye = new Eye( Form.LEFT_EYE, step, true);
 		symbiots.add(leftEye);
@@ -128,10 +117,15 @@ public class Organism extends Location implements IOrganism{
 		leftFlagellum.addInfluence(rightFlagellum);
 
 	}
-	
+
 	@Override
 	public Angle getAngle() {
 		return angle;
+	}
+
+	@Override
+	public ISymbiot getSymbiot( Form form) {
+		return symbiots.get(form.name());
 	}
 
 	@Override
@@ -155,6 +149,9 @@ public class Organism extends Location implements IOrganism{
 
 	/**
 	 * The actual movement of the organism
+	 * | 8 | 1 | 2 |
+	 * | 7 | 0 | 3 |
+	 * | 6 | 5 | 4 |
 	 * @param angle
 	 */
 	protected void move( Angle angle ) {
@@ -205,9 +202,9 @@ public class Organism extends Location implements IOrganism{
 
 	/**
 	 * Get the angle, based on the a move left and move right:
-	 * | 10  |  11  | 01  |
-	 * | 1-1 |  00  | -11 |
-	 * | -10 | -1-1 | 0-1 |
+	 * | 8 | 1 | 2 |
+	 * | 7 | 0 | 3 |
+	 * | 6 | 5 | 4 |
 	 *
 	 * -1 means <0 and +1 > 0
 	 *
@@ -215,46 +212,34 @@ public class Organism extends Location implements IOrganism{
 	 * @param moveRight
 	 * @return
 	 */
-	protected Angle getSimpleAngle( double moveLeft, double moveRight ) {
-		boolean leftZero = Math.abs( moveLeft ) < Double.MIN_VALUE ;
-		boolean rightZero = Math.abs( moveRight ) < Double.MIN_VALUE ;
-		if( leftZero && rightZero )
+	protected Angle getSimpleAngle( int outLeft, int outRight ) {
+		if(( outLeft == 0 ) && ( outRight == 0))
 			return Angle.ZERO;
-		//West
-		if(rightZero) {
-			if( moveLeft > Double.MIN_VALUE)
+		else if(( outLeft == 1 ) && ( outRight == 1 ))
+			return Angle.NORTH;
+		else if( outLeft == 0 ) {
+			if ( outRight == 1 )
 				return Angle.NORTH_WEST;
-			if( moveLeft < -Double.MIN_VALUE)
-				return Angle.SOUTH_WEST;
-		//East
-		}else if( leftZero) {
-			if( moveRight > Double.MIN_VALUE)
+			else 
+				return  ( outRight == 0)? Angle.WEST: Angle.SOUTH_WEST;
+		}
+		else if(( outLeft == 1 ) && ( outRight == -1 ))
+			return Angle.NORTH_WEST;
+		else if( outRight == 0 ) {
+			if ( outLeft == 1 )
 				return Angle.NORTH_EAST;
-			if( moveRight < -Double.MIN_VALUE)
-				return Angle.SOUTH_EAST;
-		}else if( moveLeft > Double.MIN_VALUE)
-			return ( moveRight > Double.MIN_VALUE)? Angle.NORTH: Angle.EAST;
-		return ( moveRight > Double.MIN_VALUE)? Angle.WEST: Angle.SOUTH;
-	}
-
-	protected void stressBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		double moveLeft = leftFlagellum.getStress();
-		double moveRight = rightFlagellum.getStress();
-		this.angle = getSimpleAngle(moveLeft, moveRight);
-		move(this.angle);
-	}
-
-	protected void deltaStressBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		double moveLeft = leftFlagellum.getDeltaStress( false);
-		double moveRight = rightFlagellum.getDeltaStress( false );
-		this.angle = getSimpleAngle(moveLeft, moveRight);
-		move(this.angle);
+			else 
+				return ( outLeft == 0)? Angle.EAST: Angle.SOUTH_EAST;
+		}
+		else if(( outRight == 1 ) && ( outLeft == -1 ))
+			return Angle.SOUTH_EAST;
+		else return (( outLeft == -1 ) && ( outRight == -1 ))? Angle.SOUTH: Angle.ZERO;	
 	}
 
 	protected void outputBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		double moveLeft = leftFlagellum.getFactor();
-		double moveRight = rightFlagellum.getFactor();
-		this.angle = getSimpleAngle(moveLeft, moveRight);
+		int outLeft = leftFlagellum.getOutput();
+		int outRight = rightFlagellum.getOutput();
+		this.angle = getSimpleAngle(outLeft, outRight);
 		move(this.angle);
 	}
 
@@ -280,6 +265,7 @@ public class Organism extends Location implements IOrganism{
 	
 	@Override
 	public void update( Environment environment ) {
+		//First read the eyes
 		int maxVision = environment.getDiagonal()+5;//add a ceiling
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
 		leftEye.setMaxVision(maxVision);
@@ -295,22 +281,12 @@ public class Organism extends Location implements IOrganism{
 		if( environment.noFood())
 			return;
 
-		Flagellum leftFlagellum = (Flagellum) design.get(Form.LEFT_FLAGELLUM);
-
-		Flagellum rightFlagellum = (Flagellum) design.get(Form.RIGHT_FLAGELLUM);
+		//Then update the flagelii
 		this.symbiots.updateSymbiots();
 
-		switch( this.behaviour ) {
-		case ON_WEIGHT:
-			outputBehaviour(leftFlagellum, rightFlagellum);
-			break;
-		case ON_DELTA:
-			deltaStressBehaviour(leftFlagellum, rightFlagellum);
-			break;
-		default:
-			stressBehaviour(leftFlagellum, rightFlagellum);
-			break;
-		}
+		Flagellum leftFlagellum = (Flagellum) design.get(Form.LEFT_FLAGELLUM);
+		Flagellum rightFlagellum = (Flagellum) design.get(Form.RIGHT_FLAGELLUM);
+		outputBehaviour(leftFlagellum, rightFlagellum);		
 		notifyListeners( new OrganismEvent(this));
 	}
 
@@ -370,13 +346,13 @@ public class Organism extends Location implements IOrganism{
 		}
 	
 		@Override
-		public void addInfluence(ISymbiot symbiot) {
-			this.symbiots.add(symbiot);
+		public void addInfluence( ISymbiot symbiot) {
+			// NOTHING
 		}
 
 		@Override
-		public IStressData getStressData(ISymbiot symbiot) {
-			return new StressData( symbiot );
+		public IStressData getStressData(String symbiot) {
+			return null;
 		}
 		
 		@Override
@@ -400,9 +376,9 @@ public class Organism extends Location implements IOrganism{
 		}
 
 		@Override
-		public Map<ISymbiot, IStressData> getSignals() {
-			Map<ISymbiot, IStressData> results = new HashMap<>();
-			this.symbiots.forEach((s) -> results.put(s, new StressData( s )));
+		public Map<String, IStressData> getSignals() {
+			Map<String, IStressData> results = new HashMap<>();
+			this.symbiots.forEach((s) -> results.put(s.getId(), new StressData( s )));
 			return results;
 		}
 

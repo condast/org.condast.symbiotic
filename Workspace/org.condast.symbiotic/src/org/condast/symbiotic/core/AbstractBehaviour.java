@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IBehaviour;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
@@ -14,7 +13,7 @@ public abstract class AbstractBehaviour implements IBehaviour {
 
 	public static final int DEFAULT_RANGE = 10;
 	
-	private Map<ISymbiot, Float> symbiots;
+	private Map<String, StressData> symbiots;
 	private boolean includeOwner;
 	private ISymbiot owner;
 	private int range;
@@ -24,7 +23,7 @@ public abstract class AbstractBehaviour implements IBehaviour {
 	}
 	
 	protected AbstractBehaviour( int range, boolean includeOwner ) {
-		symbiots = new HashMap<ISymbiot, Float>();
+		symbiots = new HashMap<>();
 		this.range = range;
 		this.includeOwner = includeOwner;
 	}
@@ -73,37 +72,37 @@ public abstract class AbstractBehaviour implements IBehaviour {
 
 	/**
 	 * Get the stress data of the owner for the given symbiot
-	 * @param symbiot
+	 * @param reference
 	 * @return
 	 */
-	protected IStressData getStressData( ISymbiot symbiot ){
-		return this.owner.getStressData(symbiot);
+	protected IStressData getStressData( String reference ){
+		return this.owner.getStressData(reference);
 	}
 	
-	protected abstract float onUpdate( ISymbiot symbiot, float currentStress );
+	protected abstract void onUpdate( String reference, StressData currentStress );
 	
 	@Override
 	public boolean updateStress(ISymbiot symbiot) {
 		if( !symbiot.isActive() ){
-			symbiots.remove(symbiot);
+			symbiots.remove(symbiot.getId());
 			return false;
-		}else if( !this.includeOwner && ( this.owner.equals( symbiot ))){
+		}else if( !this.includeOwner && ( this.owner.equals( symbiot )))
 			return false;
-		}
 		
-		Float stress = NumberUtils.assertNull( symbiots.get( symbiot )); 
-		symbiots.put(symbiot, onUpdate( symbiot, stress));
+		StressData stress = symbiots.get( symbiot.getId() ); 
+		onUpdate( symbiot.getId(), stress);
+		symbiots.put(symbiot.getId(), stress);
 		return true;
 	}
 
-	protected abstract int onUpdateValue( ISymbiot symbiot, int current, boolean revert );
+	protected abstract int onUpdateValue( String reference, int current, boolean revert );
 
 	@Override
 	public int calculate( boolean revert ) {
-		Iterator<Map.Entry<ISymbiot, Float>> iterator = symbiots.entrySet().iterator();
+		Iterator<Map.Entry<String, StressData>> iterator = symbiots.entrySet().iterator();
 		int retval = 0;
 		while( iterator.hasNext()){
-			Map.Entry<ISymbiot, Float> entry = iterator.next();
+			Map.Entry<String, StressData> entry = iterator.next();
 			retval += onUpdateValue( entry.getKey(), retval, revert );
 		}
 		return retval;

@@ -2,7 +2,6 @@ package org.condast.symbiot.symbiot;
 
 import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganism.Form;
-import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
 public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
@@ -14,8 +13,8 @@ public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 	}
 
 	@Override
-	protected boolean enableSymbiot(ISymbiot reference) {
-		IOrganism.Form refForm = IOrganism.Form.valueOf(reference.getId());
+	protected boolean enableSymbiot(String reference) {
+		IOrganism.Form refForm = IOrganism.Form.valueOf(reference);
 		boolean retval = false;
 		switch( super.getForm() ) {
 		case LEFT_FLAGELLUM:

@@ -8,6 +8,13 @@ import org.condast.symbiotic.core.def.ISymbiot;
 public interface ISymbiotCollection extends Collection<ISymbiot>{
 	
 	/**
+	 * returns the symbiot with the given identifier
+	 * @param identifier
+	 * @return
+	 */
+	ISymbiot get(String identifier);
+
+	/**
 	 * Get the cumulated stress from the symbiots
 	 * @return
 	 */

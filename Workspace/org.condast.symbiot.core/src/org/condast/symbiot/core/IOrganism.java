@@ -22,6 +22,15 @@ public interface IOrganism extends ILocation {
 		}
 	}
 
+	/**
+	 * Get the symbiot with the given form
+	 * @param form
+	 * @return
+	 */
+	ISymbiot getSymbiot(Form form);
+
+	Angle getAngle();
+
 	void addListener(IOrganismListener listener);
 
 	void removeListener(IOrganismListener listener);
@@ -32,8 +41,5 @@ public interface IOrganism extends ILocation {
 
 	Collection<ISymbiot> getSymbiots();
 
-	Angle getAngle();
-
 	ISymbiot toSymbiot();
-
 }

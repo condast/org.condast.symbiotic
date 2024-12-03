@@ -32,6 +32,20 @@ public class SymbiotCollection implements ISymbiotCollection{
 		listeners = new ArrayList<IStressListener>();
 	}
 
+	/**
+	 * returns the symbiot with the given identifier
+	 * @param identifier
+	 * @return
+	 */
+	@Override
+	public ISymbiot get( String identifier ) {
+		for( ISymbiot symbiot: symbiots ) {
+			if( symbiot.getId().equals(identifier))
+				return symbiot;
+		}
+		return null;
+	}
+	
 	public void addStressListener(IStressListener listener) {
 		this.listeners.add(listener );
 	}
@@ -55,9 +69,9 @@ public class SymbiotCollection implements ISymbiotCollection{
 		for( ISymbiot symbiot: symbiots ){
 			Map<String, Double> stress = new HashMap<>();
 			for( ISymbiot child: symbiots ){
-				Double strss = symbiot.getStressData( child ).getCurrentStress();
+				Double strss = symbiot.getStressData( child.getId() ).getCurrentStress();
 				stress.put( child.getId(), strss);
-				symbiot.getStressData( symbiot );
+				symbiot.getStressData( symbiot.getId() );
 			}
 			results.put(symbiot.getId(), stress);
 		}

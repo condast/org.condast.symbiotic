@@ -44,14 +44,14 @@ public interface ISymbiot{
 	 * add a symbiot that influences the behaviour
 	 * @param symbiot
 	 */
-	void addInfluence(ISymbiot symbiot);
+	void addInfluence( ISymbiot reference);
 
 	/**
 	 * Get the stress data
 	 * @param symbiot
 	 * @return
 	 */
-	public IStressData getStressData(ISymbiot symbiot);
+	public IStressData getStressData(String reference);
 
 	/**
 	 * Update the stress influence for influencing symbiots
@@ -78,7 +78,7 @@ public interface ISymbiot{
 	 * symbiot collection
 	 * @return
 	 */
-	Map<ISymbiot, IStressData> getSignals();
+	Map<String, IStressData> getSignals();
 
 	/**
 	 * Get the factor of the symbiot. This is defined as sigma( w.s)

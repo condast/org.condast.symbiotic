@@ -2,7 +2,6 @@ package org.condast.symbiotic.core;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
-import org.condast.symbiotic.core.def.ISymbiot;
 
 public class DefaultBehaviour extends AbstractBehaviour {
 
@@ -18,18 +17,15 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	}
 
 	@Override
-	protected float onUpdate(ISymbiot symbiot, float currentStress) {
-		IStressData sd = getStressData(symbiot);
-		float weight = NumberUtils.assertNull( (float) sd.getWeight());
-		double retval = ( symbiot.getStress() - currentStress )/getRange();
+	protected void onUpdate( String reference, StressData currentStress) {
+		double retval = currentStress.getDelta()/getRange();
 		retval = (float) NumberUtils.clip( 1f, retval );
 		overall = getOverallStress();
-		return weight;
 	}
 
 	@Override
-	protected int onUpdateValue( ISymbiot symbiot, int current, boolean revert ) {
-		IStressData sd = getStressData(symbiot);
+	protected int onUpdateValue( String reference, int current, boolean revert ) {
+		IStressData sd = getStressData(reference);
 		float weight = NumberUtils.assertNull( (float) sd.getWeight());
 		return ( int )( weight * getRange() );
 	}

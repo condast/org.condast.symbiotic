@@ -2,7 +2,7 @@ package org.condast.symbiotic.core.def;
 
 public interface IStressData {
 
-	ISymbiot getReference();
+	String getReference();
 	
 	double getWeight();
 
@@ -12,6 +12,7 @@ public interface IStressData {
 
 	double getDelta();
 
-	void update();
+	double getStress();
 
+	void update();
 }

@@ -29,7 +29,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	private boolean isActive;
 	private double weightStep; //The increase or decrease of stress per cycle
 	
-	private Map<ISymbiot, IStressData> signals;
+	private Map<String, IStressData> signals;
 
 	public Symbiot( String id) {
 		this( id, DEFAULT_WEIGHT_STEP, true );
@@ -47,7 +47,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		this.stress = 0; 
 		this.oldStress = 0;
 		this.weightStep = weightStep;
-		this.signals = new HashMap<ISymbiot, IStressData>();
+		this.signals = new HashMap<String, IStressData>();
 		listeners = new ArrayList<IStressListener>();
 	}
 
@@ -118,22 +118,23 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	}
 
 	@Override
-	public void addInfluence( ISymbiot symbiot ) {
-		this.signals.put(symbiot, new StressData( symbiot ));
+	public void addInfluence( ISymbiot reference ) {
+		this.signals.put(reference.getId(), new StressData( reference ));
 	}
 	
 	@Override
-	public IStressData getStressData( ISymbiot symbiot ){
-		IStressData data = this.signals.get(symbiot );
-		if( data == null ){
-			data = new StressData(symbiot);
-			signals.put( symbiot, data);
-		}
+	public IStressData getStressData( String reference ){
+		IStressData data = this.signals.get(reference );
 		return data;
 	}
 	
-	protected boolean enableSymbiot(ISymbiot reference) {
-		return !reference.equals( this);
+	/**
+	 * Skip the own stress
+	 * @param reference
+	 * @return
+	 */
+	protected boolean enableSymbiot(String reference) {
+		return !getId().equals( reference );
 	}
 
 	@Override
@@ -141,20 +142,19 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		this.signals.forEach((s,d)-> updateStress( s,d ));
 	}
 
-	protected void updateStress(ISymbiot reference, IStressData dt ) {
+	protected void updateStress(String reference, IStressData dt ) {
 		if(!enableSymbiot(reference))
 			return;
 		IStressData data = getStressData(reference);//ensures that stressData is not null
-		double refStress = reference.getDeltaStress( false);
 		double weight = data.getWeight();
 		//stressDelta >=0 is good, because this means that the stress is decreasing
-		if( refStress > 0 )
-			weight -= this.weightStep*data.getCurrentStress();
-		else if( refStress < 0)
+		if( dt.getDelta() < 0 )
 			weight += this.weightStep*data.getCurrentStress();
+		else
+			weight -= this.weightStep*data.getCurrentStress();
 		weight = NumberUtils.clipRange(-1, 1, weight);
 		data.setWeight(weight);		
-		data.update();	
+		data.update();
 		this.notifySymbiotChanged(new StressEvent (this));
 	}
 
@@ -211,7 +211,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	 * @return
 	 */
 	@Override
-	public Map<ISymbiot, IStressData> getSignals() {
+	public Map<String, IStressData> getSignals() {
 		return signals;
 	}
 

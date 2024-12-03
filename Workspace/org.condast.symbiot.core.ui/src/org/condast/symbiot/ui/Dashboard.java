@@ -5,8 +5,10 @@ import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.table.ITableEventListener;
 import org.condast.commons.ui.table.TableEvent;
 import org.condast.symbiot.core.IOrganism;
+import org.condast.symbiot.core.IOrganism.Form;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
+import org.condast.symbiot.symbiot.Flagellum;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -103,7 +105,17 @@ public class Dashboard extends Composite {
 		@Override
 		protected void onHandleSession(SessionEvent<OrganismEvent> sevent) {
 			IOrganism organism = sevent.getData().getOrganism();
-			lblAngleLabel.setText( organism.getAngle().name());
+			StringBuilder builder = new StringBuilder();
+			builder.append(organism.getAngle().name());
+			
+			Flagellum leftFlagellum = (Flagellum) organism.getSymbiot( Form.LEFT_FLAGELLUM);
+			Flagellum rightFlagellum = (Flagellum) organism.getSymbiot( Form.RIGHT_FLAGELLUM);
+			builder.append(": (");
+			builder.append(leftFlagellum.getOutput());
+			builder.append(",");
+			builder.append(rightFlagellum.getOutput());
+			builder.append(")");
+			lblAngleLabel.setText( builder.toString());
 		}		
 	}
 }

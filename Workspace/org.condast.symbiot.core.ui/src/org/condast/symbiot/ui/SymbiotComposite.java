@@ -109,7 +109,6 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 	@Override
 	protected void onHeaderClicked(SelectionEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -128,7 +127,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		this.symbiot = symbiot;
 		if( this.symbiot != null ) {
 			this.symbiot.addStressListener(listener);
-			Map<ISymbiot, IStressData> signals = this.symbiot.getSignals();
+			Map<String, IStressData> signals = this.symbiot.getSignals();
 			Collection<IStressData> symbiots = new ArrayList<>(signals.values() );
 			super.setInput( symbiots.toArray( new IStressData[ symbiots.size() ]));
 		}
@@ -144,7 +143,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 			IStressData stress = (IStressData) element;
 			switch( column){
 			case NAME:
-				retval = stress.getReference().getId();
+				retval = stress.getReference();
 				break;
 			case WEIGHT:
 				retval = String.format("%,.4f", stress.getWeight());

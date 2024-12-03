@@ -1,7 +1,6 @@
 package org.condast.symbiotic.core;
 
 import org.condast.symbiotic.core.def.IInputSymbiot;
-import org.condast.symbiotic.core.def.ISymbiot;
 
 public abstract class AbstractInputSymbiot<I extends Object> extends Symbiot implements IInputSymbiot<I> {
 
@@ -41,7 +40,7 @@ public abstract class AbstractInputSymbiot<I extends Object> extends Symbiot imp
 	 * input symbiots by default do not react to stress signals form other symbiots
 	 */
 	@Override
-	protected boolean enableSymbiot(ISymbiot reference) {
+	protected boolean enableSymbiot(String reference) {
 		return false;
 	}
 }

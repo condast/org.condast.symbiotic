@@ -1,7 +1,6 @@
 package org.condast.symbiotic.core.enumid;
 
 import org.condast.symbiotic.core.def.IInputSymbiot;
-import org.condast.symbiotic.core.def.ISymbiot;
 
 public abstract class AbstractEnumInputSymbiot<E extends Enum<E>, I extends Object> extends EnumSymbiot<E> implements IInputSymbiot<I> {
 
@@ -41,7 +40,7 @@ public abstract class AbstractEnumInputSymbiot<E extends Enum<E>, I extends Obje
 	 * input symbiots by default do not react to stress signals form other symbiots
 	 */
 	@Override
-	protected boolean enableSymbiot(ISymbiot reference) {
+	protected boolean enableSymbiot(String reference) {
 		return false;
 	}
 }

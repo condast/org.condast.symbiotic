@@ -8,25 +8,27 @@ public class StressData implements IStressData {
 
 	private double weight;
 	private double currentStress;
-	private double stress;
 	private ISymbiot symbiot;
 	
 	public StressData(ISymbiot symbiot) {
-		this( symbiot, 0f, 0f );
+		this( symbiot, 0f );
 	}
 	
-	private StressData(ISymbiot symbiot, float weight, float stress) {
+	private StressData(ISymbiot symbiot, float weight) {
 		super();
 		this.weight = weight;
-		this.stress = stress;
 		this.currentStress = 0;
 		this.symbiot = symbiot;
 	}
 
-	
 	@Override
-	public ISymbiot getReference() {
-		return this.symbiot;
+	public String getReference() {
+		return this.symbiot.getId();
+	}
+
+	@Override
+	public double getStress() {
+		return this.symbiot.getStress();
 	}
 
 	@Override
@@ -44,18 +46,17 @@ public class StressData implements IStressData {
 		return currentStress;
 	}
 	
-		/**
+	/**
 	 * Get the delta between the new stress and the currently stored stress
 	 * @return
 	 */
 	@Override
 	public double getDelta(){
-		return this.stress - this.currentStress;
+		return this.symbiot.getStress() - this.currentStress;
 	}
-
+	
 	@Override
-	public void update(){
-		this.currentStress = stress;
-		this.stress = symbiot.getStress();
+	public void update () {
+		this.currentStress = this.symbiot.getStress();
 	}
 }
