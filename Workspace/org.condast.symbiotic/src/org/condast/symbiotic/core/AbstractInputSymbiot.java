@@ -10,12 +10,8 @@ public abstract class AbstractInputSymbiot<I extends Object> extends Symbiot imp
 		super(id);
 	}
 
-	protected AbstractInputSymbiot(String id, float step) {
-		super(id, step);
-	}
-
-	protected AbstractInputSymbiot(String id, float step, boolean active) {
-		super(id, step, active);
+	protected AbstractInputSymbiot(String id, boolean active) {
+		super(id, active);
 	}
 
 	@Override
@@ -40,7 +36,7 @@ public abstract class AbstractInputSymbiot<I extends Object> extends Symbiot imp
 	 * input symbiots by default do not react to stress signals form other symbiots
 	 */
 	@Override
-	protected boolean enableSymbiot(String reference) {
+	public boolean enableUpdate(String reference) {
 		return false;
 	}
 }

@@ -12,6 +12,7 @@ import org.condast.commons.ui.table.AbstractTableComposite;
 import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
+import org.condast.symbiot.symbiot.Eye;
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
@@ -33,6 +34,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	private enum Columns{
 		NAME,
 		DISTANCE,
+		ANGLE,
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
@@ -159,6 +161,12 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 						retval = is.getInput().toString();
 				}
 				break;
+			case ANGLE:
+				if( symbiot instanceof Eye ) {
+					Eye eye  = (Eye) symbiot;
+					retval = String.valueOf( eye.getAngle());
+				}
+				break;
 			case WEIGHT:
 				retval = String.format("%,.4f", symbiot.getOverallWeight());
 				break;
@@ -166,7 +174,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = String.format("%,.4f", symbiot.getStress());
 				break;
 			case STRESS_DELTA:
-				retval = String.format("%,.8f", symbiot.getDeltaStress( true));
+				retval = String.format("%,.8f", symbiot.getDeltaStress());
 				break;
 			case FACTOR:
 				retval = String.format("%,.8f", symbiot.getFactor());

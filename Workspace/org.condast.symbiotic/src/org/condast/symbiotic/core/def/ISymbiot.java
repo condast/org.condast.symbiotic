@@ -4,11 +4,6 @@ import java.util.Map;
 
 public interface ISymbiot{
 
-	/**
-	 * the default step for increasing or decreasing the weight of stress signals
-	 */
-	public static double DEFAULT_WEIGHT_STEP = 0.01d;
-
 	String getId();
 
 	/**
@@ -30,11 +25,9 @@ public interface ISymbiot{
 
 	/**
 	 * Get the (previous stress - current stress) as determined by the last setStress operation
-	 * If strict is false, then the actual stress is returned if the delta is zero. This is to prevent
-	 * the system from not optimising if the delta is zero  
 	 * @return
 	 */
-	double getDeltaStress( boolean strict);	
+	double getDeltaStress();	
 
 	public void addStressListener( IStressListener listener );
 	public void removeStressListener( IStressListener listener );
@@ -52,12 +45,6 @@ public interface ISymbiot{
 	 * @return
 	 */
 	public IStressData getStressData(String reference);
-
-	/**
-	 * Update the stress influence for influencing symbiots
-	 * @param symbiot
-	 */
-	public void updateStress();
 
 	/**
 	 * Get the overall stress
@@ -84,4 +71,17 @@ public interface ISymbiot{
 	 * Get the factor of the symbiot. This is defined as sigma( w.s)
 	 */
 	double getFactor();
+
+	/**
+	 * If true, then the stress data for the given refeence will be updated
+	 * @param reference
+	 * @return
+	 */
+	public boolean enableUpdate( String reference );
+	
+	/**
+	 * Update the stress influence for influencing symbiots
+	 * @param symbiot
+	 */
+	public void update();
 }

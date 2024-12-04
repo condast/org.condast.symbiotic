@@ -11,13 +11,8 @@ public class EnumSymbiot<E extends Enum<E>> extends Symbiot {
 		this.form = form;
 	}
 
-	protected EnumSymbiot(E form, float step) {
-		super(form.name(), step);
-		this.form = form;
-	}
-
-	public EnumSymbiot( E form, float step, boolean active) {
-		super( form.name(), step, active);
+	public EnumSymbiot( E form, boolean active) {
+		super( form.name(), active);
 		this.form = form;
 	}
 

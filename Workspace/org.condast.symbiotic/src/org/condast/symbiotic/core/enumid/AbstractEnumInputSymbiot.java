@@ -10,12 +10,8 @@ public abstract class AbstractEnumInputSymbiot<E extends Enum<E>, I extends Obje
 		super(form);
 	}
 
-	protected AbstractEnumInputSymbiot(E form, float step) {
-		super(form, step);
-	}
-
-	protected AbstractEnumInputSymbiot(E form, float step, boolean active) {
-		super(form, step, active);
+	protected AbstractEnumInputSymbiot(E form, boolean active) {
+		super(form, active);
 	}
 
 	@Override
@@ -40,7 +36,7 @@ public abstract class AbstractEnumInputSymbiot<E extends Enum<E>, I extends Obje
 	 * input symbiots by default do not react to stress signals form other symbiots
 	 */
 	@Override
-	protected boolean enableSymbiot(String reference) {
+	public boolean enableUpdate(String reference) {
 		return false;
 	}
 }

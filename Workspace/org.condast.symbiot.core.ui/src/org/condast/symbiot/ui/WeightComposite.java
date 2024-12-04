@@ -26,14 +26,15 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import org.eclipse.swt.graphics.Image;
 
-public class SymbiotComposite extends AbstractTableComposite<IStressData> {
+public class WeightComposite extends AbstractTableComposite<IStressData> {
 	private static final long serialVersionUID = 1L;
 
 	private enum Columns{
 		NAME,
-		WEIGHT,
 		STRESS,
-		STRESS_DELTA;
+		STRESS_DELTA,
+		WEIGHT,
+		TOTAL;
 
 		@Override
 		public String toString() {
@@ -62,7 +63,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		handler.addData(symbiot);
 	}
 	
-	public SymbiotComposite(Composite parent, int style) {
+	public WeightComposite(Composite parent, int style) {
 		super(parent, style);
 		setContentProvider( ArrayContentProvider.getInstance() );
 		SymbiotLabelProvider provider = new SymbiotLabelProvider();

@@ -7,8 +7,8 @@ public class Stomach extends Symbiot {
 
 	private IOrganism.Form form;
 	
-	public Stomach( IOrganism.Form form, float step, boolean active) {
-		super( form.name(), step, active);
+	public Stomach( IOrganism.Form form, boolean active) {
+		super( form.name(), active);
 	}
 
 	public IOrganism.Form getForm() {

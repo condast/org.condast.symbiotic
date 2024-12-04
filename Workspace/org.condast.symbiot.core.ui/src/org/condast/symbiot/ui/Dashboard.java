@@ -62,13 +62,13 @@ public class Dashboard extends Composite {
 		tabFolder.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ));
 
 		TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Selected");
+		tabItem.setText("Symbiot");
 		sm = new SymbiotComposite(tabFolder, SWT.BORDER);
 		sm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(sm);
 
 		tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Organism");
+		tabItem.setText("Weights");
 		om = new OrganismMap(tabFolder, SWT.BORDER);
 		om.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(om);
@@ -116,6 +116,7 @@ public class Dashboard extends Composite {
 			builder.append(rightFlagellum.getOutput());
 			builder.append(")");
 			lblAngleLabel.setText( builder.toString());
+			sm.refresh();
 		}		
 	}
 }

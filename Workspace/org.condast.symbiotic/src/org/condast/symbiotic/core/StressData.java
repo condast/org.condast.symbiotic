@@ -7,7 +7,8 @@ import org.condast.symbiotic.core.def.ISymbiot;
 public class StressData implements IStressData {
 
 	private double weight;
-	private double currentStress;
+	private double stress;
+	private double previousStress;
 	private ISymbiot symbiot;
 	
 	public StressData(ISymbiot symbiot) {
@@ -17,7 +18,7 @@ public class StressData implements IStressData {
 	private StressData(ISymbiot symbiot, float weight) {
 		super();
 		this.weight = weight;
-		this.currentStress = 0;
+		this.previousStress = 0;
 		this.symbiot = symbiot;
 	}
 
@@ -28,7 +29,7 @@ public class StressData implements IStressData {
 
 	@Override
 	public double getStress() {
-		return this.symbiot.getStress();
+		return this.stress;
 	}
 
 	@Override
@@ -41,22 +42,18 @@ public class StressData implements IStressData {
 		this.weight = NumberUtils.clipRange(-1, 1, weight );
 	}
 
-	@Override
-	public double getCurrentStress() {
-		return currentStress;
-	}
-	
 	/**
 	 * Get the delta between the new stress and the currently stored stress
 	 * @return
 	 */
 	@Override
 	public double getDelta(){
-		return this.symbiot.getStress() - this.currentStress;
+		return this.stress - this.previousStress;
 	}
 	
 	@Override
 	public void update () {
-		this.currentStress = this.symbiot.getStress();
+		this.previousStress = this.stress;
+		this.stress = this.symbiot.getStress();
 	}
 }

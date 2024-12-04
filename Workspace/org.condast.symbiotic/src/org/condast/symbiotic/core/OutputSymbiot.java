@@ -10,12 +10,8 @@ public class OutputSymbiot<O extends Object> extends Symbiot implements IOutputS
 		super(id);
 	}
 
-	protected OutputSymbiot(String id, float step) {
-		super(id, step);
-	}
-
-	protected OutputSymbiot(String id, float step, boolean active) {
-		super(id, step, active);
+	protected OutputSymbiot(String id, boolean active) {
+		super(id, active);
 	}
 
 	@Override

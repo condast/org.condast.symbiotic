@@ -10,12 +10,8 @@ public class EnumOutputSymbiot<E extends Enum<E>, O extends Object> extends Enum
 		super(form);
 	}
 
-	protected EnumOutputSymbiot(E form, float step) {
-		super(form, step);
-	}
-
-	protected EnumOutputSymbiot(E form, float step, boolean active) {
-		super(form, step, active);
+	protected EnumOutputSymbiot(E form, boolean active) {
+		super(form, active);
 	}
 
 	@Override

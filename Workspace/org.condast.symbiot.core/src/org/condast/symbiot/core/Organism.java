@@ -10,10 +10,10 @@ import org.condast.symbiot.core.env.Environment;
 import org.condast.symbiot.symbiot.Eye;
 import org.condast.symbiot.symbiot.Flagellum;
 import org.condast.symbiotic.core.StressData;
+import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.collection.SymbiotCollection;
 import org.condast.symbiotic.core.def.IStressData;
-import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public class Organism extends Location implements IOrganism{
@@ -84,8 +84,7 @@ public class Organism extends Location implements IOrganism{
 		super();
 		this.angle = Angle.ZERO;
 		symbiots = new SymbiotCollection();
-		float step = 0.01f;
-		design( step );
+		design();
 		this.listeners = new ArrayList<>();
 	}
 
@@ -93,29 +92,30 @@ public class Organism extends Location implements IOrganism{
 	 * Design the organism
 	 * @param step
 	 */
-	protected void design( float step ) {
-		Eye leftEye = new Eye( Form.LEFT_EYE, step, true);
+	protected void design() {
+		Eye leftEye = new Eye( Form.LEFT_EYE, true);
 		symbiots.add(leftEye);
 		design = new HashMap<>();
 		design.put(Form.LEFT_EYE, leftEye);
 		
-		Eye rightEye = new Eye( Form.RIGHT_EYE, step, true);
+		Eye rightEye = new Eye( Form.RIGHT_EYE, true);
 		symbiots.add(rightEye);
 		design.put(Form.RIGHT_EYE, rightEye);
 		
-		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, step, true);
-		symbiots.add(leftFlagellum);
+		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true);
 		leftFlagellum.addInfluence(leftEye);
+		leftFlagellum.addInfluence(rightEye);
+		symbiots.add(leftFlagellum);
 		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
 		
-		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, step, true);
+		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		symbiots.add(  rightFlagellum);
+		leftFlagellum.addInfluence(leftEye);
 		rightFlagellum.addInfluence(rightEye);
 		rightFlagellum.addInfluence(leftFlagellum);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		
 
 		leftFlagellum.addInfluence(rightFlagellum);
-
 	}
 
 	@Override
@@ -248,6 +248,51 @@ public class Organism extends Location implements IOrganism{
 		return new OrganismSymbiot( this.symbiots );
 	}
 
+	protected void updateEyes( Angle angle ) {
+		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
+		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
+
+		int x= getX();
+		int y= getY();
+		int offset = 1;		
+		switch( angle ) {
+		case NORTH:
+			leftEye.setLocation(x-offset, y-offset);
+			rightEye.setLocation(x+offset, y-offset);
+			break;
+		case NORTH_EAST:
+			leftEye.setLocation(x+offset, y-offset);
+			rightEye.setLocation(x-offset, y-offset);
+			break;
+		case EAST:
+			leftEye.setLocation(x+offset, y-offset);
+			rightEye.setLocation(x-offset, y+offset);
+			break;
+		case SOUTH_EAST:
+			leftEye.setLocation(x+offset, y-offset);
+			rightEye.setLocation(x-offset, y+offset);
+			break;
+		case SOUTH:
+			leftEye.setLocation(x-offset, y+offset);
+			rightEye.setLocation(x+offset, y+offset);
+			break;
+		case SOUTH_WEST:
+			leftEye.setLocation(x+offset, y-offset);
+			rightEye.setLocation(x-offset, y+offset);
+			break;
+		case WEST:
+			leftEye.setLocation(x-offset, y+offset);
+			rightEye.setLocation(x-offset, y-offset);
+			break;
+		case NORTH_WEST:
+			leftEye.setLocation(x+offset, y-offset);
+			rightEye.setLocation(-+offset, y+offset);
+			break;
+		default:
+			break;
+		}
+	}
+
 	protected int getDistance( Form eye, Environment environment ) {
 		int retval = environment.getNearestFoodDistance(getX(), getY());
 		switch( angle ) {
@@ -265,18 +310,23 @@ public class Organism extends Location implements IOrganism{
 	
 	@Override
 	public void update( Environment environment ) {
-		//First read the eyes
+		//First update the eyes to find the nearest food source
 		int maxVision = environment.getDiagonal()+5;//add a ceiling
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
-		leftEye.setMaxVision(maxVision);
-
-		int distance =  getDistance(leftEye.getForm(), environment);
-		leftEye.setInput( distance);
-
 		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
+		leftEye.setMaxVision(maxVision);
 		rightEye.setMaxVision(maxVision);
-		distance = getDistance( rightEye.getForm(), environment );
+		updateEyes(angle);
+
+		int angle =  environment.getNearestFoodAngle(getX(), getY());
+
+		int distance = environment.getNearestFoodDistance(leftEye.getX(), leftEye.getY());
+		leftEye.setInput( distance);
+		leftEye.setAngle(angle);
+
+		distance = environment.getNearestFoodDistance(rightEye.getX(), rightEye.getY());
 		rightEye.setInput(distance);
+		rightEye.setAngle(angle);
 
 		if( environment.noFood())
 			return;
@@ -293,25 +343,15 @@ public class Organism extends Location implements IOrganism{
 	/**
 	 * This symbiot is mainly intended for purposes of visualisation, and does not contribute to the activities
 	 */
-	private static class OrganismSymbiot implements ISymbiot{
+	private static class OrganismSymbiot extends Symbiot{
 
 		private ISymbiotCollection symbiots;
 		private double stress;
 
 		public OrganismSymbiot( ISymbiotCollection organism ) {
-			super();
+			super( S_ORGANISM );
 			this.symbiots = organism;
 			this.stress = 0;
-		}
-
-		@Override
-		public String getId() {
-			return S_ORGANISM;
-		}
-
-		@Override
-		public boolean isActive() {
-			return true;
 		}
 
 		@Override
@@ -331,33 +371,8 @@ public class Organism extends Location implements IOrganism{
 		}
 
 		@Override
-		public double getDeltaStress( boolean strict ) {
+		public double getDeltaStress() {
 			return this.stress - this.symbiots.getAverageStress();
-		}
-
-		@Override
-		public void addStressListener(IStressListener listener) {
-			// NOTHING
-		}
-
-		@Override
-		public void removeStressListener(IStressListener listener) {
-			// NOTHING
-		}
-	
-		@Override
-		public void addInfluence( ISymbiot symbiot) {
-			// NOTHING
-		}
-
-		@Override
-		public IStressData getStressData(String symbiot) {
-			return null;
-		}
-		
-		@Override
-		public void updateStress() {
-			this.symbiots.forEach((s) -> s.updateStress());			
 		}
 
 		@Override
@@ -366,21 +381,10 @@ public class Organism extends Location implements IOrganism{
 		}
 
 		@Override
-		public double getOverallWeight() {
-			return 0;
-		}
-
-		@Override
-		public double getFactor() {
-			return 0;
-		}
-
-		@Override
 		public Map<String, IStressData> getSignals() {
 			Map<String, IStressData> results = new HashMap<>();
 			this.symbiots.forEach((s) -> results.put(s.getId(), new StressData( s )));
 			return results;
 		}
-
 	}
 }

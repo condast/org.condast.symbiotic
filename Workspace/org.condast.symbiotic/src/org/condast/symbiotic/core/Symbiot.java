@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.condast.commons.Utils;
-import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
@@ -27,26 +26,20 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	private String id;
 	private double oldStress, stress;
 	private boolean isActive;
-	private double weightStep; //The increase or decrease of stress per cycle
 	
 	private Map<String, IStressData> signals;
 
-	public Symbiot( String id) {
-		this( id, DEFAULT_WEIGHT_STEP, true );
-	}
-
-	public Symbiot( String id, double weightStep ) {
-		this( id, weightStep, true );
+	public Symbiot( String id ) {
+		this( id, true );
 	}
 	
-	public Symbiot( String id, double weightStep, boolean active ) {
+	public Symbiot( String id, boolean active ) {
 		if( id == null )
 			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.isActive = active;
 		this.stress = 0; 
 		this.oldStress = 0;
-		this.weightStep = weightStep;
 		this.signals = new HashMap<String, IStressData>();
 		listeners = new ArrayList<IStressListener>();
 	}
@@ -63,10 +56,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 
 	public void setActive(boolean active) {
 		this.isActive = active;
-	}
-
-	protected double getWeightStep() {
-		return weightStep;
 	}
 
 	@Override
@@ -96,11 +85,8 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	 * @see org.condast.symbiotic.core.ISymbiot#getStress()
 	 */
 	@Override
-	public double getDeltaStress( boolean strict ) {
-		double delta = this.oldStress - stress; 
-		if(!strict && Math.abs(delta)<Double.MIN_VALUE && Math.abs(stress)>Double.MIN_VALUE)
-			delta = DEFAULT_WEIGHT_STEP;	
-		return delta;
+	public double getDeltaStress( ) {
+		return this.oldStress - stress; 
 	}
 
 	@Override
@@ -109,7 +95,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 			throw new NumberFormatException( S_ERR_INVALID_STRESS + stress);
 		this.oldStress = this.stress;
 		this.stress = stress;
-		this.notifySymbiotChanged(new StressEvent (this));
 	}
 
 	@Override	
@@ -129,36 +114,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	}
 	
 	/**
-	 * Skip the own stress
-	 * @param reference
-	 * @return
-	 */
-	protected boolean enableSymbiot(String reference) {
-		return !getId().equals( reference );
-	}
-
-	@Override
-	public void updateStress() {
-		this.signals.forEach((s,d)-> updateStress( s,d ));
-	}
-
-	protected void updateStress(String reference, IStressData dt ) {
-		if(!enableSymbiot(reference))
-			return;
-		IStressData data = getStressData(reference);//ensures that stressData is not null
-		double weight = data.getWeight();
-		//stressDelta >=0 is good, because this means that the stress is decreasing
-		if( dt.getDelta() < 0 )
-			weight += this.weightStep*data.getCurrentStress();
-		else
-			weight -= this.weightStep*data.getCurrentStress();
-		weight = NumberUtils.clipRange(-1, 1, weight);
-		data.setWeight(weight);		
-		data.update();
-		this.notifySymbiotChanged(new StressEvent (this));
-	}
-
-	/**
 	 * Get the overall stress <-1,1>
 	 * @return
 	*/
@@ -168,7 +123,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		if( Utils.assertNull(this.signals))
 			return overall;
 		for( IStressData sd: this.signals.values() )
-			overall += sd.getCurrentStress();
+			overall += sd.getStress();
 		return ( overall/this.signals.size() );
 	}
 
@@ -213,6 +168,17 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	@Override
 	public Map<String, IStressData> getSignals() {
 		return signals;
+	}
+	
+	@Override
+	public boolean enableUpdate(String reference) {
+		return !this.id.equals(reference);
+	}
+
+	@Override
+	public void update() {
+		signals.values().forEach(d-> d.update());
+		this.notifySymbiotChanged(new StressEvent (this));
 	}
 
 	@Override

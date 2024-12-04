@@ -7,12 +7,10 @@ public interface IStressData {
 	double getWeight();
 
 	void setWeight( double weight );
-	
-	double getCurrentStress();
-
-	double getDelta();
 
 	double getStress();
+
+	double getDelta();
 
 	void update();
 }

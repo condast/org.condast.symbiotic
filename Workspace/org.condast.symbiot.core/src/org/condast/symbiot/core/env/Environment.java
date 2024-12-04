@@ -144,6 +144,23 @@ public class Environment {
 		return (int) nearest;
 	}
 
+	public int getNearestFoodAngle( int x, int y ) {
+		double angle = 0;
+		double nearest = Double.MAX_VALUE;
+		for( ILocation location: field ) {
+			if(!( location instanceof Food ))
+				continue;
+			double x2 = Math.pow(location.getX() - x, 2 ); 
+			double y2 = Math.pow(location.getY() - y, 2 ); 
+			double distance = Math.sqrt( x2 + y2);
+			if( distance >= nearest )
+				continue;
+			angle = Math.toDegrees( Math.acos( Math.sqrt( x2 ) / distance ));
+			nearest = distance;
+		}
+		return (int) angle;
+	}
+
 	/**
 	 * Get the diagonal of the field
 	 * @param distance

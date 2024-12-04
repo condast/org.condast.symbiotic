@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.def.IBehaviour;
-import org.condast.symbiotic.core.def.IStressListener;
+import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.def.StressEvent;
 
 public class SymbiotCollection implements ISymbiotCollection{
 
@@ -21,15 +21,20 @@ public class SymbiotCollection implements ISymbiotCollection{
 	 */
 	private double stress;
 
-	/**
-	 * Listeners to a change in the stress levels
-	 */
-	private Collection<IStressListener> listeners;
+	private double weightStep; //The increase or decrease of stress per cycle
 
-	public SymbiotCollection() {
+	public SymbiotCollection(  ) {
+		this( DEFAULT_WEIGHT_STEP);
+	}
+	
+	public SymbiotCollection( double weightStep ) {
 		this.stress = 0;
+		this.weightStep = weightStep;
 		symbiots = new ArrayList<ISymbiot>();
-		listeners = new ArrayList<IStressListener>();
+	}
+
+	public double getWeightStep() {
+		return weightStep;
 	}
 
 	/**
@@ -46,19 +51,6 @@ public class SymbiotCollection implements ISymbiotCollection{
 		return null;
 	}
 	
-	public void addStressListener(IStressListener listener) {
-		this.listeners.add(listener );
-	}
-
-	public void removeStressListener(IStressListener listener) {
-		this.listeners.remove( listener );
-	}
-
-	protected void notifyStressLevels( StressEvent event){
-		for( IStressListener listener: listeners )
-			listener.notifyStressChanged( event );
-	}
-
 	/**
 	 *Get the overall stress levels of all the symbiots in the collection
 	 * @return
@@ -69,11 +61,12 @@ public class SymbiotCollection implements ISymbiotCollection{
 		for( ISymbiot symbiot: symbiots ){
 			Map<String, Double> stress = new HashMap<>();
 			for( ISymbiot child: symbiots ){
-				Double strss = symbiot.getStressData( child.getId() ).getCurrentStress();
+				Double strss = symbiot.getStressData( child.getId() ).getStress();
 				stress.put( child.getId(), strss);
 				symbiot.getStressData( symbiot.getId() );
 			}
 			results.put(symbiot.getId(), stress);
+			symbiot.update();
 		}
 		return results;
 	}
@@ -176,6 +169,30 @@ public class SymbiotCollection implements ISymbiotCollection{
 	}
 
 	/**
+	 * Update the 
+	 * @param reference
+	 * @param dt
+	 */
+	protected void updateStress(ISymbiot source ) {
+		Map<String, IStressData> signals = source.getSignals();
+		Iterator<Map.Entry<String, IStressData>> iterator = signals.entrySet().iterator();
+		while( iterator.hasNext()) {
+			Map.Entry<String, IStressData> entry = iterator.next();
+			if( entry.getKey().equals(source.getId()))
+				continue;
+			IStressData data = entry.getValue();
+			double weight = data.getWeight();
+			//stressDelta <=0 is good, because this means that the stress is decreasing
+			if( data.getDelta() <= 0 )
+				weight -= this.weightStep* data.getStress();
+			else
+				weight += this.weightStep* data.getStress();
+			weight = NumberUtils.clipRange(-1, 1, weight);
+			data.setWeight(weight);		
+		}
+	}
+
+	/**
 	 * update the symbiots
 	 */
 	@Override
@@ -188,7 +205,8 @@ public class SymbiotCollection implements ISymbiotCollection{
 		while( iterator.hasNext() ) {
 			ISymbiot source = iterator.next();
 			result += source.getStress();
-			source.updateStress();
+			updateStress( source );
+			source.update();
 		}
 		result/=symbiots.size();
 		this.stress= result;
