@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.core.Symbiot;
+import org.condast.symbiotic.core.DefaultBehaviour;
 import org.condast.symbiotic.core.def.IBehaviour;
-import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public class SymbiotCollection implements ISymbiotCollection{
 
+	private IBehaviour behaviour;
+	
 	private Collection<ISymbiot> symbiots;
 	
 	/**
@@ -21,20 +21,14 @@ public class SymbiotCollection implements ISymbiotCollection{
 	 */
 	private double stress;
 
-	private double weightStep; //The increase or decrease of stress per cycle
-
 	public SymbiotCollection(  ) {
-		this( DEFAULT_WEIGHT_STEP);
+		this( IBehaviour.DEFAULT_WEIGHT_STEP);
 	}
 	
 	public SymbiotCollection( double weightStep ) {
 		this.stress = 0;
-		this.weightStep = weightStep;
+		this.behaviour = new DefaultBehaviour( weightStep);
 		symbiots = new ArrayList<ISymbiot>();
-	}
-
-	public double getWeightStep() {
-		return weightStep;
 	}
 
 	/**
@@ -90,13 +84,6 @@ public class SymbiotCollection implements ISymbiotCollection{
 		for( ISymbiot symbiot: this.symbiots )
 			stress.put( symbiot.getId(), symbiot.getStress() );
 		return stress;
-	}
-
-	public ISymbiot add( String id, IBehaviour behaviour ){
-		ISymbiot symbiot = new Symbiot( id );
-		behaviour.setOwner(symbiot);
-		this.add( symbiot );
-		return symbiot;
 	}
 
 	@Override
@@ -169,30 +156,6 @@ public class SymbiotCollection implements ISymbiotCollection{
 	}
 
 	/**
-	 * Update the 
-	 * @param reference
-	 * @param dt
-	 */
-	protected void updateStress(ISymbiot source ) {
-		Map<String, IStressData> signals = source.getSignals();
-		Iterator<Map.Entry<String, IStressData>> iterator = signals.entrySet().iterator();
-		while( iterator.hasNext()) {
-			Map.Entry<String, IStressData> entry = iterator.next();
-			if( entry.getKey().equals(source.getId()))
-				continue;
-			IStressData data = entry.getValue();
-			double weight = data.getWeight();
-			//stressDelta <=0 is good, because this means that the stress is decreasing
-			if( data.getDelta() <= 0 )
-				weight -= this.weightStep* data.getStress();
-			else
-				weight += this.weightStep* data.getStress();
-			weight = NumberUtils.clipRange(-1, 1, weight);
-			data.setWeight(weight);		
-		}
-	}
-
-	/**
 	 * update the symbiots
 	 */
 	@Override
@@ -205,7 +168,7 @@ public class SymbiotCollection implements ISymbiotCollection{
 		while( iterator.hasNext() ) {
 			ISymbiot source = iterator.next();
 			result += source.getStress();
-			updateStress( source );
+			behaviour.updateSymbiot(source);
 			source.update();
 		}
 		result/=symbiots.size();

@@ -8,11 +8,6 @@ import org.condast.symbiotic.core.def.ISymbiot;
 public interface ISymbiotCollection extends Collection<ISymbiot>{
 
 	/**
-	 * the default step for increasing or decreasing the weight of stress signals
-	 */
-	public static double DEFAULT_WEIGHT_STEP = 0.1d;
-
-	/**
 	 * returns the symbiot with the given identifier
 	 * @param identifier
 	 * @return
