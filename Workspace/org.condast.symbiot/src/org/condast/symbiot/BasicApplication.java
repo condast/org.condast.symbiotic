@@ -14,5 +14,6 @@ public class BasicApplication implements ApplicationConfiguration {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(WebClient.PAGE_TITLE, "Symbiot Demonstrator");
         application.addEntryPoint("/symbiot", BasicEntryPoint.class, properties);
+        application.addEntryPoint("/onedim", EntryPoint1D.class, properties);
     }
 }

@@ -1,4 +1,4 @@
-package org.condast.symbiot.core;
+package org.condast.symbiot.core.organism;
 
 import org.condast.symbiotic.core.environment.Location;
 

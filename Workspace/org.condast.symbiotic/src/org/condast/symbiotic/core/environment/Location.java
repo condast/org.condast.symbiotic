@@ -8,7 +8,7 @@ public class Location implements ILocation {
 		this( 0,0);
 	}
 	
-	protected Location( int x, int y) {
+	public Location( int x, int y) {
 		this.x = x;
 		this.y = y;
 	}

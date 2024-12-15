@@ -4,14 +4,13 @@ import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.table.ITableEventListener;
 import org.condast.commons.ui.table.TableEvent;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.IOrganism.Form;
-import org.condast.symbiot.core.IOrganismListener;
-import org.condast.symbiot.core.OrganismEvent;
-import org.condast.symbiot.symbiot.AngleControl;
-import org.condast.symbiot.symbiot.AngleControl.AngleBehaviour;
-import org.condast.symbiot.symbiot.Flagellum;
+import org.condast.symbiot.core.twodim.AngleControl;
+import org.condast.symbiot.core.twodim.Organism2D;
+import org.condast.symbiot.core.twodim.AngleControl.AngleBehaviour;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.core.organism.IOrganismListener;
+import org.condast.symbiotic.core.organism.OrganismEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -95,7 +94,7 @@ public class Dashboard extends Composite {
 		sm.setInput(event.getData());
 	}
 
-	public void setInput( IOrganism organism ) {
+	public void setInput( IOrganism<Organism2D.Form> organism ) {
 		oc.setInput(organism);
 		om.setInput(organism);
 		organism.addListener( handler);
@@ -107,34 +106,26 @@ public class Dashboard extends Composite {
 		super.dispose();
 	}
 
-	private class Handler extends AbstractSessionHandler<OrganismEvent> implements IOrganismListener{
+	private class Handler extends AbstractSessionHandler<OrganismEvent<Organism2D.Form>> implements IOrganismListener<Organism2D.Form>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		public void notifyOrganismChanged(OrganismEvent event) {
+		public void notifyOrganismChanged(OrganismEvent<Organism2D.Form> event) {
 			super.addData(event);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<OrganismEvent> sevent) {
-			IOrganism organism = sevent.getData().getOrganism();
-			AngleControl ac = (AngleControl) organism.getSymbiot( Form.ANGLE);
-			ac.setBehaviour(AngleBehaviour.values()[ angleCombo.getSelectionIndex()]);
-		
-			StringBuilder builder = new StringBuilder();	
-			builder.append(ac.getAngle().name());
+		protected void onHandleSession(SessionEvent<OrganismEvent<Organism2D.Form>> sevent) {
+			IOrganism<Organism2D.Form> organism = sevent.getData().getOrganism();
+			if( organism instanceof Organism2D) {
+				AngleControl ac = (AngleControl) organism.getSymbiot( Organism2D.Form.ANGLE);
+				ac.setBehaviour(AngleBehaviour.values()[ angleCombo.getSelectionIndex()]);
+			}
 			
-			Flagellum leftFlagellum = (Flagellum) organism.getSymbiot( Form.LEFT_FLAGELLUM);
-			Flagellum rightFlagellum = (Flagellum) organism.getSymbiot( Form.RIGHT_FLAGELLUM);
-			builder.append(": (");
-			builder.append(leftFlagellum.getOutput());
-			builder.append(",");
-			builder.append(rightFlagellum.getOutput());
-			builder.append(")");
-			lblAngleLabel.setText( builder.toString());
+			lblAngleLabel.setText( organism.log());
 			sm.refresh();
 		}		
 	}

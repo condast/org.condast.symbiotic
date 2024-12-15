@@ -9,14 +9,15 @@ import org.condast.commons.strings.StringStyler;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.table.AbstractTableComposite;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.IOrganismListener;
-import org.condast.symbiot.core.OrganismEvent;
-import org.condast.symbiot.symbiot.AngleControl;
-import org.condast.symbiot.symbiot.Eye;
+import org.condast.symbiot.core.organism.Eye;
+import org.condast.symbiot.core.twodim.AngleControl;
+import org.condast.symbiot.core.twodim.Organism2D;
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.core.organism.IOrganismListener;
+import org.condast.symbiotic.core.organism.OrganismEvent;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -61,11 +62,11 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	}
 	
 	private Handler handler;
-	private IOrganism organism;
+	private IOrganism<Organism2D.Form> organism;
 	
-	private IOrganismListener listener = e-> onOrganismChanged(e);
+	private IOrganismListener<Organism2D.Form> listener = e-> onOrganismChanged(e);
 	
-	private void onOrganismChanged( OrganismEvent event) {
+	private void onOrganismChanged( OrganismEvent<Organism2D.Form> event) {
 		handler.addData(organism);
 	}
 	
@@ -123,11 +124,11 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		return 0;
 	}
 
-	public IOrganism getOrganism() {
+	public IOrganism<Organism2D.Form> getOrganism() {
 		return organism;
 	}
 
-	public void setInput(IOrganism organism) {
+	public void setInput(IOrganism<Organism2D.Form> organism) {
 		if( this.organism != null )
 			this.organism.removeListener(listener);
 		this.organism = organism;
@@ -161,7 +162,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				break;
 			case ANGLE:
 				if( symbiot instanceof Eye ) {
-					Eye eye  = (Eye) symbiot;
+					Eye<Organism2D.Form> eye  = (Eye<Organism2D.Form>) symbiot;
 					retval = String.valueOf( eye.getAngle());
 				} else 	if( symbiot instanceof AngleControl ) {
 					AngleControl ac  = (AngleControl) symbiot;
@@ -207,14 +208,14 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 
 	}
 
-	private class Handler extends AbstractSessionHandler<IOrganism>{
+	private class Handler extends AbstractSessionHandler<IOrganism<Organism2D.Form>>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<IOrganism> sevent) {
+		protected void onHandleSession(SessionEvent<IOrganism<Organism2D.Form>> sevent) {
 			refresh();
 		}	
 	}	

@@ -1,17 +1,16 @@
-package org.condast.symbiot.symbiot;
+package org.condast.symbiot.core.organism;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiotic.core.enumid.AbstractEnumInputSymbiot;
 
-public class Eye extends AbstractEnumInputSymbiot<IOrganism.Form, Integer> {
+public class Eye<E extends Enum<E>> extends AbstractEnumInputSymbiot<E, Integer> {
 
 	private int x,y;
 	private int maxVision;
 	private int angle;
 	
 	
-	public Eye( IOrganism.Form form, boolean active) {
+	public Eye( E form, boolean active) {
 		super( form, active);
 		this.maxVision = Integer.MAX_VALUE;
 		super.setInput( Integer.MAX_VALUE );

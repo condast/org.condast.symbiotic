@@ -2,12 +2,11 @@ package org.condast.symbiot.ui;
 
 import java.util.Iterator;
 
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.Organism;
-import org.condast.symbiot.core.env.Environment;
+import org.condast.symbiot.core.twodim.Organism2D;
 import org.condast.symbiotic.core.environment.EnvironmentEvent;
 import org.condast.symbiotic.core.environment.IEnvironment;
 import org.condast.symbiotic.core.environment.ILocation;
+import org.condast.symbiotic.core.organism.IOrganism;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
@@ -17,13 +16,13 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-public class EnvironmentCanvas extends Canvas{
+public class EnvironmentCanvas<E extends Enum<E>> extends Canvas{
 	private static final long serialVersionUID = 1L;
 
 	public static final int GRIDX = 100;//meters
 	public static final int GRIDY = 20;//meters
 
-	private Environment environment;
+	private IEnvironment<IOrganism<E>> environment;
 	
 	private boolean disposed;
 
@@ -56,7 +55,7 @@ public class EnvironmentCanvas extends Canvas{
 		}
 	}
 
-	private void onNotifyEnvironmentChanged(EnvironmentEvent<IOrganism> event) {
+	private void onNotifyEnvironmentChanged(EnvironmentEvent<E> event) {
 		if( disposed || getDisplay().isDisposed() || ( event.getSource() == null ))
 			return;
 		getDisplay().asyncExec( new Runnable() {
@@ -68,16 +67,17 @@ public class EnvironmentCanvas extends Canvas{
 		});
 	}
 
-	public IEnvironment<IOrganism> getInput() {
+	public IEnvironment<IOrganism<E>> getInput() {
 		return this.environment;
 	}
 
-	public void setInput( IEnvironment<IOrganism> environment){
+	@SuppressWarnings("unchecked")
+	public void setInput( IEnvironment<IOrganism<E>> environment){
 		if( this.environment != null )
-			this.environment.removeListener(e->onNotifyEnvironmentChanged(e));
-		this.environment = (Environment) environment;
+			this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
+		this.environment = (IEnvironment<IOrganism<E>>) environment;
 		if( this.environment != null )
-			this.environment.addListener(e->onNotifyEnvironmentChanged(e));
+			this.environment.addListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
 		this.redraw();
 	}
 
@@ -123,7 +123,7 @@ public class EnvironmentCanvas extends Canvas{
 			//The raster
 			Iterator<ILocation> iterator = this.environment.iterator();
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_MAGENTA ));					
-			IOrganism place = environment.getOrganism();
+			IOrganism<E> place = environment.getOrganism();
 			int[] pos;
 			ILocation food = null;
 			if( place != null ) {
@@ -137,7 +137,7 @@ public class EnvironmentCanvas extends Canvas{
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_GREEN ));
 			while( iterator.hasNext() ) {			
 				ILocation loc = iterator.next();
-				if(( loc.equals(food )) || ( loc instanceof Organism ))
+				if(( loc.equals(food )) || ( loc instanceof Organism2D ))
 					continue;					
 				pos = scale( loc );
 				gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);					
@@ -155,7 +155,7 @@ public class EnvironmentCanvas extends Canvas{
 
 		try {
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED ));					
-			IOrganism place = environment.getOrganism();
+			IOrganism<E> place = environment.getOrganism();
 			if( place != null ) {
 				int[] pos = scale( place );
 				gc.fillOval( pos[0]-10, pos[1]-10, 20, 20);
@@ -185,11 +185,12 @@ public class EnvironmentCanvas extends Canvas{
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void dispose() {
 		this.disposed = true;
 		super.removePaintListener( e->onPaintControl(e));
-		this.environment.removeListener(e->onNotifyEnvironmentChanged(e));
+		this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
 		super.dispose();
 	}
 }

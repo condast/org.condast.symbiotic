@@ -16,10 +16,18 @@ public interface IEnvironment<O> {
 
 	ILocation get(int x, int y);
 
+	ILocation getBorder();
+
 	Iterator<ILocation> iterator();
 
 	void init(int amountFood);
 
 	void update();
+
+	O getOrganism();
+
+	ILocation getNearestFood(int x, int y);
+
+	boolean noFood();
 
 }

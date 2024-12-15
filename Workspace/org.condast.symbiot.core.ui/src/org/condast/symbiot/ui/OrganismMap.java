@@ -3,9 +3,10 @@ package org.condast.symbiot.ui;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.xy.AbstractXYGraph;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.IOrganismListener;
-import org.condast.symbiot.core.OrganismEvent;
+import org.condast.symbiot.core.twodim.Organism2D;
+import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.core.organism.IOrganismListener;
+import org.condast.symbiotic.core.organism.OrganismEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -16,22 +17,22 @@ import org.eclipse.swt.widgets.Display;
 public class OrganismMap extends AbstractXYGraph<Double> {
 	private static final long serialVersionUID = 1L;
 
-	private IOrganism organism;
+	private IOrganism<Organism2D.Form> organism;
 
 	private Handler handler;
 
-	private IOrganismListener listener = e-> onOrganismChanged(e);
+	private IOrganismListener<Organism2D.Form> listener = e-> onOrganismChanged(e);
 	
 	public OrganismMap(Composite parent, int style) {
 		super(parent, style);
         handler = new Handler(getDisplay());
 	}
 
-	private void onOrganismChanged( OrganismEvent event) {
+	private void onOrganismChanged( OrganismEvent<Organism2D.Form> event) {
 		handler.addData(organism);
 	}
 	
-	public void setInput( IOrganism organism ) {
+	public void setInput( IOrganism<Organism2D.Form> organism ) {
 		if( this.organism != null )
 			this.organism.removeListener(listener);
 		this.organism = organism;
@@ -70,14 +71,14 @@ public class OrganismMap extends AbstractXYGraph<Double> {
 		// TODO Auto-generated method stub	
 	}
 	
-	private class Handler extends AbstractSessionHandler<IOrganism>{
+	private class Handler extends AbstractSessionHandler<IOrganism<Organism2D.Form>>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<IOrganism> sevent) {
+		protected void onHandleSession(SessionEvent<IOrganism<Organism2D.Form>> sevent) {
 			redraw();
 		}	
 	}

@@ -1,19 +1,19 @@
-package org.condast.symbiot.core.env;
+package org.condast.symbiot.core.twodim;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import org.condast.symbiot.core.Food;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.Organism;
+import org.condast.symbiot.core.organism.Food;
 import org.condast.symbiotic.core.environment.EnvironmentEvent;
 import org.condast.symbiotic.core.environment.IEnvironment;
 import org.condast.symbiotic.core.environment.IEnvironmentListener;
 import org.condast.symbiotic.core.environment.ILocation;
+import org.condast.symbiotic.core.environment.Location;
+import org.condast.symbiotic.core.organism.IOrganism;
 
-public class Environment implements IEnvironment<IOrganism> {
+public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>> {
 
 	public static final int DEFAULT_BORDER = 10;
 	
@@ -23,9 +23,9 @@ public class Environment implements IEnvironment<IOrganism> {
 	
 	private Collection<ILocation> field;
 	
-	private IOrganism organism;
+	private IOrganism<E> organism;
 	
-	private Collection<IEnvironmentListener<IOrganism>> listeners;
+	private Collection<IEnvironmentListener<IOrganism<E>>> listeners;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -53,16 +53,16 @@ public class Environment implements IEnvironment<IOrganism> {
 	}
 	
 	@Override
-	public void addListener( IEnvironmentListener<IOrganism> listener) {
+	public void addListener( IEnvironmentListener<IOrganism<E>> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener( IEnvironmentListener<IOrganism> listener) {
+	public void removeListener( IEnvironmentListener<IOrganism<E>> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected void notifyListeners( EnvironmentEvent<IOrganism> event ) {
+	protected void notifyListeners( EnvironmentEvent<IOrganism<E>> event ) {
 		this.listeners.forEach( l->l.notifyEnvironmentChanged(event));
 	}
 
@@ -77,19 +77,24 @@ public class Environment implements IEnvironment<IOrganism> {
 		return field.add( new Food( x, y));
 	}
 
-	public IOrganism getOrganism() {
+	public IOrganism<E> getOrganism() {
 		return organism;
 	}
 
-	public boolean setOrganism( IOrganism organism ) {
+	public boolean setOrganism( IOrganism<E> organism ) {
 		if( this.organism != null )
 			this.remove(this.organism);
 		this.organism = organism;
 		this.field.add(organism);
-		notifyListeners( new EnvironmentEvent<IOrganism>( this, this.organism ));
+		notifyListeners( new EnvironmentEvent<IOrganism<E>>( this, this.organism ));
 		return true;
 	}
-	
+
+	@Override
+	public ILocation getBorder() {
+		return new Location( border, border );
+	}
+
 	@Override
 	public ILocation get( int x, int y ) {
 		for( ILocation l: this.field ) {
@@ -115,6 +120,7 @@ public class Environment implements IEnvironment<IOrganism> {
 		return field.iterator();		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void init( int amountFood) {
        this.clear();
@@ -128,7 +134,7 @@ public class Environment implements IEnvironment<IOrganism> {
     		yo = this.border + (int) (lengthy * Math.random());
     		addFood(xo, yo);
     	}
-        Organism organism = new Organism();
+        Organism2D organism = new Organism2D();
         Object food = null;
         do{
         	xo = this.border + (int) (lengthx * Math.random());
@@ -137,7 +143,7 @@ public class Environment implements IEnvironment<IOrganism> {
         }while( food != null );
         organism.setLocation(xo, yo);
 		logger.info("Organism added at: {" + xo + ", " + yo + "}");
-        setOrganism(organism);
+        setOrganism((IOrganism<E>) organism);
 
 	}
 	

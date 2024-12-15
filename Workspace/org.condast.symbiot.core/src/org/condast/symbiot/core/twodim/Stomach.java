@@ -1,17 +1,16 @@
-package org.condast.symbiot.symbiot;
+package org.condast.symbiot.core.twodim;
 
-import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiotic.core.Symbiot;
 
 public class Stomach extends Symbiot {
 
-	private IOrganism.Form form;
+	private Organism2D.Form form;
 	
-	public Stomach( IOrganism.Form form, boolean active) {
+	public Stomach( Organism2D.Form form, boolean active) {
 		super( form.name(), active);
 	}
 
-	public IOrganism.Form getForm() {
+	public Organism2D.Form getForm() {
 		return form;
 	}
 

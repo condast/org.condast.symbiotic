@@ -1,14 +1,12 @@
-package org.condast.symbiot.symbiot;
+package org.condast.symbiot.core.twodim;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.IOrganism.Form;
 import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
 /**
  * The angle of movement of the organism
  */
-public class AngleControl extends EnumOutputSymbiot<IOrganism.Form, Integer>{
+public class AngleControl extends EnumOutputSymbiot<Organism2D.Form, Integer>{
 
 	public enum Angle{
 		ZERO(0),
@@ -85,11 +83,11 @@ public class AngleControl extends EnumOutputSymbiot<IOrganism.Form, Integer>{
 	private Angle angle;//The angle of the movement
 	private AngleBehaviour behaviour;
 	
-	public AngleControl( Form form ) {
+	public AngleControl( Organism2D.Form form ) {
 		this( form, AngleBehaviour.SIMPLE_ANGLE );
 	}
 
-	public AngleControl( Form form, AngleBehaviour behaviour ) {
+	public AngleControl( Organism2D.Form form, AngleBehaviour behaviour ) {
 		super( form );
 		this.angle = Angle.ZERO;
 		this.behaviour = behaviour;
@@ -169,7 +167,7 @@ public class AngleControl extends EnumOutputSymbiot<IOrganism.Form, Integer>{
 		boolean retval = false;
 		switch( this.behaviour) {
 		case SYMBIOTIC_ANGLE:
-			IOrganism.Form refForm = IOrganism.Form.valueOf(reference);
+			Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
 			//retval = (Form.LEFT_FLAGELLUM.equals(refForm) || Form.RIGHT_FLAGELLUM.equals(refForm));
 		default:
 			break;

@@ -1,34 +1,50 @@
-package org.condast.symbiot.core;
+package org.condast.symbiot.core.twodim;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.condast.symbiot.core.env.Environment;
-import org.condast.symbiot.symbiot.AngleControl;
-import org.condast.symbiot.symbiot.Eye;
-import org.condast.symbiot.symbiot.Flagellum;
+import org.condast.commons.strings.StringStyler;
+import org.condast.symbiot.core.organism.Eye;
+import org.condast.symbiot.core.organism.Flagellum;
 import org.condast.symbiotic.core.StressData;
 import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.collection.SymbiotCollection;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.environment.IEnvironment;
 import org.condast.symbiotic.core.environment.Location;
+import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.core.organism.IOrganismListener;
+import org.condast.symbiotic.core.organism.OrganismEvent;
 
-public class Organism extends Location implements IOrganism{
+public class Organism2D extends Location implements IOrganism<Organism2D.Form>{
 
 	public static final String S_ORGANISM = "ORGANISM";
 
+	public enum Form{
+		LEFT_EYE,
+		RIGHT_EYE,
+		LEFT_FLAGELLUM,
+		RIGHT_FLAGELLUM,
+		ANGLE,
+		STOMACH;
+
+		@Override
+		public String toString() {
+			return StringStyler.sentence( name() );
+		}
+	}
 
 	private Map<Form, ISymbiot> design;
 
 	private ISymbiotCollection symbiots;
 
-	private Collection<IOrganismListener> listeners;
+	private Collection<IOrganismListener<Organism2D.Form>> listeners;
 
-	public Organism() {
+	public Organism2D() {
 		super();
 		symbiots = new SymbiotCollection();
 		design();
@@ -40,12 +56,12 @@ public class Organism extends Location implements IOrganism{
 	 * @param step
 	 */
 	protected void design() {
-		Eye leftEye = new Eye( Form.LEFT_EYE, true);
+		Eye<Organism2D.Form> leftEye = new Eye<>( Form.LEFT_EYE, true);
 		symbiots.add(leftEye);
 		design = new HashMap<>();
 		design.put(Form.LEFT_EYE, leftEye);
 		
-		Eye rightEye = new Eye( Form.RIGHT_EYE, true);
+		Eye<Organism2D.Form> rightEye = new Eye<>( Form.RIGHT_EYE, true);
 		symbiots.add(rightEye);
 		design.put(Form.RIGHT_EYE, rightEye);
 
@@ -80,22 +96,23 @@ public class Organism extends Location implements IOrganism{
 	}
 
 	@Override
-	public void addListener( IOrganismListener listener) {
+	public void addListener( IOrganismListener<Organism2D.Form> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener( IOrganismListener listener) {
+	public void removeListener( IOrganismListener<Organism2D.Form> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected void notifyListeners( OrganismEvent event ) {
+	protected void notifyListeners( OrganismEvent<Organism2D.Form> event ) {
 		this.listeners.forEach( l->l.notifyOrganismChanged(event));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public double geDistance( Form form ) {
-		Eye eye = (Eye) design.get( form );
+		Eye<Organism2D.Form> eye = (Eye<Organism2D.Form>) design.get( form );
 		return eye.getInput();
 	}
 
@@ -154,15 +171,16 @@ public class Organism extends Location implements IOrganism{
 	 * Update the location of the eyes, based on the angle
 	 * @param angle
 	 */
+	@SuppressWarnings("unchecked")
 	protected void updateEyes() {
-		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
-		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
+		Eye<Organism2D.Form> leftEye = (Eye<Organism2D.Form>) design.get(Form.LEFT_EYE);
+		Eye<Organism2D.Form> rightEye = (Eye<Organism2D.Form>) design.get(Form.RIGHT_EYE);
 
 		int x= getX();
 		int y= getY();
 		int offset = 1;		
 
-		AngleControl angleControl = (AngleControl) this.design.get( IOrganism.Form.ANGLE);
+		AngleControl angleControl = (AngleControl) this.design.get( Organism2D.Form.ANGLE);
 		switch( angleControl.getAngle() ) {
 		case NORTH:
 			leftEye.setLocation(x-offset, y-offset);
@@ -203,8 +221,10 @@ public class Organism extends Location implements IOrganism{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void update( Environment environment ) {
+	public void update( IEnvironment<IOrganism<Organism2D.Form>> env ) {
+		Environment<Organism2D.Form> environment = (Environment<Form>) env;
 		if( environment.noFood())
 			return;
 
@@ -213,8 +233,8 @@ public class Organism extends Location implements IOrganism{
 		
 		//Secondly update the eyes to find the nearest food source
 		int maxVision = environment.getDiagonal()+5;//add a ceiling
-		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
-		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
+		Eye<Organism2D.Form> leftEye = (Eye<Organism2D.Form>) design.get(Form.LEFT_EYE);
+		Eye<Organism2D.Form> rightEye = (Eye<Organism2D.Form>) design.get(Form.RIGHT_EYE);
 		leftEye.setMaxVision(maxVision);
 		rightEye.setMaxVision(maxVision);
 
@@ -240,11 +260,11 @@ public class Organism extends Location implements IOrganism{
 		int outRight = rightFlagellum.getOutput();		
 		
 		//Calculate the angle of movement
-		AngleControl angleControl = (AngleControl) this.design.get( IOrganism.Form.ANGLE);
+		AngleControl angleControl = (AngleControl) this.design.get( Organism2D.Form.ANGLE);
 		AngleControl.Angle movement =  angleControl.update(outLeft, outRight);
 		move( movement );
 				
-		notifyListeners( new OrganismEvent(this));
+		notifyListeners( new OrganismEvent<Organism2D.Form>(this));
 	}
 
 	/**
@@ -292,5 +312,18 @@ public class Organism extends Location implements IOrganism{
 			this.symbiots.forEach((s) -> results.put(s.getId(), new StressData( s )));
 			return results;
 		}
+	}
+
+	@Override
+	public String log() {
+		StringBuilder builder = new StringBuilder();			
+		Flagellum leftFlagellum = (Flagellum)getSymbiot( Organism2D.Form.LEFT_FLAGELLUM);
+		Flagellum rightFlagellum = (Flagellum) getSymbiot( Organism2D.Form.RIGHT_FLAGELLUM);
+		builder.append(": (");
+		builder.append(leftFlagellum.getOutput());
+		builder.append(",");
+		builder.append(rightFlagellum.getOutput());
+		builder.append(")");
+		return builder.toString();
 	}
 }
