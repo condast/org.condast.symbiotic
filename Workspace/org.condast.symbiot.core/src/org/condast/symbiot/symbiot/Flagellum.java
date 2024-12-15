@@ -6,7 +6,7 @@ import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
 public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 
-	public static final double DEFAULT_FACTOR_STEP = 0.001d;
+	public static final double DEFAULT_FACTOR_STEP = 0.000001d;
 	
 	public Flagellum( IOrganism.Form form, boolean active) {
 		super( form, active);
@@ -32,11 +32,13 @@ public class Flagellum extends EnumOutputSymbiot<IOrganism.Form, Integer> {
 	@Override
 	public void update() {
 		super.update();
-		if( getFactor() > DEFAULT_FACTOR_STEP)
+		if( getFactor() > DEFAULT_FACTOR_STEP) {
 			setOutput(1);
-		else if ( getFactor() < -DEFAULT_FACTOR_STEP)
+			setStress(0.01);
+		}else if ( getFactor() < -DEFAULT_FACTOR_STEP) {
 			setOutput( -1 );
-		else
+			setStress(0.01);
+		}else
 			setOutput(0);	
 	}	
 }

@@ -153,7 +153,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		Iterator<IStressData> iterator = signals.values().iterator();
 		while( iterator.hasNext() ) {
 			IStressData source = iterator.next();
-			double stress = Math.abs(source.getDelta())<Double.MIN_VALUE?-0.01d: source.getDelta();
+			double stress = source.getStress();
 			result += stress*source.getWeight();
 		}
 		result/=signals.size();

@@ -73,7 +73,7 @@ public interface ISymbiot{
 	double getFactor();
 
 	/**
-	 * If true, then the stress data for the given refeence will be updated
+	 * If true, then the stress data for the given reference will be updated
 	 * @param reference
 	 * @return
 	 */

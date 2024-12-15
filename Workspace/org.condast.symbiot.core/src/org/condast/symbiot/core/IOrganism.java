@@ -3,9 +3,9 @@ package org.condast.symbiot.core;
 import java.util.Collection;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiot.core.Organism.Angle;
 import org.condast.symbiot.core.env.Environment;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.environment.ILocation;
 
 public interface IOrganism extends ILocation {
 
@@ -14,6 +14,7 @@ public interface IOrganism extends ILocation {
 		RIGHT_EYE,
 		LEFT_FLAGELLUM,
 		RIGHT_FLAGELLUM,
+		ANGLE,
 		STOMACH;
 
 		@Override
@@ -28,8 +29,6 @@ public interface IOrganism extends ILocation {
 	 * @return
 	 */
 	ISymbiot getSymbiot(Form form);
-
-	Angle getAngle();
 
 	void addListener(IOrganismListener listener);
 

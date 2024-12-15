@@ -8,11 +8,14 @@ import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganism.Form;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
+import org.condast.symbiot.symbiot.AngleControl;
+import org.condast.symbiot.symbiot.AngleControl.AngleBehaviour;
 import org.condast.symbiot.symbiot.Flagellum;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -29,6 +32,7 @@ public class Dashboard extends Composite {
 	private SymbiotComposite sm;
 	
 	private Label lblAngleLabel;
+	private Combo angleCombo;
 	
 	private Handler handler;
 
@@ -45,7 +49,7 @@ public class Dashboard extends Composite {
 		this.setLayout(new GridLayout());
 
 		Group grpOrganism = new Group(this, SWT.NONE);
-		grpOrganism.setLayout(new GridLayout(2, false));
+		grpOrganism.setLayout(new GridLayout(4, false));
 		grpOrganism.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		grpOrganism.setText("Organism:");
 		
@@ -55,6 +59,15 @@ public class Dashboard extends Composite {
 		lblAngleLabel = new Label(grpOrganism, SWT.NONE);
 		lblAngleLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		lblAngleLabel.setText("Rest");
+		
+		Label lblAngle_2 = new Label(grpOrganism, SWT.NONE);
+		lblAngle_2.setText("Behaviour:");
+		
+		this.angleCombo = new Combo(grpOrganism, SWT.NONE );
+		this.angleCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));		
+		this.angleCombo.setItems( AngleControl.AngleBehaviour.items());
+		this.angleCombo.select(0);
+		
 		oc = new OrganismComposite(this, SWT.BORDER);
 		oc.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ));
 
@@ -74,6 +87,10 @@ public class Dashboard extends Composite {
 		tabItem.setControl(om);
 	}
 	
+	public void enableAngleCombo( boolean enable ) {
+		this.angleCombo.setEnabled(enable);
+	}
+	
 	private void onSymbiotSelected( TableEvent<ISymbiot> event) {
 		sm.setInput(event.getData());
 	}
@@ -90,7 +107,6 @@ public class Dashboard extends Composite {
 		super.dispose();
 	}
 
-
 	private class Handler extends AbstractSessionHandler<OrganismEvent> implements IOrganismListener{
 
 		protected Handler(Display display) {
@@ -105,8 +121,11 @@ public class Dashboard extends Composite {
 		@Override
 		protected void onHandleSession(SessionEvent<OrganismEvent> sevent) {
 			IOrganism organism = sevent.getData().getOrganism();
-			StringBuilder builder = new StringBuilder();
-			builder.append(organism.getAngle().name());
+			AngleControl ac = (AngleControl) organism.getSymbiot( Form.ANGLE);
+			ac.setBehaviour(AngleBehaviour.values()[ angleCombo.getSelectionIndex()]);
+		
+			StringBuilder builder = new StringBuilder();	
+			builder.append(ac.getAngle().name());
 			
 			Flagellum leftFlagellum = (Flagellum) organism.getSymbiot( Form.LEFT_FLAGELLUM);
 			Flagellum rightFlagellum = (Flagellum) organism.getSymbiot( Form.RIGHT_FLAGELLUM);

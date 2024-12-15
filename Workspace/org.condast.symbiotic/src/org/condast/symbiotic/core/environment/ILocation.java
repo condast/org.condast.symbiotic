@@ -1,4 +1,4 @@
-package org.condast.symbiot.core;
+package org.condast.symbiotic.core.environment;
 
 public interface ILocation {
 
@@ -7,5 +7,7 @@ public interface ILocation {
 	int getY();
 
 	int[] getLocation();
+
+	boolean equals(int x, int y);
 
 }

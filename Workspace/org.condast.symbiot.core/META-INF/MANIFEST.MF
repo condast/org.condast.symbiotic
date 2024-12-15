@@ -11,7 +11,8 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core,
  org.condast.symbiotic.core.collection,
  org.condast.symbiotic.core.def,
- org.condast.symbiotic.core.enumid
+ org.condast.symbiotic.core.enumid,
+ org.condast.symbiotic.core.environment
 Export-Package: org.condast.symbiot.core,
  org.condast.symbiot.core.env,
  org.condast.symbiot.symbiot

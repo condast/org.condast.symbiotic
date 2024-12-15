@@ -1,4 +1,4 @@
-package org.condast.symbiot.core;
+package org.condast.symbiotic.core.environment;
 
 public class Location implements ILocation {
 

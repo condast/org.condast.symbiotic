@@ -13,9 +13,10 @@ import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
-import org.condast.symbiot.core.Organism;
+import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.env.Environment;
-import org.condast.symbiot.core.env.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.IEnvironment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,7 +37,7 @@ public class EnvironmentComposite extends Composite {
 	private EnvironmentCanvas canvas;
 	private Spinner foodSpinner;
 	private LogComposite logComposite;
-	private Player<Organism> player;
+	private Player player;
 	
 	private ExecuteThread executor;
 	private Handler handler;
@@ -47,15 +48,16 @@ public class EnvironmentComposite extends Composite {
         
 		dashboard = new Dashboard(this, SWT.BORDER);
         dashboard.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
-		
-		canvas = new EnvironmentCanvas(this, SWT.BORDER);
+        dashboard.setEnabled(true);
+
+        canvas = new EnvironmentCanvas(this, SWT.BORDER);
         canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,2,2 ));
        
         logComposite = new LogComposite(this, SWT.BORDER);
         logComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
         logComposite.activate(true);
 
-        player = new Player<Organism >( this, SWT.BORDER );
+        player = new Player( this, SWT.BORDER );
         player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ));
         
         Group foodGroup = new Group(this, SWT.NONE );
@@ -68,18 +70,18 @@ public class EnvironmentComposite extends Composite {
         handler = new Handler(getDisplay());
 	}
 
-	private void onUpdateEnvironment( EnvironmentEvent<Organism> event ) {
+	private void onUpdateEnvironment( EnvironmentEvent<IOrganism> event ) {
 		handler.addData(event.getOrganism());
 	}
 	
-	public void setInput( Environment environment ) {
+	public void setInput( IEnvironment<IOrganism> environment ) {
 		player.setInput(environment);
 		canvas.setInput(environment);
 		executor = new ExecuteThread( environment);
 		executor.setTime(1000);
 	}
 
-	private class Player<I extends Object> extends PlayerComposite<Environment> {
+	private class Player extends PlayerComposite<IEnvironment<IOrganism>> {
 		private static final long serialVersionUID = 1L;
 
 		public Player(Composite parent, int style) {
@@ -95,12 +97,12 @@ public class EnvironmentComposite extends Composite {
 		}
 			
 		@Override
-		public void setInput(Environment input) {
+		public void setInput(IEnvironment<IOrganism> input) {
 			Button button = (Button) super.getButton( PlayerImages.Images.START);
 			button.setEnabled( input != null );
 			button = (Button) super.getButton( PlayerImages.Images.STOP);
 			button.setEnabled( input == null );
-			Environment environment = super.getInput();
+			IEnvironment<IOrganism> environment = super.getInput();
 			if( environment != null )
 				environment.removeListener(l->onUpdateEnvironment(l));
 			super.setInput(input);
@@ -120,7 +122,7 @@ public class EnvironmentComposite extends Composite {
 		@Override
 		protected Control createButton(PlayerImages.Images type) {
 			Button button = new Button( this, SWT.FLAT );
-			Environment environment = super.getInput();
+			IEnvironment<IOrganism> environment = super.getInput();
 			switch( type ){
 			case START:
 				button.setEnabled( environment != null );
@@ -139,7 +141,7 @@ public class EnvironmentComposite extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try{
-						Environment environment = getInput();
+						IEnvironment<IOrganism> environment = getInput();
 						Button button = (Button) e.getSource();
 						PlayerImages.Images image = (PlayerImages.Images) button.getData();
 						Button clear;
@@ -147,6 +149,7 @@ public class EnvironmentComposite extends Composite {
 						case START:
 							//environment.addListener( handler);
 							logComposite.clear();
+							dashboard.enableAngleCombo(false);
 							executor.start();
 							getButton( PlayerImages.Images.STOP).setEnabled(true);
 							getButton( PlayerImages.Images.NEXT).setEnabled(false);
@@ -155,6 +158,7 @@ public class EnvironmentComposite extends Composite {
 							clear.setEnabled( false );//!environment.isRunning() || environment.isPaused());
 							break;
 						case STOP:
+							dashboard.enableAngleCombo(true);
 							getButton( PlayerImages.Images.NEXT).setEnabled(true);
 							stop();
 							break;
@@ -164,6 +168,7 @@ public class EnvironmentComposite extends Composite {
 							clear.setEnabled( true );//!environment.isRunning() || environment.isPaused());
 							break;
 						case RESET:
+							dashboard.enableAngleCombo(true);
 							environment.clear();
 							getButton( PlayerImages.Images.RESET).setEnabled(false);
 							break;
@@ -187,10 +192,10 @@ public class EnvironmentComposite extends Composite {
 		private ScheduledExecutorService service;
 		private Environment environment;
 
-		public ExecuteThread( Environment environment )
+		public ExecuteThread( IEnvironment<IOrganism> environment )
 		{
 			super(true);
-			this.environment = environment;		}
+			this.environment = (Environment) environment;		}
 
 		
 		@Override
@@ -224,14 +229,14 @@ public class EnvironmentComposite extends Composite {
 		
 	}
 
-	private class Handler extends AbstractSessionHandler<Organism>{
+	private class Handler extends AbstractSessionHandler<IOrganism>{
 
 		protected Handler(Display display) {
 			super(display);
 		}
 
 		@Override
-		protected void onHandleSession(SessionEvent<Organism> sevent) {
+		protected void onHandleSession(SessionEvent<IOrganism> sevent) {
 			canvas.redraw();
 		}	
 	}

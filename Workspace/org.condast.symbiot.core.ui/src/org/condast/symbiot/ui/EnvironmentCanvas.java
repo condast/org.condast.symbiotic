@@ -2,12 +2,12 @@ package org.condast.symbiot.ui;
 
 import java.util.Iterator;
 
-import org.condast.symbiot.core.ILocation;
 import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.Location;
 import org.condast.symbiot.core.Organism;
 import org.condast.symbiot.core.env.Environment;
-import org.condast.symbiot.core.env.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.IEnvironment;
+import org.condast.symbiotic.core.environment.ILocation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
@@ -56,7 +56,7 @@ public class EnvironmentCanvas extends Canvas{
 		}
 	}
 
-	private void onNotifyEnvironmentChanged(EnvironmentEvent<Organism> event) {
+	private void onNotifyEnvironmentChanged(EnvironmentEvent<IOrganism> event) {
 		if( disposed || getDisplay().isDisposed() || ( event.getSource() == null ))
 			return;
 		getDisplay().asyncExec( new Runnable() {
@@ -68,14 +68,14 @@ public class EnvironmentCanvas extends Canvas{
 		});
 	}
 
-	public Environment getInput() {
+	public IEnvironment<IOrganism> getInput() {
 		return this.environment;
 	}
 
-	public void setInput( Environment environment){
+	public void setInput( IEnvironment<IOrganism> environment){
 		if( this.environment != null )
 			this.environment.removeListener(e->onNotifyEnvironmentChanged(e));
-		this.environment = environment;
+		this.environment = (Environment) environment;
 		if( this.environment != null )
 			this.environment.addListener(e->onNotifyEnvironmentChanged(e));
 		this.redraw();
@@ -121,7 +121,7 @@ public class EnvironmentCanvas extends Canvas{
 
 		try {
 			//The raster
-			Iterator<Location> iterator = this.environment.iterator();
+			Iterator<ILocation> iterator = this.environment.iterator();
 			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_MAGENTA ));					
 			IOrganism place = environment.getOrganism();
 			int[] pos;

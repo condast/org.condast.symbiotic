@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.condast.commons.strings.StringStyler;
 import org.condast.symbiot.core.env.Environment;
+import org.condast.symbiot.symbiot.AngleControl;
 import org.condast.symbiot.symbiot.Eye;
 import org.condast.symbiot.symbiot.Flagellum;
 import org.condast.symbiotic.core.StressData;
@@ -15,62 +15,12 @@ import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.collection.SymbiotCollection;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.environment.Location;
 
 public class Organism extends Location implements IOrganism{
 
 	public static final String S_ORGANISM = "ORGANISM";
 
-	public enum Angle{
-		ZERO(0),
-		NORTH(1),
-		NORTH_EAST(2),
-		EAST(3),
-		SOUTH_EAST(4),
-		SOUTH(5),
-		SOUTH_WEST(6),
-		WEST(7),
-		NORTH_WEST(8);
-
-		private int angle;
-
-		private Angle(int angle) {
-			this.angle = angle;
-		}
-
-		private int getIndex() {
-			return this.angle;
-		}
-
-		public static Angle getAngle( int angle ) {
-			return Angle.values()[ angle ];
-		}
-
-		public static Angle right( Angle angle ) {
-			int result = (NORTH_WEST.getIndex() + angle.getIndex() + 1)%NORTH_WEST.getIndex();
-			if( result == ZERO.getIndex())
-				result = NORTH.getIndex();
-			return Angle.getAngle( result );
-		}
-
-		public static Angle left( Angle angle ) {
-			int result = (NORTH_WEST.getIndex() + angle.getIndex() - 1)%NORTH_WEST.getIndex();
-			if( result == ZERO.getIndex())
-				result = NORTH.getIndex();
-			return Angle.getAngle( result );
-		}
-
-		public static Angle swap( Angle angle ) {
-			int result = (NORTH_WEST.getIndex() + angle.getIndex() + SOUTH_EAST.getIndex())%NORTH_WEST.getIndex();
-			if( result == ZERO.getIndex())
-				result = SOUTH.getIndex();
-			return Angle.getAngle( result );
-		}
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString(name());
-		}
-	}
 
 	private Map<Form, ISymbiot> design;
 
@@ -78,11 +28,8 @@ public class Organism extends Location implements IOrganism{
 
 	private Collection<IOrganismListener> listeners;
 
-	private Angle angle;
-
 	public Organism() {
 		super();
-		this.angle = Angle.ZERO;
 		symbiots = new SymbiotCollection();
 		design();
 		this.listeners = new ArrayList<>();
@@ -101,7 +48,11 @@ public class Organism extends Location implements IOrganism{
 		Eye rightEye = new Eye( Form.RIGHT_EYE, true);
 		symbiots.add(rightEye);
 		design.put(Form.RIGHT_EYE, rightEye);
-		
+
+		AngleControl angleControl = new AngleControl( Form.ANGLE);
+		symbiots.add(angleControl);
+		design.put(Form.ANGLE, angleControl);
+
 		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true);
 		leftFlagellum.addInfluence(leftEye);
 		leftFlagellum.addInfluence(rightEye);
@@ -109,18 +60,13 @@ public class Organism extends Location implements IOrganism{
 		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
 		
 		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
-		symbiots.add(  rightFlagellum);
-		leftFlagellum.addInfluence(leftEye);
+		rightFlagellum.addInfluence(leftEye);
 		rightFlagellum.addInfluence(rightEye);
 		rightFlagellum.addInfluence(leftFlagellum);
+		symbiots.add(  rightFlagellum);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		
 
 		leftFlagellum.addInfluence(rightFlagellum);
-	}
-
-	@Override
-	public Angle getAngle() {
-		return angle;
 	}
 
 	@Override
@@ -147,6 +93,12 @@ public class Organism extends Location implements IOrganism{
 		this.listeners.forEach( l->l.notifyOrganismChanged(event));
 	}
 
+	@Override
+	public double geDistance( Form form ) {
+		Eye eye = (Eye) design.get( form );
+		return eye.getInput();
+	}
+
 	/**
 	 * The actual movement of the organism
 	 * | 8 | 1 | 2 |
@@ -154,7 +106,7 @@ public class Organism extends Location implements IOrganism{
 	 * | 6 | 5 | 4 |
 	 * @param angle
 	 */
-	protected void move( Angle angle ) {
+	protected void move( AngleControl.Angle angle ) {
 		int x = super.getX();
 		int y=  super.getY();
 		switch( angle ) {
@@ -194,68 +146,24 @@ public class Organism extends Location implements IOrganism{
 	}
 
 	@Override
-	public double geDistance( Form form ) {
-		Eye eye = (Eye) design.get( form );
-		return eye.getInput();
-	}
-
-
-	/**
-	 * Get the angle, based on the a move left and move right:
-	 * | 8 | 1 | 2 |
-	 * | 7 | 0 | 3 |
-	 * | 6 | 5 | 4 |
-	 *
-	 * -1 means <0 and +1 > 0
-	 *
-	 * @param moveLeft
-	 * @param moveRight
-	 * @return
-	 */
-	protected Angle getSimpleAngle( int outLeft, int outRight ) {
-		if(( outLeft == 0 ) && ( outRight == 0))
-			return Angle.ZERO;
-		else if(( outLeft == 1 ) && ( outRight == 1 ))
-			return Angle.NORTH;
-		else if( outLeft == 0 ) {
-			if ( outRight == 1 )
-				return Angle.NORTH_WEST;
-			else 
-				return  ( outRight == 0)? Angle.WEST: Angle.SOUTH_WEST;
-		}
-		else if(( outLeft == 1 ) && ( outRight == -1 ))
-			return Angle.NORTH_WEST;
-		else if( outRight == 0 ) {
-			if ( outLeft == 1 )
-				return Angle.NORTH_EAST;
-			else 
-				return ( outLeft == 0)? Angle.EAST: Angle.SOUTH_EAST;
-		}
-		else if(( outRight == 1 ) && ( outLeft == -1 ))
-			return Angle.SOUTH_EAST;
-		else return (( outLeft == -1 ) && ( outRight == -1 ))? Angle.SOUTH: Angle.ZERO;	
-	}
-
-	protected void outputBehaviour( Flagellum leftFlagellum, Flagellum rightFlagellum ) {
-		int outLeft = leftFlagellum.getOutput();
-		int outRight = rightFlagellum.getOutput();
-		this.angle = getSimpleAngle(outLeft, outRight);
-		move(this.angle);
-	}
-
-	@Override
 	public ISymbiot toSymbiot() {
 		return new OrganismSymbiot( this.symbiots );
 	}
 
-	protected void updateEyes( Angle angle ) {
+	/**
+	 * Update the location of the eyes, based on the angle
+	 * @param angle
+	 */
+	protected void updateEyes() {
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
 		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
 
 		int x= getX();
 		int y= getY();
 		int offset = 1;		
-		switch( angle ) {
+
+		AngleControl angleControl = (AngleControl) this.design.get( IOrganism.Form.ANGLE);
+		switch( angleControl.getAngle() ) {
 		case NORTH:
 			leftEye.setLocation(x-offset, y-offset);
 			rightEye.setLocation(x+offset, y-offset);
@@ -286,40 +194,34 @@ public class Organism extends Location implements IOrganism{
 			break;
 		case NORTH_WEST:
 			leftEye.setLocation(x+offset, y-offset);
-			rightEye.setLocation(-+offset, y+offset);
+			rightEye.setLocation(x+offset, y+offset);
 			break;
-		default:
+		default://default NORTH facing, without movement
+			leftEye.setLocation(x-offset, y);
+			rightEye.setLocation(x+offset, y);
 			break;
 		}
 	}
 
-	protected int getDistance( Form eye, Environment environment ) {
-		int retval = environment.getNearestFoodDistance(getX(), getY());
-		switch( angle ) {
-		case NORTH:
-			retval = Form.LEFT_EYE.equals(eye)? retval+1: retval-1;
-			break;
-		case SOUTH:
-			retval = Form.LEFT_EYE.equals(eye)? retval-1: retval+1;
-			break;
-		default:
-			break;
-		}
-		return retval;
-	}
-	
 	@Override
 	public void update( Environment environment ) {
-		//First update the eyes to find the nearest food source
+		if( environment.noFood())
+			return;
+
+		//First set the eyes to reflect the current angle
+		this.updateEyes();
+		
+		//Secondly update the eyes to find the nearest food source
 		int maxVision = environment.getDiagonal()+5;//add a ceiling
 		Eye leftEye = (Eye) design.get(Form.LEFT_EYE);
 		Eye rightEye = (Eye) design.get(Form.RIGHT_EYE);
 		leftEye.setMaxVision(maxVision);
 		rightEye.setMaxVision(maxVision);
-		updateEyes(angle);
 
+		//First find the angle to the nearest food source
 		int angle =  environment.getNearestFoodAngle(getX(), getY());
 
+		//This affects the two eyes
 		int distance = environment.getNearestFoodDistance(leftEye.getX(), leftEye.getY());
 		leftEye.setInput( distance);
 		leftEye.setAngle(angle);
@@ -328,15 +230,20 @@ public class Organism extends Location implements IOrganism{
 		rightEye.setInput(distance);
 		rightEye.setAngle(angle);
 
-		if( environment.noFood())
-			return;
-
-		//Then update the flagelii
+		//Then update the stress signals
 		this.symbiots.updateSymbiots();
 
+		//Move the organism,
 		Flagellum leftFlagellum = (Flagellum) design.get(Form.LEFT_FLAGELLUM);
 		Flagellum rightFlagellum = (Flagellum) design.get(Form.RIGHT_FLAGELLUM);
-		outputBehaviour(leftFlagellum, rightFlagellum);		
+		int outLeft = leftFlagellum.getOutput();
+		int outRight = rightFlagellum.getOutput();		
+		
+		//Calculate the angle of movement
+		AngleControl angleControl = (AngleControl) this.design.get( IOrganism.Form.ANGLE);
+		AngleControl.Angle movement =  angleControl.update(outLeft, outRight);
+		move( movement );
+				
 		notifyListeners( new OrganismEvent(this));
 	}
 
@@ -367,7 +274,6 @@ public class Organism extends Location implements IOrganism{
 		@Override
 		public void setStress(double stress) {
 			this.stress = stress;
-
 		}
 
 		@Override

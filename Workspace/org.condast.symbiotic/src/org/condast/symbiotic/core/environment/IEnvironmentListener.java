@@ -1,4 +1,4 @@
-package org.condast.symbiot.core.env;
+package org.condast.symbiotic.core.environment;
 
 public interface IEnvironmentListener<O extends Object> {
 

@@ -26,8 +26,12 @@ public class SymbiotCollection implements ISymbiotCollection{
 	}
 	
 	public SymbiotCollection( double weightStep ) {
+		this( new DefaultBehaviour( weightStep));
+	}
+
+	public SymbiotCollection( IBehaviour behaviour ) {
 		this.stress = 0;
-		this.behaviour = new DefaultBehaviour( weightStep);
+		this.behaviour = behaviour;
 		symbiots = new ArrayList<ISymbiot>();
 	}
 

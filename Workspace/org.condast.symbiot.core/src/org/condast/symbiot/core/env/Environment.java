@@ -6,12 +6,14 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.condast.symbiot.core.Food;
-import org.condast.symbiot.core.ILocation;
 import org.condast.symbiot.core.IOrganism;
-import org.condast.symbiot.core.Location;
 import org.condast.symbiot.core.Organism;
+import org.condast.symbiotic.core.environment.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.IEnvironment;
+import org.condast.symbiotic.core.environment.IEnvironmentListener;
+import org.condast.symbiotic.core.environment.ILocation;
 
-public class Environment {
+public class Environment implements IEnvironment<IOrganism> {
 
 	public static final int DEFAULT_BORDER = 10;
 	
@@ -19,11 +21,11 @@ public class Environment {
 	
 	private int border;
 	
-	private Collection<Location> field;
+	private Collection<ILocation> field;
 	
-	private Organism organism;
+	private IOrganism organism;
 	
-	private Collection<IEnvironmentListener<Organism>> listeners;
+	private Collection<IEnvironmentListener<IOrganism>> listeners;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -40,26 +42,31 @@ public class Environment {
 		this.listeners = new ArrayList<>();
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
 	
-	public void addListener( IEnvironmentListener<Organism> listener) {
+	@Override
+	public void addListener( IEnvironmentListener<IOrganism> listener) {
 		this.listeners.add(listener);
 	}
 
-	public void removeListener( IEnvironmentListener<Organism> listener) {
+	@Override
+	public void removeListener( IEnvironmentListener<IOrganism> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected void notifyListeners( EnvironmentEvent<Organism> event ) {
+	protected void notifyListeners( EnvironmentEvent<IOrganism> event ) {
 		this.listeners.forEach( l->l.notifyEnvironmentChanged(event));
 	}
 
+	@Override
 	public void clear() {
 		setOrganism( null );
 		this.field.clear();
@@ -74,17 +81,18 @@ public class Environment {
 		return organism;
 	}
 
-	public boolean setOrganism( Organism organism ) {
+	public boolean setOrganism( IOrganism organism ) {
 		if( this.organism != null )
 			this.remove(this.organism);
 		this.organism = organism;
 		this.field.add(organism);
-		notifyListeners( new EnvironmentEvent<Organism>( this, organism ));
+		notifyListeners( new EnvironmentEvent<IOrganism>( this, this.organism ));
 		return true;
 	}
 	
+	@Override
 	public ILocation get( int x, int y ) {
-		for( Location l: this.field ) {
+		for( ILocation l: this.field ) {
 			if( l.equals(x,y))
 				return l;
 		}
@@ -102,10 +110,12 @@ public class Environment {
 		return field.remove(obj);
 	}
 
-	public Iterator<Location> iterator(){
+	@Override
+	public Iterator<ILocation> iterator(){
 		return field.iterator();		
 	}
 
+	@Override
 	public void init( int amountFood) {
        this.clear();
 		logger.info("Environment: {" + x + ", " + y + "}");
@@ -144,6 +154,12 @@ public class Environment {
 		return (int) nearest;
 	}
 
+	/**
+	 * Get the angle to the nearest food source in degrees (0-360)
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public int getNearestFoodAngle( int x, int y ) {
 		double angle = 0;
 		double nearest = Double.MAX_VALUE;
@@ -195,6 +211,7 @@ public class Environment {
 		return true;
 	}
 
+	@Override
 	public void update() {
 		try {
 			int[] location = this.organism.getLocation();

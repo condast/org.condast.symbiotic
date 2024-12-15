@@ -12,6 +12,7 @@ import org.condast.commons.ui.table.AbstractTableComposite;
 import org.condast.symbiot.core.IOrganism;
 import org.condast.symbiot.core.IOrganismListener;
 import org.condast.symbiot.core.OrganismEvent;
+import org.condast.symbiot.symbiot.AngleControl;
 import org.condast.symbiot.symbiot.Eye;
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.IOutputSymbiot;
@@ -83,14 +84,12 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		viewer.setLabelProvider( new SymbiotLabelProvider() );
 	}
 	
-
 	@Override
 	protected void createColumns(Composite parent, TableViewer viewer) {
 		for( Columns column: Columns.values()){
 			TableViewerColumn tcol = super.registerColum(column.toString(), SWT.CENTER, column.getWeight( ), column.ordinal());
 			tcol.getColumn().setText(column.toString());
 			getTableColumnLayout().setColumnData( tcol.getColumn(), new ColumnWeightData( column.getWeight()));
-
 		}
 	}
 	
@@ -124,7 +123,6 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		return 0;
 	}
 
-	
 	public IOrganism getOrganism() {
 		return organism;
 	}
@@ -165,6 +163,9 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				if( symbiot instanceof Eye ) {
 					Eye eye  = (Eye) symbiot;
 					retval = String.valueOf( eye.getAngle());
+				} else 	if( symbiot instanceof AngleControl ) {
+					AngleControl ac  = (AngleControl) symbiot;
+					retval = String.valueOf( StringStyler.prettyString( ac.getAngle().name() ));
 				}
 				break;
 			case WEIGHT:

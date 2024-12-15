@@ -28,18 +28,28 @@ public class DefaultBehaviour implements IBehaviour {
 		Iterator<Map.Entry<String, IStressData>> iterator = signals.entrySet().iterator();
 		while( iterator.hasNext()) {
 			Map.Entry<String, IStressData> entry = iterator.next();
-			if( entry.getKey().equals(symbiot.getId()))
+			if(( entry.getKey().equals(symbiot.getId()))) // || !symbiot.enableUpdate(entry.getKey()))
 				continue;
 			IStressData data = entry.getValue();
 			double weight = data.getWeight();
+			
 			//stressDelta <=0 is good, because this means that the stress is decreasing
-			if( data.getDelta() <= 0 )
-				weight -= this.weightStep* data.getStress();
-			else
-				weight += this.weightStep* data.getStress();
+			double stressDelta = data.getDelta();
+
+			//There is stress, so we need to do something about it
+			//The delta is ALSO increasing, so we need to change direction
+			if(( data.getStress() > 0 ) &&  ( stressDelta > 0 )) {
+				//the weight is not right
+				if( data.getWeight() > 0 )
+					weight -= this.weightStep * data.getStress();
+				else 
+					weight += this.weightStep * data.getStress();
+			}else {
+				//No stress, or it is getting less, so keep things as they are for now
+				//weight += this.weightStep* data.getStress();
+			}
 			weight = NumberUtils.clipRange(-1, 1, weight);
-			data.setWeight(weight);		
+			data.setWeight(weight);			
 		}
 	}
-
 }
