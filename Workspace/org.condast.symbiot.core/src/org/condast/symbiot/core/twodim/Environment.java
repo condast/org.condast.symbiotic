@@ -51,7 +51,12 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
 	public int getY() {
 		return y;
 	}
-	
+
+	@Override
+	public ILocation getBorder() {
+		return new Location( border, border );
+	}
+
 	@Override
 	public void addListener( IEnvironmentListener<IOrganism<E>> listener) {
 		this.listeners.add(listener);
@@ -88,11 +93,6 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
 		this.field.add(organism);
 		notifyListeners( new EnvironmentEvent<IOrganism<E>>( this, this.organism ));
 		return true;
-	}
-
-	@Override
-	public ILocation getBorder() {
-		return new Location( border, border );
 	}
 
 	@Override

@@ -100,10 +100,12 @@ public class Organism1D extends Location implements IOrganism<Organism1D.Form>{
 	 * | 6 | 5 | 4 |
 	 * @param angle
 	 */
-	protected void move( int out, int border ) {
+	protected void move( int out, IEnvironment<IOrganism<Organism1D.Form>> env ) {
 		int x = super.getX();
 		x += out;
-		if(( x < 0 ) || ( x > border ))
+		int minx = -env.getBorder().getX();
+		int range =  env.getX() + env.getBorder().getX();
+		if(( x < minx ) || ( x > range ))
 			return;
 		super.setX( x);
 	}
@@ -134,9 +136,9 @@ public class Organism1D extends Location implements IOrganism<Organism1D.Form>{
 		this.symbiots.updateSymbiots();
 
 		//Move the organism,
-		Flagellum1D leftFlagellum = (Flagellum1D) design.get(Organism1D.Form.FLAGELLUM);
-		int out = leftFlagellum.getOutput();	
-		move( out, environment.getBorder().getX() );
+		Flagellum1D flagellum = (Flagellum1D) design.get(Organism1D.Form.FLAGELLUM);
+		int out = flagellum.getOutput();	
+		move( out, environment );
 				
 		notifyListeners( new OrganismEvent<Organism1D.Form>(this));
 	}

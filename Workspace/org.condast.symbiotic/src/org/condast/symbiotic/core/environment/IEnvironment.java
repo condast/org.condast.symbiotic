@@ -4,9 +4,14 @@ import java.util.Iterator;
 
 public interface IEnvironment<O> {
 
+	//The length of the x-axis
 	int getX();
 
+	//The length of the y-axis
 	int getY();
+
+	//The border of the environement
+	ILocation getBorder();
 
 	void addListener(IEnvironmentListener<O> listener);
 
@@ -15,8 +20,6 @@ public interface IEnvironment<O> {
 	void clear();
 
 	ILocation get(int x, int y);
-
-	ILocation getBorder();
 
 	Iterator<ILocation> iterator();
 
@@ -29,5 +32,4 @@ public interface IEnvironment<O> {
 	ILocation getNearestFood(int x, int y);
 
 	boolean noFood();
-
 }
