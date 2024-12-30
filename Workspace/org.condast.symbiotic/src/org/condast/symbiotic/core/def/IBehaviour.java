@@ -7,6 +7,13 @@ public interface IBehaviour {
 	 */
 	public static double DEFAULT_WEIGHT_STEP = 0.1d;
 
+	/**
+	 * If the behaviours is inclusive, then the stress of all the symbiots are 
+	 * used for all calculations. This by definition has complexity of O(n^2) 
+	 * @return
+	 */
+	boolean isInclusive();
+
 	double getWeightStep();
 	
 	public void updateSymbiot( ISymbiot symbiot );

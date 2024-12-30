@@ -22,11 +22,11 @@ public class SymbiotCollection implements ISymbiotCollection{
 	private double stress;
 
 	public SymbiotCollection(  ) {
-		this( IBehaviour.DEFAULT_WEIGHT_STEP);
+		this( IBehaviour.DEFAULT_WEIGHT_STEP, false );
 	}
 	
-	public SymbiotCollection( double weightStep ) {
-		this( new DefaultBehaviour( weightStep));
+	public SymbiotCollection( double weightStep, boolean inclusive ) {
+		this( new DefaultBehaviour( weightStep, inclusive ));
 	}
 
 	public SymbiotCollection( IBehaviour behaviour ) {
@@ -35,6 +35,16 @@ public class SymbiotCollection implements ISymbiotCollection{
 		symbiots = new ArrayList<ISymbiot>();
 	}
 
+	/**
+	 * If the behaviours is inclusive, then the stress of all the symbiots are 
+	 * used for all calculations. This by definition has complexity of O(n^2) 
+	 * @return
+	 */
+	@Override
+	public boolean isInclusive() {
+		return this.behaviour.isInclusive();
+	}
+	
 	/**
 	 * returns the symbiot with the given identifier
 	 * @param identifier

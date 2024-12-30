@@ -15,15 +15,24 @@ public interface ISymbiotCollection extends Collection<ISymbiot>{
 	ISymbiot get(String identifier);
 
 	/**
+	 * If the behaviours is inclusive, then the stress of all the symbiots are 
+	 * used for all calculations. This by definition has complexity of O(n^2) 
+	 * @return
+	 */
+	boolean isInclusive();
+
+	/**
+	 * clear the symbiots
+	 */
+	void clear();
+
+	/**
 	 * Get the cumulated stress from the symbiots
 	 * @return
 	 */
 	Map<String, Double> getCumultatedStress();
 
 	boolean add(ISymbiot symbiot);
-
-	void clear();
-
 	/**
 	 *Get the overall stress levels of all the symbiots in the collection
 	 * @return

@@ -124,8 +124,9 @@ public class Organism1D extends Location implements IOrganism<Organism1D.Form>{
 			return;
 
 		//Secondly update the eyes to find the nearest food source
-		int maxVision = environment.getBorder().getX()+5;//add a ceiling
+		int maxVision = environment.getX()+environment.getBorder().getX();//add a ceiling
 		Eye<Organism1D.Form> eye = (Eye<Organism1D.Form>) design.get(Form.EYE);
+		eye.setLocation(getX(), getY());
 		eye.setMaxVision(maxVision);
 
 		//This affects the two eyes

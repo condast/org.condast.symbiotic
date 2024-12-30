@@ -53,7 +53,8 @@ public class StressData implements IStressData {
 	
 	@Override
 	public void update () {
-		this.previousStress = this.stress;
+		if(Math.abs( this.previousStress - this.stress ) > Double.MAX_VALUE )
+			this.previousStress = this.stress;
 		this.stress = this.symbiot.getStress();
 	}
 }
