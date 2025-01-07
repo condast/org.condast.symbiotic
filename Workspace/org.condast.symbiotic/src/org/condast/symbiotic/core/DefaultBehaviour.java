@@ -13,7 +13,7 @@ public class DefaultBehaviour implements IBehaviour {
 	private double weightStep; //The increase or decrease of stress per cycle
 	
 	private boolean inclusive;
-
+	
 	public DefaultBehaviour(double weightStep) {
 		this( weightStep, false );
 	}
@@ -23,7 +23,6 @@ public class DefaultBehaviour implements IBehaviour {
 		this.weightStep = weightStep;
 		this.inclusive = inclusive;
 	}
-
 	@Override
 	public boolean isInclusive() {
 		return inclusive;
@@ -47,7 +46,11 @@ public class DefaultBehaviour implements IBehaviour {
 			
 			//stressDelta <=0 is good, because this means that the stress is decreasing
 			double stressDelta = data.getDelta();
-			weight -= this.weightStep * stressDelta;
+			if( weight < 0) {
+				weight += this.weightStep * stressDelta;
+			}else {
+				weight -= this.weightStep * stressDelta;
+			}
 			weight = NumberUtils.clipRange(-1, 1, weight);
 			data.setWeight(weight);			
 		}

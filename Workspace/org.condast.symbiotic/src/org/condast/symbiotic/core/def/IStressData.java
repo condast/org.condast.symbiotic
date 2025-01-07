@@ -16,8 +16,17 @@ public interface IStressData {
 	 */
 	double getDelta();
 
-
+	/**
+	 * Get the current weight 
+	 * @return
+	 */
 	double getWeight();
+
+	/**
+	 * weight minus previous weight
+	 * @return
+	 */
+	double getWeightDelta();
 
 	void setWeight( double weight );
 

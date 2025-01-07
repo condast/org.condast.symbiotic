@@ -3,12 +3,14 @@ package org.condast.symbiot.ui;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 import org.condast.commons.strings.StringStyler;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.table.AbstractTableComposite;
+import org.condast.commons.ui.table.ITableEventListener.TableEvents;
+import org.condast.commons.ui.table.TableEvent;
 import org.condast.symbiot.core.organism.Eye;
 import org.condast.symbiot.core.twodim.AngleControl;
 import org.condast.symbiot.core.twodim.Organism2D;
@@ -127,16 +129,29 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	public IOrganism<Organism2D.Form> getOrganism() {
 		return organism;
 	}
+	
+	@Override
+	public ISymbiot getInput() {
+		return super.getInput();
+	}
 
 	public void setInput(IOrganism<Organism2D.Form> organism) {
 		if( this.organism != null )
 			this.organism.removeListener(listener);
 		this.organism = organism;
-		if( this.organism != null ) {
-			this.organism.addListener(listener);
-			Collection<ISymbiot> symbiots = new ArrayList<>( this.organism.getSymbiots());
-			symbiots.add(this.organism.toSymbiot());
-			super.setInput( symbiots.toArray( new ISymbiot[ symbiots.size() ]));
+		if( this.organism == null )
+			return;
+		this.organism.addListener(listener);
+		List<ISymbiot> symbiots = new ArrayList<>( this.organism.getSymbiots());
+		symbiots.add(this.organism.toSymbiot());
+		super.setInput( symbiots.toArray( new ISymbiot[ symbiots.size() ]));
+		for( int i=0; i<symbiots.size(); i++ ) {
+			ISymbiot symbiot = symbiots.get(i);
+			if( !symbiot.getId().contains("FLAGELLUM"))
+				continue;
+			super.setSelection(i);
+			super.notifyTableEvent( new TableEvent<>(this, TableEvents.SELECT, symbiot ));
+			return;
 		}
 	}
 

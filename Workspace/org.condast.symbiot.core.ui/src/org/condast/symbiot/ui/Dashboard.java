@@ -53,6 +53,7 @@ public class Dashboard extends Composite {
 		grpOrganism.setText("Organism:");
 		
 		Label lblAngle_1 = new Label(grpOrganism, SWT.NONE);
+		lblAngle_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		lblAngle_1.setText("Angle:");
 		
 		lblAngleLabel = new Label(grpOrganism, SWT.NONE);
@@ -97,12 +98,16 @@ public class Dashboard extends Composite {
 	public void setInput( IOrganism<Organism2D.Form> organism ) {
 		oc.setInput(organism);
 		om.setInput(organism);
+		sm.setInput(oc.getInput());
 		organism.addListener( handler);
 	}
 
 	@Override
 	public void dispose() {
 		this.oc.removeTableEventListener(listener);
+		this.oc.dispose();
+		this.om.dispose();
+		this.sm.dispose();
 		super.dispose();
 	}
 

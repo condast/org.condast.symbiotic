@@ -32,6 +32,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 	private enum Columns{
 		NAME,
 		WEIGHT,
+		WEIGHT_DELTA,
 		STRESS,
 		STRESS_DELTA;
 
@@ -147,6 +148,9 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 				break;
 			case WEIGHT:
 				retval = String.format("%,.4f", stress.getWeight());
+				break;
+			case WEIGHT_DELTA:
+				retval = String.format("%,.4f", stress.getWeightDelta());
 				break;
 			case STRESS:
 				retval = String.format("%,.4f", stress.getStress());
