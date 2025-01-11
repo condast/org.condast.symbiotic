@@ -1,4 +1,4 @@
-package org.condast.symbiot.core.twodim;
+package org.condast.symbiot.core.test;
 
 public class Place<O extends Object> {
 

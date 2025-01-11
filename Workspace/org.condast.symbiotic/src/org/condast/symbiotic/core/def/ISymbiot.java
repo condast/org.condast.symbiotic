@@ -14,6 +14,11 @@ public interface ISymbiot{
 	 */
 	public boolean isActive();
 
+	/**
+	 * clear the stress and stress data
+	 */
+	void clear();
+	
 	void clearStress();
 
 	/**

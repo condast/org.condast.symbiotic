@@ -1,4 +1,4 @@
-package org.condast.symbiot.core.twodim;
+package org.condast.symbiot.core.test;
 
 import org.condast.commons.strings.StringStyler;
 import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;

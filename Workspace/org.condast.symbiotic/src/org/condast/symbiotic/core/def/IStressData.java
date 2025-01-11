@@ -5,6 +5,11 @@ public interface IStressData {
 	String getReference();
 
 	/**
+	 * clear the stress and weights
+	 */
+	void clear();
+	
+	/**
 	 * Get the current stress of the symbiot
 	 * @return
 	 */

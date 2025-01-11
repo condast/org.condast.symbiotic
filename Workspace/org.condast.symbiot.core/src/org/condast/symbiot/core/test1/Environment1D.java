@@ -1,8 +1,9 @@
-package org.condast.symbiot.core.onedim;
+package org.condast.symbiot.core.test1;
 
 import java.util.logging.Logger;
 
-import org.condast.symbiot.core.twodim.Environment;
+import org.condast.symbiot.core.test.Environment;
+import org.condast.symbiotic.core.organism.IOrganism;
 
 public class Environment1D extends Environment<Organism1D.Form> {
 
@@ -39,7 +40,7 @@ public class Environment1D extends Environment<Organism1D.Form> {
 			xo = border + (int) ( lengthx * Math.random());
 			addFood(xo);
 		}
-		Organism1D organism = new Organism1D();
+		IOrganism<Organism1D.Form> organism = super.getOrganism();
 		Object food = null;
 		do{
 			xo = border + (int) (lengthx * Math.random());

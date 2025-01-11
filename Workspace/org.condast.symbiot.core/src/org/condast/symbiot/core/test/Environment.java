@@ -1,4 +1,4 @@
-package org.condast.symbiot.core.twodim;
+package org.condast.symbiot.core.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +73,7 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
 
 	@Override
 	public void clear() {
-		setOrganism( null );
+		this.organism.clear();
 		this.field.clear();
 	}
 	
@@ -86,13 +86,12 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
 		return organism;
 	}
 
-	public boolean setOrganism( IOrganism<E> organism ) {
+	public void setOrganism( IOrganism<E> organism ) {
 		if( this.organism != null )
 			this.remove(this.organism);
 		this.organism = organism;
 		this.field.add(organism);
 		notifyListeners( new EnvironmentEvent<IOrganism<E>>( this, this.organism ));
-		return true;
 	}
 
 	@Override
@@ -120,7 +119,6 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
 		return field.iterator();		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void init( int amountFood) {
        this.clear();
@@ -134,14 +132,13 @@ public class Environment<E extends Enum<E>> implements IEnvironment<IOrganism<E>
     		yo = this.border + (int) (lengthy * Math.random());
     		addFood(xo, yo);
     	}
-        Organism2D organism = new Organism2D();
         Object food = null;
         do{
         	xo = this.border + (int) (lengthx * Math.random());
         	yo = this.border + (int) (lengthy * Math.random());
         	food = get(xo, yo);
         }while( food != null );
-        organism.setLocation(xo, yo);
+        this.organism.setLocation(xo, yo);
 		logger.info("Organism added at: {" + xo + ", " + yo + "}");
         setOrganism((IOrganism<E>) organism);
 

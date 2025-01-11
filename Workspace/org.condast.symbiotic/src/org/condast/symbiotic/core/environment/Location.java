@@ -39,7 +39,7 @@ public class Location implements ILocation {
 		return result;
 	}
 	
-	public void setLocation( int x, int y ) {
+	protected void setLocation( int x, int y ) {
 		this.x = x;
 		this.y = y;
 	}

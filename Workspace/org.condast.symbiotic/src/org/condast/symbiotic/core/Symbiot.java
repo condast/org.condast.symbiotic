@@ -53,6 +53,12 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public boolean isActive() {
 		return isActive;
 	}
+	
+	@Override
+	public void clear() {
+		this.clearStress();
+		this.signals.values().forEach( s->s.clear());	
+	}
 
 	public void setActive(boolean active) {
 		this.isActive = active;

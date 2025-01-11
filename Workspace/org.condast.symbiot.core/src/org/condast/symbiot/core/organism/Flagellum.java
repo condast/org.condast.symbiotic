@@ -1,6 +1,6 @@
 package org.condast.symbiot.core.organism;
 
-import org.condast.symbiot.core.twodim.Organism2D;
+import org.condast.symbiot.core.test.Organism2D;
 import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
 
 public class Flagellum extends EnumOutputSymbiot<Organism2D.Form, Integer> {

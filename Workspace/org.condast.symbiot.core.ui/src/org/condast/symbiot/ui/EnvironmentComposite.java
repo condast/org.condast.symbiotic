@@ -13,7 +13,7 @@ import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
-import org.condast.symbiot.core.twodim.Organism2D.Form;
+import org.condast.symbiot.core.test.Organism2D.Form;
 import org.condast.symbiotic.core.environment.EnvironmentEvent;
 import org.condast.symbiotic.core.environment.IEnvironment;
 import org.condast.symbiotic.core.organism.IOrganism;
@@ -96,6 +96,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 					PlayerImages.Images.RESET);
 		}
 			
+		@SuppressWarnings("unchecked")
 		@Override
 		public void setInput(IEnvironment<IOrganism<E>> input) {
 			Button button = (Button) super.getButton( PlayerImages.Images.START);
@@ -108,6 +109,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			super.setInput(input);
 			if( input != null )
 				input.addListener(l->onUpdateEnvironment(l));
+	        dashboard.setInput( (IOrganism<Form>) input.getOrganism());
 		}
 		
 		private void stop() {
@@ -204,12 +206,9 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			return service;
 		}
 
-
-		@SuppressWarnings("unchecked")
 		@Override
 		public boolean onInitialise() {
 			environment.init( foodSpinner.getSelection());
-	        dashboard.setInput((IOrganism<Form>) environment.getOrganism());
 			return false;
 		}
 

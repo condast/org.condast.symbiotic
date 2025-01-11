@@ -10,8 +10,8 @@ Require-Bundle: org.eclipse.rap.rwt;bundle-version="[3.0.0,4.0.0)"
 Service-Component: OSGI-INF/contribution.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: org.condast.commons.ui.player,
- org.condast.symbiot.core.onedim,
- org.condast.symbiot.core.twodim,
+ org.condast.symbiot.core.test,
+ org.condast.symbiot.core.test1,
  org.condast.symbiot.ui,
  org.condast.symbiotic.core.environment,
  org.condast.symbiotic.core.organism

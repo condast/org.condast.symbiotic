@@ -31,6 +31,14 @@ public class StressData implements IStressData {
 	}
 
 	@Override
+	public void clear() {
+		this.weight = 0;
+		this.previousWeight = 0;
+		this.stress = 0;
+		this.previousStress = 0;
+	}
+
+	@Override
 	public double getStress() {
 		return this.stress;
 	}

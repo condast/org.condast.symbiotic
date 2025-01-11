@@ -2,7 +2,7 @@ package org.condast.symbiot.ui;
 
 import java.util.Iterator;
 
-import org.condast.symbiot.core.twodim.Organism2D;
+import org.condast.symbiot.core.test.Organism2D;
 import org.condast.symbiotic.core.environment.EnvironmentEvent;
 import org.condast.symbiotic.core.environment.IEnvironment;
 import org.condast.symbiotic.core.environment.ILocation;
@@ -190,7 +190,8 @@ public class EnvironmentCanvas<E extends Enum<E>> extends Canvas{
 	public void dispose() {
 		this.disposed = true;
 		super.removePaintListener( e->onPaintControl(e));
-		this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
+		if( this.environment != null )
+			this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
 		super.dispose();
 	}
 }

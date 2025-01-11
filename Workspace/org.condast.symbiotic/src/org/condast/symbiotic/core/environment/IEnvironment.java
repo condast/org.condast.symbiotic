@@ -27,7 +27,12 @@ public interface IEnvironment<O> {
 
 	void update();
 
-	O getOrganism();
+	/**
+	 * \Get or set the organism
+	 * @return
+	 */
+	O getOrganism();	
+	void setOrganism( O organism );
 
 	ILocation getNearestFood(int x, int y);
 
