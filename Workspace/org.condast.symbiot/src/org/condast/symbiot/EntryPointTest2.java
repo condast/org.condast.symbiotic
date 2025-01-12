@@ -1,7 +1,8 @@
 package org.condast.symbiot;
 
-import org.condast.symbiot.core.test1.Environment1D;
-import org.condast.symbiot.core.test1.Organism1D;
+import org.condast.symbiot.core.test.Organism2D;
+import org.condast.symbiot.core.test2.Environment1D;
+import org.condast.symbiot.core.test2.Organism1D2Flagellum;
 import org.condast.symbiot.ui.EnvironmentComposite;
 import org.eclipse.rap.rwt.application.AbstractEntryPoint;
 import org.eclipse.swt.SWT;
@@ -16,9 +17,9 @@ public class EntryPointTest2 extends AbstractEntryPoint {
     protected void createContents(Composite parent) {
         parent.setLayout(new FillLayout());
         Environment1D environment = new Environment1D(100, 100);
-        environment.setOrganism( new Organism1D());
+        environment.setOrganism( new Organism1D2Flagellum());
        
-        EnvironmentComposite<Organism1D.Form> composite = new EnvironmentComposite<>(parent, SWT.BORDER);
+        EnvironmentComposite<Organism2D.Form> composite = new EnvironmentComposite<>(parent, SWT.BORDER);
         composite.setInput(environment);      
     }
 }

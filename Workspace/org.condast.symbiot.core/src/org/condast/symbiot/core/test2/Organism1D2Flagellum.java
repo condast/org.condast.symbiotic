@@ -67,24 +67,28 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 
 	/**
 	 * The actual movement of the organism
-	 * | 8 | 1 | 2 |
-	 * | 7 | 0 | 3 |
-	 * | 6 | 5 | 4 |
-	 * @param angle
+	 * The actual movement of the organism
+	 * | -1 | -1 |  Left |
+	 * | x  | |x |   0   |
+	 * | 1  | 1  | Right |
+	 * @param leftOut, rightOut
 	 */
 	@Override
 	protected void updateOutputSymbiots(IEnvironment<IOrganism<Form>> env) {
-		//Move the organism,
-		Flagellum flagellum = (Flagellum) super.getSymbiot(Organism2D.Form.LEFT_FLAGELLUM);
-		int out = flagellum.getOutput();	
+		Flagellum leftFlagellum = (Flagellum) super.getSymbiot(Organism2D.Form.LEFT_FLAGELLUM);
+		int leftOut = leftFlagellum.getOutput();	
+
+		Flagellum rightFlagellum = (Flagellum) super.getSymbiot(Organism2D.Form.RIGHT_FLAGELLUM);
+		int rightOut = rightFlagellum.getOutput();	
 
 		int x = super.getX();
-		x += out;
-		int minx = -env.getBorder().getX();
-		int range =  env.getX() + env.getBorder().getX();
-		if(( x < minx ) || ( x > range ))
+		if(( leftOut * rightOut ) < 0 )
 			return;
-		super.setX( x);
+		if( leftOut > 0 )
+			x += 1;
+		else if( leftOut < 0 )
+			x-= 1;
+		super.setX( x );
 	}
 
 
