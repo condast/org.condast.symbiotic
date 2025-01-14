@@ -19,6 +19,7 @@ Export-Package: org.condast.symbiotic.core,
  org.condast.symbiotic.core.environment,
  org.condast.symbiotic.core.filter,
  org.condast.symbiotic.core.organism,
+ org.condast.symbiotic.core.process,
  org.condast.symbiotic.core.transformation,
  org.condast.symbiotic.core.transformer,
  org.condast.symbiotic.core.utils

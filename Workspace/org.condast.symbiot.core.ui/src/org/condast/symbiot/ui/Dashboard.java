@@ -29,6 +29,7 @@ public class Dashboard extends Composite {
 	
 	private OrganismMap om;
 	private SymbiotComposite sm;
+	private WeightComposite wc;
 	
 	private Label lblAngleLabel;
 	private Combo angleCombo;
@@ -82,9 +83,16 @@ public class Dashboard extends Composite {
 
 		tabItem = new TabItem(tabFolder, SWT.NULL);
 		tabItem.setText("Weights");
+		wc = new WeightComposite(tabFolder, SWT.BORDER);
+		wc.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
+		tabItem.setControl(wc);
+
+		tabItem = new TabItem(tabFolder, SWT.NULL);
+		tabItem.setText("Organism");
 		om = new OrganismMap(tabFolder, SWT.BORDER);
 		om.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(om);
+
 	}
 	
 	public void enableAngleCombo( boolean enable ) {
@@ -99,6 +107,7 @@ public class Dashboard extends Composite {
 		oc.setInput(organism);
 		om.setInput(organism);
 		sm.setInput(oc.getInput());
+		wc.setInput(organism);
 		organism.addListener( handler);
 	}
 
@@ -107,6 +116,7 @@ public class Dashboard extends Composite {
 		this.oc.removeTableEventListener(listener);
 		this.oc.dispose();
 		this.om.dispose();
+		this.wc.dispose();
 		this.sm.dispose();
 		super.dispose();
 	}

@@ -178,11 +178,12 @@ public class SymbiotCollection implements ISymbiotCollection{
 			return;
 		double result = 0;
 
+		behaviour.setStress( this.stress );
 		Iterator<ISymbiot> iterator = symbiots.iterator();
 		while( iterator.hasNext() ) {
 			ISymbiot source = iterator.next();
 			result += source.getStress();
-			behaviour.updateSymbiot(source);
+			behaviour.updateWeights(source);
 			source.update();
 		}
 		result/=symbiots.size();

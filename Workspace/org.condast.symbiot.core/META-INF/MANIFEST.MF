@@ -13,7 +13,8 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core.def,
  org.condast.symbiotic.core.enumid,
  org.condast.symbiotic.core.environment,
- org.condast.symbiotic.core.organism
+ org.condast.symbiotic.core.organism,
+ org.condast.symbiotic.core.process
 Export-Package: org.condast.symbiot.core.organism,
  org.condast.symbiot.core.test,
  org.condast.symbiot.core.test1,

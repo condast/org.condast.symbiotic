@@ -1,19 +1,41 @@
 package org.condast.symbiot.core.organism;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.core.enumid.AbstractEnumInputSymbiot;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
+import org.condast.symbiotic.core.process.AbstractProcess;
+import org.condast.symbiotic.core.process.IProcess;
 
-public class Eye<E extends Enum<E>> extends AbstractEnumInputSymbiot<E, Integer> {
+public class Eye<E extends Enum<E>> extends AbstractProcessSymbiot<E, Integer, Double> {
 
 	private int x,y;
 	private int maxVision;
 	private int angle;
 	
-	
 	public Eye( E form, boolean active) {
 		super( form, active);
 		this.maxVision = Integer.MAX_VALUE;
-		super.setInput( Integer.MAX_VALUE );
+	}
+
+	@Override
+	protected IProcess<Integer, Double> createProcess(ISymbiot symbiot) {
+		return new Process( symbiot );
+	}
+
+	public int getInput() {
+		Process process = (Eye<E>.Process) getProcess();
+		Integer inp = process.getInput();
+		return (inp == null )?0: inp;
+	}
+	
+	@Override
+	public void setInput(Integer input) {
+		getProcess().setInput(input);
+	}
+
+	@Override
+	public ISymbiot getSymbiot() {
+		return this;
 	}
 
 	public int getMaxVision() {
@@ -37,7 +59,6 @@ public class Eye<E extends Enum<E>> extends AbstractEnumInputSymbiot<E, Integer>
 		this.y = y;
 	}
 
-
 	public int getAngle() {
 		return angle;
 	}
@@ -45,15 +66,44 @@ public class Eye<E extends Enum<E>> extends AbstractEnumInputSymbiot<E, Integer>
 	public void setAngle(int angle) {
 		this.angle = angle;
 	}
-
-	/**
-	 * Stress is purely based on distance
-	 */
+	
 	@Override
-	protected boolean updateStress(Integer input) {
-		double stress = (input == null )?0: Math.abs( input.floatValue()/maxVision);
+	public void update() {
+		double stress = getProcess().getStress();
 		stress = NumberUtils.clipRange( -1, 1, stress);
 		setStress( stress);
-		return false;
+		super.update();
+	}
+
+	private class Process extends AbstractProcess<Integer, Double>{
+
+		protected Process(ISymbiot symbiot) {
+			super(symbiot);
+		}
+	
+		@Override
+		public Integer getInput() {
+			return super.getInput();
+		}
+
+
+		@Override
+		public double getStress() {
+			return normalisedInput();
+		}
+
+		@Override
+		protected double normalisedInput() {
+			Integer input = super.getInput();
+			return (input == null )?0: Math.abs( input.doubleValue()/maxVision);
+		}
+
+		/**
+		 * No specific output
+		 */
+		@Override
+		protected Double transformOutput(double output) {
+			return 0d;
+		}
 	}
 }

@@ -16,5 +16,11 @@ public interface IBehaviour {
 
 	double getWeightStep();
 	
-	public void updateSymbiot( ISymbiot symbiot );
+	/**
+	 * Get the normalised total stress of all the symbiots, because the behaviour may use this metric 
+	 * @param stress
+	 */
+	void setStress(double stress);
+
+	public void updateWeights( ISymbiot symbiot );
 }

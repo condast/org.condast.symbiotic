@@ -12,14 +12,14 @@ import org.condast.commons.ui.table.AbstractTableComposite;
 import org.condast.commons.ui.table.ITableEventListener.TableEvents;
 import org.condast.commons.ui.table.TableEvent;
 import org.condast.symbiot.core.organism.Eye;
+import org.condast.symbiot.core.organism.Flagellum;
 import org.condast.symbiot.core.test.AngleControl;
 import org.condast.symbiot.core.test.Organism2D;
-import org.condast.symbiotic.core.def.IInputSymbiot;
-import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.organism.IOrganism;
 import org.condast.symbiotic.core.organism.IOrganismListener;
 import org.condast.symbiotic.core.organism.OrganismEvent;
+import org.condast.symbiotic.core.process.IProcess;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -169,10 +169,9 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = symbiot.getId();
 				break;
 			case DISTANCE:
-				if( symbiot instanceof IInputSymbiot ) {
-					IInputSymbiot<Integer> is  = (IInputSymbiot<Integer>) symbiot;
-					if( is.getInput() != null )
-						retval = is.getInput().toString();
+				if( symbiot instanceof Eye ) {
+					Eye<Organism2D.Form> is  = (Eye<Organism2D.Form>) symbiot;
+					retval = String.valueOf( is.getInput() );
 				}
 				break;
 			case ANGLE:
@@ -197,8 +196,8 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = String.format("%,.8f", symbiot.getFactor());
 				break;
 			case OUTPUT:
-				if( symbiot instanceof IOutputSymbiot ) {
-					IOutputSymbiot<Integer> is  = (IOutputSymbiot<Integer>) symbiot;
+				if( symbiot instanceof Flagellum ) {
+					IProcess<Double, Integer> is  = (IProcess<Double, Integer>) symbiot;
 					if(( is==null ) || ( is.getOutput() == null ))
 						return retval;
 					retval = is.getOutput().toString();

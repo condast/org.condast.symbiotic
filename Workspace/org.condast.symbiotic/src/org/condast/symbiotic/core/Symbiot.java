@@ -152,9 +152,9 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	 */
 	@Override
 	public double getFactor() {
-		if(( signals == null ) || signals.isEmpty())
-			return 0d;
 		double result = 0;
+		if(( signals == null ) || signals.isEmpty())
+			return result;
 
 		Iterator<IStressData> iterator = signals.values().iterator();
 		while( iterator.hasNext() ) {

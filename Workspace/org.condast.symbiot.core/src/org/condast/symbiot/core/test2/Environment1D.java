@@ -34,10 +34,11 @@ public class Environment1D extends Environment<Organism2D.Form> {
 		int border = super.getBorder().getX();
 		int y = getY()/2;
 		logger.info("Environment: {" + border + "}");
-		int xo;
+		int xo = getX()/2;
 		int range = 2*border;
 		int lengthx = getX() - range;
-		for( int i=0; i<amountFood;i++) {
+		addFood(xo);
+		for( int i=1; i<amountFood;i++) {
 			xo = border + (int) ( lengthx * Math.random());
 			addFood(xo);
 		}

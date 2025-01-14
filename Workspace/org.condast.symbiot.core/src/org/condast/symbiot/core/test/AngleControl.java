@@ -1,12 +1,15 @@
 package org.condast.symbiot.core.test;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiotic.core.enumid.EnumOutputSymbiot;
+import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
+import org.condast.symbiotic.core.process.AbstractProcess;
+import org.condast.symbiotic.core.process.IProcess;
 
 /**
  * The angle of movement of the organism
  */
-public class AngleControl extends EnumOutputSymbiot<Organism2D.Form, Integer>{
+public class AngleControl extends AbstractProcessSymbiot<Organism2D.Form, Integer, Double>{
 
 	public enum Angle{
 		ZERO(0),
@@ -91,6 +94,21 @@ public class AngleControl extends EnumOutputSymbiot<Organism2D.Form, Integer>{
 		super( form );
 		this.angle = Angle.ZERO;
 		this.behaviour = behaviour;
+	}
+
+	@Override
+	protected IProcess<Integer, Double> createProcess(ISymbiot symbiot) {
+		return new Process( symbiot );
+	}
+
+	@Override
+	public void setInput(Integer input) {
+		super.getProcess().setInput(input);
+	}
+
+	@Override
+	public ISymbiot getSymbiot() {
+		return this;
 	}
 
 	public Angle getAngle() {
@@ -194,17 +212,27 @@ public class AngleControl extends EnumOutputSymbiot<Organism2D.Form, Integer>{
 		return this.angle;
 	}
 	
-	@Override
-	public void update() {
-		super.update();
-		/*
-		if( getFactor() > DEFAULT_FACTOR_STEP)
-			setOutput(1);
-		else if ( getFactor() < -DEFAULT_FACTOR_STEP)
-			setOutput( -1 );
-		else
-			setOutput(0);	
-			*/
-	}	
+	private class Process extends AbstractProcess<Integer, Double>{
+
+		protected Process(ISymbiot symbiot) {
+			super(symbiot);
+		}
+
+		@Override
+		public double getStress() {
+			return 0;
+		}
+
+		@Override
+		protected double normalisedInput() {
+			return super.getInput();
+		}
+
+		@Override
+		protected Double transformOutput(double output) {
+			double factor = getFactor();
+			return 0d;
+		}
+	}
 
 }
