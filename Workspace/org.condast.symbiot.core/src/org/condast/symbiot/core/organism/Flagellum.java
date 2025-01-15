@@ -8,23 +8,20 @@ import org.condast.symbiotic.core.process.IProcess;
 
 public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, Integer> {
 
+	private boolean oneEye;
+	
 	public Flagellum( Organism2D.Form form, boolean active) {
+		this( form, false, active );
+	}
+	
+	public Flagellum( Organism2D.Form form, boolean oneEye, boolean active) {
 		super( form, active);
+		this.oneEye = oneEye;
 	}
 
 	@Override
 	protected IProcess<Double, Integer> createProcess(ISymbiot symbiot) {
-		return new FlagellumProcess( symbiot, true );
-	}
-
-	@Override
-	public void setInput(Double input) {
-		super.getProcess().setInput(input);
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
+		return new FlagellumProcess( symbiot, false, FlagellumProcess.DEFAULT_FACTOR_STEP * 0.01 );
 	}
 
 	@Override
@@ -36,7 +33,8 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 			retval = Organism2D.Form.LEFT_EYE.equals(refForm) || Organism2D.Form.RIGHT_FLAGELLUM.equals(refForm);
 			break;
 		case RIGHT_FLAGELLUM:
-			retval =Organism2D.Form.RIGHT_EYE.equals(refForm) || Organism2D.Form.LEFT_FLAGELLUM.equals(refForm);
+			boolean enableEye = oneEye?Organism2D.Form.LEFT_EYE.equals(refForm): Organism2D.Form.RIGHT_EYE.equals(refForm);
+			retval = enableEye || Organism2D.Form.LEFT_FLAGELLUM.equals(refForm);
 			break;
 		default:
 			break;

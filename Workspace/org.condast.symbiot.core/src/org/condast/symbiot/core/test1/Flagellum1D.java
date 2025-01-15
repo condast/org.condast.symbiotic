@@ -22,17 +22,6 @@ public class Flagellum1D extends AbstractProcessSymbiot<Organism1D.Form, Double,
 	}
 
 	@Override
-	public void setInput(Double input) {
-		super.getProcess().setInput(input);
-	}
-
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
-	}
-
-	@Override
 	public boolean enableUpdate(String reference) {
 		Organism1D.Form refForm = Organism1D.Form.valueOf(reference);
 		return Organism1D.Form.EYE.equals(refForm);

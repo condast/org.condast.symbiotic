@@ -26,11 +26,11 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 		Eye<Organism2D.Form> eye = new Eye<Organism2D.Form>( Organism2D.Form.LEFT_EYE, true);
 		design.put(Form.LEFT_EYE, eye);
 		
-		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true);
+		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true, true);
 		leftFlagellum.addInfluence(eye);
 		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
 		
-		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
+		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true, true);
 		rightFlagellum.addInfluence(eye);
 		rightFlagellum.addInfluence(leftFlagellum);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		
@@ -90,12 +90,16 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 		super.setX( x );
 	}
 
-
 	@Override
 	protected void logOrganism(StringBuilder builder) {		
 		Flagellum flagellum = (Flagellum) getSymbiot( Organism2D.Form.LEFT_FLAGELLUM);
 		builder.append(": (");
 		builder.append(flagellum.getOutput());
+		builder.append(", ");
+
+		flagellum = (Flagellum) getSymbiot( Organism2D.Form.RIGHT_FLAGELLUM);
+		builder.append(flagellum.getOutput());
+
 		builder.append(")");
 	}
 }

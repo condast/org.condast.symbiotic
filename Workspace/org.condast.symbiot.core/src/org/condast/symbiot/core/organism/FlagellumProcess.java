@@ -7,13 +7,19 @@ public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 
 	public static final double DEFAULT_FACTOR_STEP = 0.00001d;
 	
-
+	private double step;
+	
 	public FlagellumProcess(ISymbiot symbiot) {
 		this(symbiot, false);
 	}
 
 	public FlagellumProcess(ISymbiot symbiot, boolean addFactor) {
+		this(symbiot, addFactor, DEFAULT_FACTOR_STEP);
+	}
+
+	public FlagellumProcess(ISymbiot symbiot, boolean addFactor, double step) {
 		super(symbiot, addFactor);
+		this.step = step;
 	}
 
 	@Override
@@ -28,8 +34,8 @@ public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 
 	@Override
 	protected Integer transformOutput(double output) {
-		if( output > DEFAULT_FACTOR_STEP)
+		if( output > step)
 			return 1;
-		return ( output < -DEFAULT_FACTOR_STEP)? -1: 0;
+		return ( output < -step)? -1: 0;
 	}
 }

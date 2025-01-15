@@ -28,6 +28,16 @@ public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object
 		return form;
 	}
 
+	@Override
+	public ISymbiot getSymbiot() {
+		return this;
+	}
+
+	@Override
+	public void setInput( I input) {
+		process.setInput(input);
+	}
+
 	protected IProcess<I, O> getProcess() {
 		return process;
 	}
