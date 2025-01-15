@@ -61,7 +61,8 @@ public abstract class AbstractProcess<I, O extends Object> implements IProcess<I
 		return transformOutput(output);
 	}
 
-	protected double getNormalisedOutput() {
+	@Override
+	public double getNormalisedOutput() {
 		return output;
 	}
 

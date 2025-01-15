@@ -13,8 +13,6 @@ import org.condast.symbiotic.core.organism.IOrganism;
 
 public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 
-	public static final String S_ORGANISM = "ORGANISM";
-
 	public Organism1D2Flagellum() {
 		super();
 	}
@@ -36,6 +34,7 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 		rightFlagellum.addInfluence(eye);
 		rightFlagellum.addInfluence(leftFlagellum);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		
+		
 		leftFlagellum.addInfluence(rightFlagellum);
 	}
 
@@ -82,7 +81,7 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 		int rightOut = rightFlagellum.getOutput();	
 
 		int x = super.getX();
-		if(( leftOut * rightOut ) < 0 )
+		if(( leftOut * rightOut ) <= 0 )
 			return;
 		if( leftOut > 0 )
 			x += 1;

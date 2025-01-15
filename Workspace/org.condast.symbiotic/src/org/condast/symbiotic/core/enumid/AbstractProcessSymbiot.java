@@ -33,6 +33,11 @@ public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object
 	}
 
 	@Override
+	public double getNormalisedOutput() {
+		return this.process.getNormalisedOutput();
+	}
+
+	@Override
 	public O getOutput() {
 		return this.process.getOutput();
 	}

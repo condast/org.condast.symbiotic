@@ -5,7 +5,7 @@ import org.condast.symbiotic.core.process.AbstractProcess;
 
 public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 
-	public static final double DEFAULT_FACTOR_STEP = 0.01d;
+	public static final double DEFAULT_FACTOR_STEP = 0.00001d;
 	
 
 	public FlagellumProcess(ISymbiot symbiot) {
@@ -28,9 +28,8 @@ public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 
 	@Override
 	protected Integer transformOutput(double output) {
-		double factor = getNormalisedOutput();
-		if( factor > DEFAULT_FACTOR_STEP)
+		if( output > DEFAULT_FACTOR_STEP)
 			return 1;
-		return ( factor < -DEFAULT_FACTOR_STEP)? -1: 0;
+		return ( output < -DEFAULT_FACTOR_STEP)? -1: 0;
 	}
 }

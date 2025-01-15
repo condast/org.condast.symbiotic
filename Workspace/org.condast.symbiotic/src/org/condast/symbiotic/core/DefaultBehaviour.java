@@ -55,12 +55,14 @@ public class DefaultBehaviour implements IBehaviour {
 	protected void updateWeight( IStressData data ) {
 		double weight = data.getWeight();
 		
-		//stressDelta <=0 is good, because this means that the stress is decreasing
 		double stressDelta = data.getDelta();
+		double step = data.isJump(0.5) ? this.weightStep/DEFAULT_ZERO_ADJUST: this.weightStep;
+
+		//stressDelta <=0 is good, because this means that the stress is decreasing
 		if( weight < 0) {
-			weight += this.weightStep * stressDelta;
+			weight += step * stressDelta;
 		}else {
-			weight -= this.weightStep * stressDelta;
+			weight -= step * stressDelta;
 		}
 		weight = NumberUtils.clipRange(-1, 1, weight);
 		data.setWeight(weight);					

@@ -14,6 +14,12 @@ public interface IProcess<I extends Object, O extends Object> {
 	O getOutput();
 	
 	/**
+	 * Get the normalised output <-1,1>
+	 * @return
+	 */
+	double getNormalisedOutput();
+
+	/**
 	 * The symbiot controls the symbiotic behaviour of the process
 	 * @return
 	 */
@@ -25,6 +31,5 @@ public interface IProcess<I extends Object, O extends Object> {
 	 * Update the output of the process according to the given factor
 	 * @return
 	 */
-	O updateOutput( double factor );
-	
+	O updateOutput( double factor );	
 }

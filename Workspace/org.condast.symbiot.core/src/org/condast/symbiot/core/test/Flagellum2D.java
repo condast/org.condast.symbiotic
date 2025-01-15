@@ -8,8 +8,6 @@ import org.condast.symbiotic.core.process.IProcess;
 
 public class Flagellum2D extends AbstractProcessSymbiot<Organism2D.Form, Double, Integer> {
 
-	public static final double DEFAULT_FACTOR_STEP = 0.000001d;
-	
 	public Flagellum2D( Organism2D.Form form, boolean active) {
 		super( form, active);
 	}

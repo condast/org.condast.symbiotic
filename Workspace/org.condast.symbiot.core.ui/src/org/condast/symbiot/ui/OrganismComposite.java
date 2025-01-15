@@ -12,7 +12,6 @@ import org.condast.commons.ui.table.AbstractTableComposite;
 import org.condast.commons.ui.table.ITableEventListener.TableEvents;
 import org.condast.commons.ui.table.TableEvent;
 import org.condast.symbiot.core.organism.Eye;
-import org.condast.symbiot.core.organism.Flagellum;
 import org.condast.symbiot.core.test.AngleControl;
 import org.condast.symbiot.core.test.Organism2D;
 import org.condast.symbiotic.core.def.ISymbiot;
@@ -43,6 +42,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		STRESS,
 		STRESS_DELTA,
 		FACTOR,
+		NORM_OUTPUT,
 		OUTPUT;
 
 		@Override
@@ -164,6 +164,8 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 			String retval = null;
 			Columns column = Columns.values()[ columnIndex ];
 			ISymbiot symbiot = (ISymbiot) element;
+			IProcess<?,?> process = null;
+
 			switch( column){
 			case NAME:
 				retval = symbiot.getId();
@@ -190,18 +192,22 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = String.format("%,.4f", symbiot.getStress());
 				break;
 			case STRESS_DELTA:
-				retval = String.format("%,.8f", symbiot.getDeltaStress());
+				retval = String.format("%,.6f", symbiot.getDeltaStress());
 				break;
 			case FACTOR:
-				retval = String.format("%,.8f", symbiot.getFactor());
+				retval = String.format("%,.6f", symbiot.getFactor());
+				break;
+			case NORM_OUTPUT:
+				if(!(symbiot instanceof IProcess ))
+					break;
+				process = (IProcess<?, ?>) symbiot;
+				retval = String.format("%,.6f", process.getNormalisedOutput());
 				break;
 			case OUTPUT:
-				if( symbiot instanceof Flagellum ) {
-					IProcess<Double, Integer> is  = (IProcess<Double, Integer>) symbiot;
-					if(( is==null ) || ( is.getOutput() == null ))
-						return retval;
-					retval = is.getOutput().toString();
-				}
+				if(!(symbiot instanceof IProcess ))
+					break;
+				process = (IProcess<?, ?>) symbiot;
+				retval = process.getOutput().toString();
 				break;
 			default:
 				break;

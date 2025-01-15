@@ -36,4 +36,21 @@ public interface IStressData {
 	void setWeight( double weight );
 
 	void update();
+
+	/**
+	 * if true, then the PREVIOUS stress is approximately zero. 
+	 * This can be used for fine tuning around the zero value
+	 * at the first iteration
+	 * @param factor
+	 * @return
+	 */
+	boolean isZero();
+
+	/**
+	 * if true, then the change in stress is larger than the factor. This happens, for instance
+	 * at the first iteration
+	 * @param factor
+	 * @return
+	 */
+	boolean isJump(double factor);
 }

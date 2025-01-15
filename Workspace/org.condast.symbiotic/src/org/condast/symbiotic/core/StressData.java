@@ -43,6 +43,30 @@ public class StressData implements IStressData {
 		return this.stress;
 	}
 
+	/**
+	 * if true, then the PREVIOUS stress is approximately zero. 
+	 * This can be used for fine tuning around the zero value
+	 * at the first iteration
+	 * @param factor
+	 * @return
+	 */
+	@Override
+	public boolean isZero() {
+		return Math.abs( this.previousStress ) < Double.MIN_VALUE;
+	}
+
+	/**
+	 * if true, then the change in stress is larger than the factor. This happens, for instance
+	 * at the first iteration
+	 * @param factor
+	 * @return
+	 */
+	@Override
+	public boolean isJump( double factor ) {
+		double jump = this.getDelta() /  this.stress;
+		return Math.abs(jump ) > factor;
+	}
+	
 	@Override
 	public double getWeight() {
 		return weight;

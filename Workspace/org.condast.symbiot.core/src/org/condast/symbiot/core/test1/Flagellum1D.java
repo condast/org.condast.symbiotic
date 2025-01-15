@@ -12,9 +12,13 @@ public class Flagellum1D extends AbstractProcessSymbiot<Organism1D.Form, Double,
 		super( form, active);
 	}
 
+	/**
+	 * In this case the output needs to be able to switch from positive to negative quickly, so we don't add the factor to it
+	 * instead the factor is the normalised output
+	 */
 	@Override
 	protected IProcess<Double, Integer> createProcess(ISymbiot symbiot) {
-		return new FlagellumProcess( symbiot );
+		return new FlagellumProcess( symbiot, false );
 	}
 
 	@Override
