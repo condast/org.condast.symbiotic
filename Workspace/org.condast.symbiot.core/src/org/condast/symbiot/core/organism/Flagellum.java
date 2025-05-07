@@ -42,15 +42,16 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 		return retval;
 	}
 
-	
 	/**
 	 * The stress of the flagellum is equal to the factor
 	 */
 	@Override
 	public void update() {
+		double stress = getStress();
 		double factor = getFactor();
-		factor = NumberUtils.clipRange(-1, 1, factor);
-		setStress( factor );
+		stress += factor;
+		stress = NumberUtils.clipRange(-1, 1, stress);
+		setStress( stress );
 		super.update();
 	}
 }

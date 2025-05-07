@@ -15,7 +15,8 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core.environment,
  org.condast.symbiotic.core.organism,
  org.condast.symbiotic.core.process
-Export-Package: org.condast.symbiot.core.organism,
+Export-Package: org.condast.symbiot.core.env,
+ org.condast.symbiot.core.organism,
  org.condast.symbiot.core.test,
  org.condast.symbiot.core.test1,
  org.condast.symbiot.core.test2

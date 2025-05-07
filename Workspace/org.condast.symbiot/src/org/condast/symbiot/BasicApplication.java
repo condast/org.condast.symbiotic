@@ -20,5 +20,9 @@ public class BasicApplication implements ApplicationConfiguration {
 
         properties.put(WebClient.PAGE_TITLE, "Symbiot Demonstrator Test 2");
         application.addEntryPoint("/test2", EntryPointTest2.class, properties);
-}
+    
+        properties.put(WebClient.PAGE_TITLE, "Symbiot Demonstrator Test 3");
+        application.addEntryPoint("/test3", EntryPointTest3.class, properties);
+
+    }
 }
