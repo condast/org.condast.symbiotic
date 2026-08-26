@@ -4,7 +4,7 @@ import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
 
-public class DefaultBehaviour extends AbstractBehaviour {
+public class DefaultBehaviour /*extends AbstractBehaviour*/ {
 
 	private float overall;
 	
@@ -13,13 +13,13 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	}
 
 	public DefaultBehaviour( int range, boolean includeOwner) {
-		super( range, includeOwner);
+		//super( range, includeOwner);
 		this.overall = 0f;
 	}
 
-	@Override
+	//@Override
 	protected float onUpdate(ISymbiot symbiot, float currentStress) {
-		IStressData sd = getStressData(symbiot);
+		IStressData sd = null;// getStressData(symbiot);
 		float weight = NumberUtils.assertNull( sd.getWeight());
 		float retval = ( symbiot.getStress() - currentStress )/getRange();
 		retval = (float) NumberUtils.clip( 1f, retval );
@@ -27,9 +27,14 @@ public class DefaultBehaviour extends AbstractBehaviour {
 		return weight;
 	}
 
-	@Override
+	private float getRange() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//@Override
 	protected int onUpdateValue( ISymbiot symbiot, int current, boolean revert ) {
-		IStressData sd = getStressData(symbiot);
+		IStressData sd = null;//getStressData(symbiot);
 		float weight = NumberUtils.assertNull( sd.getWeight());
 		return ( int )( weight * getRange() );
 	}
@@ -47,12 +52,12 @@ public class DefaultBehaviour extends AbstractBehaviour {
 	 * @return
 	 */
 	public float getOverallStress(){
-		return super.getOwner().getOverallStress();
+		return 0f;//super.getOwner().getOverallStress();
 	}
 
-	@Override
+	//@Override
 	public int getValue() {
-		float total = super.getOwner().getOverallWeight();
+		float total = 0f;//super.getOwner().getOverallWeight();
 		return (int) (total * this.getRange());
 	}
 }

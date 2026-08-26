@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dashboard
+Bundle-SymbolicName: org.condast.symbiotic.dashboard
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Automatic-Module-Name: org.condast.symbiotic.dashboard
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="[4.0.0,5.0.0)"
+Service-Component: OSGI-INF/contribution.xml
