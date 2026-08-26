@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.condast.commons.thread.AbstractExecuteThread;
-import org.condast.commons.ui.logger.LogComposite;
+import org.condast.commons.ui.widgets.logger.LogComposite;
 import org.condast.commons.ui.player.PlayerComposite;
 import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
@@ -122,7 +122,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 		}
 
 		@Override
-		protected Control createButton(PlayerImages.Images type) {
+		protected Control createButton(PlayerImages.Images type, int style) {
 			Button button = new Button( this, SWT.FLAT );
 			IEnvironment<IOrganism<E>> environment = super.getInput();
 			switch( type ){

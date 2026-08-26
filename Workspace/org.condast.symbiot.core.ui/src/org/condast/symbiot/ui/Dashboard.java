@@ -2,8 +2,8 @@ package org.condast.symbiot.ui;
 
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
-import org.condast.commons.ui.table.ITableEventListener;
-import org.condast.commons.ui.table.TableEvent;
+import org.condast.commons.ui.widgets.table.ITableEventListener;
+import org.condast.commons.ui.widgets.table.TableEvent;
 import org.condast.symbiot.core.test.AngleControl;
 import org.condast.symbiot.core.test.Organism2D;
 import org.condast.symbiot.core.test.AngleControl.AngleBehaviour;
