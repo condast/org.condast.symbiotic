@@ -8,30 +8,36 @@ import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
 public class Environment extends AbstractEnvironment<Organism2D.Form> {
 
-	public static final int DEFAULT_BORDER = 10;
+	private boolean centreFood;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public Environment( int x, int y) {
-		this( x, y, DEFAULT_BORDER );
+	public Environment( int x, int y, boolean centreFood) {
+		this( x, y, DEFAULT_BORDER, centreFood );
 	}
 	
-	public Environment( int x, int y, int border) {
+	public Environment( int x, int y, int border, boolean centreFood) {
 		super(x, y, border);
+		this.centreFood = centreFood;
 	}
 
 	@Override
 	public void init( int amountFood) {
 		this.clear();
-		logger.info("Environment: {" + super.getX() + ", " + super.getY() + "}");
+		logger.info("Environment: {" + super.getX() + ", " + super.getY() + "Centre Food is " + this.centreFood +  "}");
 		int xo, yo;
 		ILocation border = super.getBorder();
 		int range = 2*border.getX();
 		int lengthx = getX() - range;
 		int lengthy = getY() - range;
-		for( int i=0; i<amountFood;i++) {
-			xo = border.getX() + (int) ( lengthx * Math.random());
-			yo = border.getY() + (int) (lengthy * Math.random());
+		int amount = this.centreFood?1: amountFood;
+		
+		for( int i=0; i<amount;i++) {
+			double xpos = (centreFood?lengthx/2 :lengthx * Math.random());
+			xo = border.getX() + (int) ( xpos );
+
+			double ypos = (centreFood?lengthy/2 :lengthy * Math.random());
+			yo = border.getY() + (int) (ypos );
 			addFood(xo, yo);
 		}
 		Object food = null;
@@ -41,7 +47,7 @@ public class Environment extends AbstractEnvironment<Organism2D.Form> {
 			food = get(xo, yo);
 		}while( food != null );
 		
-		IOrganism<Organism2D.Form> organism = new Organism2D();
+		IOrganism<Organism2D.Form> organism = super.getOrganism();
 		organism.setLocation(xo, yo);
 		logger.info("Organism added at: {" + xo + ", " + yo + "}");
 		setOrganism( organism );

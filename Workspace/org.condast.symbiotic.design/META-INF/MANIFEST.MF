@@ -12,6 +12,7 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core.collection,
  org.condast.symbiotic.core.def,
  org.condast.symbiotic.core.enumid,
+ org.condast.symbiotic.core.growth,
  org.condast.symbiotic.core.process,
  org.condast.symbiotic.ecosystem.environment,
  org.condast.symbiotic.ecosystem.organism

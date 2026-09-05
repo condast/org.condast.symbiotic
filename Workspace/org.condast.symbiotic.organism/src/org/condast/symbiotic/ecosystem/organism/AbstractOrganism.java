@@ -11,8 +11,6 @@ import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.collection.SymbiotCollection;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.growth.DefaultGrowth;
-import org.condast.symbiotic.core.growth.IGrowth;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.environment.Location;
 
@@ -138,10 +136,7 @@ public abstract class AbstractOrganism<E extends Enum<E>> extends Location imple
 		if( !result)
 			return;
 		this.symbiots.updateSymbiots();
-		this.updateOutputSymbiots( env );
-		
-		//IGrowth growth = new DefaultGrowth();
-		//growth.prune(symbiots);
+		this.updateOutputSymbiots( env );		
 		notifyListeners( new OrganismEvent<E>(this));
 	}
 

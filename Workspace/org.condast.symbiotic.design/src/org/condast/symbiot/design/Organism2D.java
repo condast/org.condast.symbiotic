@@ -14,6 +14,8 @@ import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
+import org.condast.symbiotic.core.growth.DefaultGrowth;
+import org.condast.symbiotic.core.growth.IGrowth;
 
 public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 
@@ -62,7 +64,7 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 	
 	@Override
 	protected void onAddSymbiots(ISymbiotCollection symbiots) {
-		for( int i = 0; i< 10; i++ ) {
+		for( int i = 0; i<1; i++ ) {
 			ISymbiot newSymbiot = new Symbiot( String.valueOf(i), true ); 
 			List<ISymbiot> list = new ArrayList<>(symbiots);
 			double weight = 1d;
@@ -219,6 +221,8 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		rightEye.setAngle(angle);
 		if( distance < 2)
 			stomach.reset();
+		//IGrowth growth = new DefaultGrowth();
+		//growth.prune( super.getSymbiotCollection());
 		return true;
 	}
 

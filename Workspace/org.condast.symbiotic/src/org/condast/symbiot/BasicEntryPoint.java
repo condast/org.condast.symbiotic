@@ -15,7 +15,7 @@ public class BasicEntryPoint extends AbstractEntryPoint {
  	@Override
     protected void createContents(Composite parent) {
         parent.setLayout(new FillLayout());
-        Environment environment = new Environment(100, 100);
+        Environment environment = new Environment(100, 100, true);
         environment.setOrganism( new Organism2D());
         
         EnvironmentComposite<Organism2D.Form> composite = new EnvironmentComposite<>(parent, SWT.BORDER);
