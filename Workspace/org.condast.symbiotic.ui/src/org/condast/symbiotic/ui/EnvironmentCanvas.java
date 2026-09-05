@@ -1,0 +1,197 @@
+package org.condast.symbiotic.ui;
+
+import java.util.Iterator;
+
+import org.condast.symbiot.design.test.Organism2D;
+import org.condast.symbiotic.core.environment.EnvironmentEvent;
+import org.condast.symbiotic.core.environment.IEnvironment;
+import org.condast.symbiotic.core.environment.ILocation;
+import org.condast.symbiotic.core.organism.IOrganism;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+
+public class EnvironmentCanvas<E extends Enum<E>> extends Canvas{
+	private static final long serialVersionUID = 1L;
+
+	public static final int GRIDX = 100;//meters
+	public static final int GRIDY = 20;//meters
+
+	private IEnvironment<IOrganism<E>> environment;
+	
+	private boolean disposed;
+
+	/**
+	 * Create the composite.
+	 * @param parent
+	 * @param style
+	 */
+	public EnvironmentCanvas(Composite parent, Integer style) {
+		super(parent, style);
+		this.disposed = false;
+		setBackground(Display.getCurrent().getSystemColor( SWT.COLOR_WHITE));
+		super.addPaintListener( e->onPaintControl(e));
+	}
+
+	@Override
+	public Composite getParent(){
+		return super.getParent();
+	}
+
+	private void onPaintControl(PaintEvent event) {
+		try{
+			drawField( event.gc );
+			drawFood(event.gc);
+			drawOrganism(event.gc);
+			event.gc.dispose();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+		}
+	}
+
+	private void onNotifyEnvironmentChanged(EnvironmentEvent<E> event) {
+		if( disposed || getDisplay().isDisposed() || ( event.getSource() == null ))
+			return;
+		getDisplay().asyncExec( new Runnable() {
+
+			@Override
+			public void run() {
+				redraw();
+			}
+		});
+	}
+
+	public IEnvironment<IOrganism<E>> getInput() {
+		return this.environment;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setInput( IEnvironment<IOrganism<E>> environment){
+		if( this.environment != null )
+			this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
+		this.environment = (IEnvironment<IOrganism<E>>) environment;
+		if( this.environment != null )
+			this.environment.addListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
+		this.redraw();
+	}
+
+	protected void drawField( GC gc ){
+		if( environment == null )
+			return;
+		Rectangle clientArea = getBounds();
+		Color color = gc.getForeground();
+
+		try {
+			//The raster
+			gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
+			double rasterx = (double)clientArea.width/(2*this.environment.getX());
+			for( int i=0; i<this.environment.getX(); i++ ) {
+				int xstep = (int)(i*rasterx);
+				if( i%10==0) {
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_GRAY));
+				}else
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
+				gc.drawLine( xstep, 0, xstep, clientArea.height );
+			}
+			double rastery = (double)clientArea.height/this.environment.getY();
+			for( int i=0; i<this.environment.getY(); i++ ) {
+				int ystep = (int)(i*rastery);
+				if( i%10==0) {
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_GRAY));
+				}else
+					gc.setForeground( getDisplay().getSystemColor( SWT.COLOR_WIDGET_LIGHT_SHADOW ));
+				gc.drawLine( 0, ystep, clientArea.width, ystep );					
+			}
+		}catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		gc.setForeground(color);
+	}
+
+	protected void drawFood( GC gc ){
+		if( environment == null )
+			return;
+		Color color = gc.getForeground();
+
+		try {
+			//The raster
+			Iterator<ILocation> iterator = this.environment.iterator();
+			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_MAGENTA ));					
+			IOrganism<E> place = environment.getOrganism();
+			int[] pos;
+			ILocation food = null;
+			if( place != null ) {
+				food = environment.getNearestFood(place.getX(), place.getY());
+				if( food != null ) {
+					pos = scale( food );
+					gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);	
+				}
+			}
+
+			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_DARK_GREEN ));
+			while( iterator.hasNext() ) {			
+				ILocation loc = iterator.next();
+				if(( loc.equals(food )) || ( loc instanceof Organism2D ))
+					continue;					
+				pos = scale( loc );
+				gc.fillOval( pos[0]-5, pos[1]-5, 10, 10);					
+			}
+		}catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		gc.setBackground(color);
+	}
+
+	protected void drawOrganism( GC gc ){
+		if( environment == null )
+			return;
+		Color color = gc.getForeground();
+
+		try {
+			gc.setBackground( getDisplay().getSystemColor( SWT.COLOR_RED ));					
+			IOrganism<E> place = environment.getOrganism();
+			if( place != null ) {
+				int[] pos = scale( place );
+				gc.fillOval( pos[0]-10, pos[1]-10, 20, 20);
+			}
+		}catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		gc.setBackground(color);
+	}
+
+
+	private int[] scale( ILocation place ) {
+		return scale( place.getX(), place.getY() );
+	}
+	
+	private int[] scale( int x, int y ) {
+		Rectangle clientArea = this.getClientArea();
+		int[] result = new int[2];
+		result[0] = (int)((double)(( 0.5d + x ) * clientArea.width)/(2*this.environment.getX()));
+		result[1] = (int)((double)(( 0.5d + y ) * clientArea.height)/this.environment.getY());
+		return result;
+	}
+	
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void dispose() {
+		this.disposed = true;
+		super.removePaintListener( e->onPaintControl(e));
+		if( this.environment != null )
+			this.environment.removeListener(e->onNotifyEnvironmentChanged((EnvironmentEvent<E>) e));
+		super.dispose();
+	}
+}

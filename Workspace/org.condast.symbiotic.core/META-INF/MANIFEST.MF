@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symbiotic Networks
+Bundle-SymbolicName: org.condast.symbiotic.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: com.tinkerpop.blueprints,
+ org.condast.commons,
+ org.condast.commons.data.graph,
+ org.condast.commons.number,
+ org.condast.commons.range,
+ org.condast.commons.strings
+Export-Package: org.condast.symbiotic.core,
+ org.condast.symbiotic.core.collection,
+ org.condast.symbiotic.core.def,
+ org.condast.symbiotic.core.ecosystem,
+ org.condast.symbiotic.core.enumid,
+ org.condast.symbiotic.core.environment,
+ org.condast.symbiotic.core.filter,
+ org.condast.symbiotic.core.organism,
+ org.condast.symbiotic.core.process,
+ org.condast.symbiotic.core.transformation,
+ org.condast.symbiotic.core.transformer,
+ org.condast.symbiotic.core.utils
+Automatic-Module-Name: org.condast.symbiotic
