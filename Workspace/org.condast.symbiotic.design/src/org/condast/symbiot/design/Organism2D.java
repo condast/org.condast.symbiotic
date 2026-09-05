@@ -1,21 +1,19 @@
 package org.condast.symbiot.design;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 import java.util.Map;
 
 import org.condast.commons.strings.StringStyler;
 import org.condast.symbiot.design.organs.Eye;
 import org.condast.symbiot.design.organs.Flagellum;
 import org.condast.symbiot.design.organs.Stomach;
-import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
-import org.condast.symbiotic.core.growth.DefaultGrowth;
-import org.condast.symbiotic.core.growth.IGrowth;
+//import org.condast.symbiotic.core.growth.HiddenSymbiot;
 
 public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 
@@ -27,6 +25,14 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		ANGLE,
 		STOMACH;
 
+		public static boolean isForm( String name ) {
+			for( Form form: values() ) {
+				if( form.name().equals(name))
+					return true;
+			}
+			return false;
+		}
+		
 		@Override
 		public String toString() {
 			return StringStyler.sentence( name() );
@@ -58,14 +64,17 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);
 		
-		Stomach stomach = new Stomach( Form.STOMACH, true );
-		design.put( Form.STOMACH, stomach);
+		//Stomach stomach = new Stomach( Form.STOMACH, true );
+		//design.put( Form.STOMACH, stomach);
 	}
 	
 	@Override
 	protected void onAddSymbiots(ISymbiotCollection symbiots) {
+		/*
 		for( int i = 0; i<1; i++ ) {
-			ISymbiot newSymbiot = new Symbiot( String.valueOf(i), true ); 
+			ISymbiot newSymbiot = new HiddenSymbiot( "Hidden-" + String.valueOf(i) ); 
+			
+			//Create an unequal base weight distribution
 			List<ISymbiot> list = new ArrayList<>(symbiots);
 			double weight = 1d;
 			double delta = weight/(list.size()+1);
@@ -76,6 +85,7 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 			}
 			symbiots.add( newSymbiot );
 		}
+		*/
 		super.onAddSymbiots(symbiots);
 	}
 

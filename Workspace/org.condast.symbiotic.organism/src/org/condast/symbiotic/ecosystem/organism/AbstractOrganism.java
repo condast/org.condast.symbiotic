@@ -3,6 +3,7 @@ package org.condast.symbiotic.ecosystem.organism;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.condast.symbiotic.core.StressData;
@@ -33,11 +34,6 @@ public abstract class AbstractOrganism<E extends Enum<E>> extends Location imple
 		this.symbiots = symbiots;
 		this.listeners = new ArrayList<>();
 		design();
-		symbiots.forEach( s -> {
-			design.values().forEach( d -> {
-				onAddInfluence(s, d);
-			});
-		});
 	}
 
 	/**
@@ -51,19 +47,14 @@ public abstract class AbstractOrganism<E extends Enum<E>> extends Location imple
 	 * @param design
 	 */
 	protected void onAddSymbiots( ISymbiotCollection symbiots ) {
-		/**
-		 * Default NOTHING
-		 */
-	}
-
-	/**
-	 * design the organism;
-	 * @param design
-	 */
-	protected void onAddInfluence( ISymbiot source, ISymbiot target ) {
-		if(!target.equals(source))
-			source.addInfluence(target);
-		
+		List<ISymbiot> temp = new ArrayList<>( symbiots);
+		while( temp.size() > 0) {
+			ISymbiot source = temp.remove(0);
+			temp.forEach( t -> {
+				onAddInfluence(source, t);
+				onAddInfluence(t, source );
+			});
+		}
 	}
 
 	/**
@@ -139,6 +130,17 @@ public abstract class AbstractOrganism<E extends Enum<E>> extends Location imple
 		this.updateOutputSymbiots( env );		
 		notifyListeners( new OrganismEvent<E>(this));
 	}
+
+	/**
+	 * design the organism;
+	 * @param design
+	 */
+	protected static void onAddInfluence( ISymbiot source, ISymbiot target ) {
+		if(!target.equals(source))
+			source.addInfluence(target);
+		
+	}
+
 
 	/**
 	 * This symbiot is mainly intended for purposes of visualisation, and does not contribute to the activities

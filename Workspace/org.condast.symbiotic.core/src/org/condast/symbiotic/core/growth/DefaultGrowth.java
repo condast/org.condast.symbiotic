@@ -13,7 +13,7 @@ public class DefaultGrowth implements IGrowth {
 	private int threshold_percent;
 	
 	public DefaultGrowth() {
-		this( DEFAULT_START, DEFAULT_THRESHOLD_PERCENT);
+		this( DEFAULT_START, HiddenSymbiot.DEFAULT_THRESHOLD_PERCENT);
 	}
 
 	public DefaultGrowth(long start, int threshold_percent) {
@@ -40,8 +40,7 @@ public class DefaultGrowth implements IGrowth {
 		boolean retval =  false;
 		while( iterator.hasNext()) {
 			ISymbiot symbiot = iterator.next();
-			double threshold = this.threshold_percent/100d;
-			if( symbiot.isIsolated( threshold)) {
+			if( HiddenSymbiot.isIsolated( symbiot, this.threshold_percent)) {
 				symbiots.remove(symbiot);
 				retval = true;
 			}

@@ -7,12 +7,6 @@ public interface ISymbiot{
 	String getId();
 
 	/**
-	 * if the symbiot is hidden, then it doesn't have I/O and cannot be pruned
-	 * @return
-	 */
-	boolean isHidden();
-
-	/**
 	 * Returns true if this symbiot is active. If not, the
 	 * symbiot will not be included in the calculations
 	 * and the strategy is not updated
@@ -98,11 +92,6 @@ public interface ISymbiot{
 	 * Get the factor of the symbiot. This is defined as sigma( w.s)
 	 */
 	double getFactor();
-
-	/**
-	 * Returns true if the symbiot is isolated from the others, based on the given threshold factor <0,..1>
-	 */
-	boolean isIsolated(double threshold);
 
 	/**
 	 * If true, then the stress data for the given reference will be updated

@@ -27,24 +27,18 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	private String id;
 	private double oldStress, stress;
 	private boolean active;
-	private boolean hidden; //Hidden symbiots don't have I/O and can be pruned
 	
 	private Map<String, IStressData> signals;
 
 	public Symbiot( String id ) {
-		this( id, false, true );
+		this( id, true );
 	}
 
-	public Symbiot( String id, boolean hidden ) {
-		this( id, hidden, true );
-	}
-
-	public Symbiot( String id, boolean hidden, boolean active ) {
+	public Symbiot( String id, boolean active ) {
 		if( id == null )
 			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.active = active;
-		this.hidden = hidden;
 		this.stress = 0; 
 		this.oldStress = 0;
 		this.signals = new HashMap<String, IStressData>();
@@ -54,11 +48,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public boolean isHidden() {
-		return hidden;
 	}
 
 	@Override
@@ -187,27 +176,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		}
 		result/=signals.size();
 		return result;
-	}
-
-	/**
-	 * Returns true if the symbiot is isolated from the others, by the given threshold factor
-	 */
-	@Override
-	public boolean isIsolated( double threshold) {
-		if(( signals == null ) || signals.isEmpty())
-			return true;
-
-		double th = NumberUtils.clip(1d, Math.abs( threshold ));
-		Iterator<IStressData> iterator = signals.values().iterator();
-		while( iterator.hasNext() ) {
-			IStressData source = iterator.next();
-			ISymbiot target = source.getTarget();
-			IStressData tsd = target.getSignals().get( this.getId());
-			double stress = Math.abs( tsd.getStress());
-			if( stress >= th)
-				return false;
-		}
-		return true;
 	}
 
 	/**

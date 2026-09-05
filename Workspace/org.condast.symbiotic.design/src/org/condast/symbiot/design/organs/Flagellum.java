@@ -26,8 +26,10 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 
 	@Override
 	public boolean enableUpdate(String reference) {
-		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
 		boolean retval = false;
+		if( !Organism2D.Form.isForm(reference) )
+			return retval;
+		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
 		switch( super.getForm() ) {
 		case LEFT_FLAGELLUM:
 			retval = Organism2D.Form.LEFT_EYE.equals(refForm) || Organism2D.Form.RIGHT_FLAGELLUM.equals(refForm);
