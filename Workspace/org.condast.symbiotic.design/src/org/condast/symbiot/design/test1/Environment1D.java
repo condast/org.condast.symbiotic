@@ -2,8 +2,8 @@ package org.condast.symbiot.design.test1;
 
 import java.util.logging.Logger;
 
-import org.condast.symbiot.design.env.AbstractEnvironment;
-import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.ecosystem.environment.AbstractEnvironment;
+import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
 public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
 

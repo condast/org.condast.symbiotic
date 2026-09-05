@@ -1,7 +1,7 @@
 package org.condast.symbiot;
 
-import org.condast.symbiot.design.test.Environment;
-import org.condast.symbiot.design.test.Organism2D;
+import org.condast.symbiot.design.Environment;
+import org.condast.symbiot.design.Organism2D;
 import org.condast.symbiotic.ui.EnvironmentComposite;
 import org.eclipse.rap.rwt.application.AbstractEntryPoint;
 import org.eclipse.swt.SWT;
@@ -15,7 +15,7 @@ public class BasicEntryPoint extends AbstractEntryPoint {
  	@Override
     protected void createContents(Composite parent) {
         parent.setLayout(new FillLayout());
-        Environment<Organism2D.Form> environment = new Environment<>(100, 100);
+        Environment environment = new Environment(100, 100);
         environment.setOrganism( new Organism2D());
         
         EnvironmentComposite<Organism2D.Form> composite = new EnvironmentComposite<>(parent, SWT.BORDER);

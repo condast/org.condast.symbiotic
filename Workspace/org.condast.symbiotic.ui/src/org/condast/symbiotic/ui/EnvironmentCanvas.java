@@ -2,11 +2,11 @@ package org.condast.symbiotic.ui;
 
 import java.util.Iterator;
 
-import org.condast.symbiot.design.test.Organism2D;
-import org.condast.symbiotic.core.environment.EnvironmentEvent;
-import org.condast.symbiotic.core.environment.IEnvironment;
-import org.condast.symbiotic.core.environment.ILocation;
-import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiotic.ecosystem.environment.EnvironmentEvent;
+import org.condast.symbiotic.ecosystem.environment.IEnvironment;
+import org.condast.symbiotic.ecosystem.environment.ILocation;
+import org.condast.symbiotic.ecosystem.organism.IOrganism;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;

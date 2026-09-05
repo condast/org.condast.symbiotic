@@ -2,11 +2,11 @@ package org.condast.symbiot.design.test2;
 
 import java.util.logging.Logger;
 
-import org.condast.symbiot.design.test.Environment;
-import org.condast.symbiot.design.test.Organism2D;
-import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiotic.ecosystem.environment.AbstractEnvironment;
+import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
-public class Environment1D extends Environment<Organism2D.Form> {
+public class Environment1D extends AbstractEnvironment<Organism2D.Form> {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 

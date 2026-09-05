@@ -9,11 +9,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.rap.rwt;bundle-version="[4.0.0,5.0.0)"
 Service-Component: OSGI-INF/contribution.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: org.condast.commons.ui.player,
- org.condast.symbiot.design.env,
- org.condast.symbiot.design.test,
+Import-Package: org.condast.symbiot.design,
  org.condast.symbiot.design.test1,
  org.condast.symbiot.design.test2,
- org.condast.symbiotic.core.environment,
- org.condast.symbiotic.core.organism,
+ org.condast.symbiotic.ecosystem.environment,
+ org.condast.symbiotic.ecosystem.organism,
  org.condast.symbiotic.ui

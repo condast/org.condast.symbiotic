@@ -3,11 +3,11 @@ package org.condast.symbiot.design.test1;
 import java.util.Map;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiot.design.organism.Eye;
+import org.condast.symbiot.design.organs.Eye;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.environment.IEnvironment;
-import org.condast.symbiotic.core.organism.AbstractOrganism;
-import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.ecosystem.environment.IEnvironment;
+import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
+import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
 public class Organism1D extends AbstractOrganism<Organism1D.Form>{
 

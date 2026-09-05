@@ -1,7 +1,7 @@
 package org.condast.symbiot.design.test1;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiot.design.organism.FlagellumProcess;
+import org.condast.symbiot.design.organs.FlagellumProcess;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
 import org.condast.symbiotic.core.process.IProcess;

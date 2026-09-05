@@ -12,11 +12,10 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core.collection,
  org.condast.symbiotic.core.def,
  org.condast.symbiotic.core.enumid,
- org.condast.symbiotic.core.environment,
- org.condast.symbiotic.core.organism,
- org.condast.symbiotic.core.process
-Export-Package: org.condast.symbiot.design.env,
- org.condast.symbiot.design.organism,
- org.condast.symbiot.design.test,
+ org.condast.symbiotic.core.process,
+ org.condast.symbiotic.ecosystem.environment,
+ org.condast.symbiotic.ecosystem.organism
+Export-Package: org.condast.symbiot.design,
+ org.condast.symbiot.design.organs,
  org.condast.symbiot.design.test1,
  org.condast.symbiot.design.test2

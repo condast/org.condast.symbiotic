@@ -2,14 +2,14 @@ package org.condast.symbiot.design.test2;
 
 import java.util.Map;
 
-import org.condast.symbiot.design.organism.Eye;
-import org.condast.symbiot.design.organism.Flagellum;
-import org.condast.symbiot.design.test.Organism2D;
-import org.condast.symbiot.design.test.Organism2D.Form;
+import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiot.design.Organism2D.Form;
+import org.condast.symbiot.design.organs.Eye;
+import org.condast.symbiot.design.organs.Flagellum;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.environment.IEnvironment;
-import org.condast.symbiotic.core.organism.AbstractOrganism;
-import org.condast.symbiotic.core.organism.IOrganism;
+import org.condast.symbiotic.ecosystem.environment.IEnvironment;
+import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
+import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
 public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 
