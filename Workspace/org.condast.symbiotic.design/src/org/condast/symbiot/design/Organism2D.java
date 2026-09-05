@@ -4,6 +4,7 @@ package org.condast.symbiot.design;
 //import java.util.List;
 import java.util.Map;
 
+import org.condast.commons.number.NumberUtils;
 import org.condast.commons.strings.StringStyler;
 import org.condast.symbiot.design.organs.Eye;
 import org.condast.symbiot.design.organs.Flagellum;
@@ -64,8 +65,8 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);
 		
-		//Stomach stomach = new Stomach( Form.STOMACH, true );
-		//design.put( Form.STOMACH, stomach);
+		Stomach stomach = new Stomach( Form.STOMACH, true );
+		design.put( Form.STOMACH, stomach);
 	}
 	
 	@Override
@@ -247,7 +248,9 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		//Calculate the angle of movement
 		AngleControl angleControl = (AngleControl) super.getSymbiot( Organism2D.Form.ANGLE);
 		AngleControl.Angle movement =  angleControl.update(outLeft, outRight);
-		move( movement );			
+		move( movement );		
+		super.setX( NumberUtils.clipRange(env.getLength(), super.getX()));
+		super.setY( NumberUtils.clipRange(env.getWidth(), super.getY()));
 	}
 
 	@Override

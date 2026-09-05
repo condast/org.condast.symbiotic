@@ -5,10 +5,10 @@ import java.util.Iterator;
 public interface IEnvironment<O> {
 
 	//The length of the x-axis
-	int getX();
+	int getLength();
 
 	//The length of the y-axis
-	int getY();
+	int getWidth();
 
 	//The border of the environement
 	ILocation getBorder();

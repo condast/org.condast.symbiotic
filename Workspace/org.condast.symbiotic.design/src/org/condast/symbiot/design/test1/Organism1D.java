@@ -55,7 +55,7 @@ public class Organism1D extends AbstractOrganism<Organism1D.Form>{
 			return false;
 
 		//Secondly update the eyes to find the nearest food source
-		int maxVision = environment.getX()+environment.getBorder().getX();//add a ceiling
+		int maxVision = environment.getLength()+environment.getBorder().getX();//add a ceiling
 		Eye<Organism1D.Form> eye = (Eye<Organism1D.Form>) super.getSymbiot(Form.EYE);
 		eye.setLocation(getX(), getY());
 		eye.setMaxVision(maxVision);
@@ -82,7 +82,7 @@ public class Organism1D extends AbstractOrganism<Organism1D.Form>{
 		int x = super.getX();
 		x += out;
 		int minx = -env.getBorder().getX();
-		int range =  env.getX() + env.getBorder().getX();
+		int range =  env.getLength() + env.getBorder().getX();
 		if(( x < minx ) || ( x > range ))
 			return;
 		super.setX( x);		

@@ -18,7 +18,7 @@ public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
 	}
 
 	public int getNearestFoodDistance(int x) {
-		int y = getY()/2;
+		int y = getWidth()/2;
 		return super.getNearestFoodDistance(x, y);
 	}
 
@@ -26,11 +26,11 @@ public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
 	public void init( int amountFood) {
 		this.clear();
 		int border = super.getBorder().getX();
-		int y = getY()/2;
+		int y = getWidth()/2;
 		logger.info("Environment: {" + border + "}");
 		int xo;
 		int range = 2*border;
-		int lengthx = getX() - range;
+		int lengthx = getLength() - range;
 		for( int i=0; i<amountFood;i++) {
 			xo = border + (int) ( lengthx * Math.random());
 			addFood(xo, y);

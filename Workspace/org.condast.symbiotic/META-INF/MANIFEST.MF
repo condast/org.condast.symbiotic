@@ -14,4 +14,5 @@ Import-Package: org.condast.symbiot.design,
  org.condast.symbiot.design.test2,
  org.condast.symbiotic.ecosystem.environment,
  org.condast.symbiotic.ecosystem.organism,
- org.condast.symbiotic.ui
+ org.condast.symbiotic.ui,
+ org.condast.symbiotic.ui.environment

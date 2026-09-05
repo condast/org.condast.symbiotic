@@ -22,9 +22,9 @@ public class Environment3 extends AbstractEnvironment<Organism2D.Form> {
 	public void init( int amountFood) {
 		this.clear();
 		int border = super.getBorder().getX();
-		int y = getY()/2;
+		int y = getWidth()/2;
 		logger.info("Environment: {" + border + "}");
-		int xo = getX()/2;
+		int xo = getLength()/2;
 		int range = 2*border;
 		int lengthx = range;
 		addFood(xo, y);

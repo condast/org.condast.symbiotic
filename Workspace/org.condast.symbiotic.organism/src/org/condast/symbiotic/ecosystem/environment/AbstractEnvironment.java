@@ -9,9 +9,9 @@ import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
 public abstract class AbstractEnvironment<E extends Enum<E>> implements IEnvironment<IOrganism<E>> {
 
-	public static final int DEFAULT_BORDER = 10;
+	public static final int DEFAULT_BORDER = 5;
 	
-	private int x, y;
+	private int length, width;
 	
 	private int border;
 	
@@ -23,27 +23,27 @@ public abstract class AbstractEnvironment<E extends Enum<E>> implements IEnviron
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public AbstractEnvironment( int x, int y) {
-		this( x, y, DEFAULT_BORDER );
+	public AbstractEnvironment( int length, int width) {
+		this( length, width, DEFAULT_BORDER );
 	}
 	
 	public AbstractEnvironment( int x, int y, int border) {
 		super();
-		this.x = x;
-		this.y = y;
+		this.length = x;
+		this.width = y;
 		this.border = border;
 		field = new ArrayList<>();
 		this.listeners = new ArrayList<>();
 	}
 
 	@Override
-	public int getX() {
-		return x;
+	public int getLength() {
+		return length - 2*this.border;
 	}
 
 	@Override
-	public int getY() {
-		return y;
+	public int getWidth() {
+		return width- 2*this.border;
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public abstract class AbstractEnvironment<E extends Enum<E>> implements IEnviron
 	 * @return
 	 */
 	public int getDiagonal() {
-		return (int) Math.sqrt(getX()* getX() + getY()*getY());
+		return (int) Math.sqrt(getLength()* getLength() + getWidth()*getWidth());
 	}
 
 	public ILocation getNearestFood( int x, int y ) {

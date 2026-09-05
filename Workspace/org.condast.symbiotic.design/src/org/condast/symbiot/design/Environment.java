@@ -24,12 +24,12 @@ public class Environment extends AbstractEnvironment<Organism2D.Form> {
 	@Override
 	public void init( int amountFood) {
 		this.clear();
-		logger.info("Environment: {" + super.getX() + ", " + super.getY() + "Centre Food is " + this.centreFood +  "}");
+		logger.info("Environment: {" + super.getLength() + ", " + super.getWidth() + "Centre Food is " + this.centreFood +  "}");
 		int xo, yo;
 		ILocation border = super.getBorder();
 		int range = 2*border.getX();
-		int lengthx = getX() - range;
-		int lengthy = getY() - range;
+		int lengthx = getLength() - range;
+		int lengthy = getWidth() - range;
 		int amount = this.centreFood?1: amountFood;
 		
 		for( int i=0; i<amount;i++) {

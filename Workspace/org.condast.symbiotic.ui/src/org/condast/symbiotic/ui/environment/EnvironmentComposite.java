@@ -1,4 +1,4 @@
-package org.condast.symbiotic.ui;
+package org.condast.symbiotic.ui.environment;
 
 import java.util.EnumSet;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +17,7 @@ import org.condast.commons.ui.session.SessionEvent;
 import org.condast.symbiotic.ecosystem.environment.EnvironmentEvent;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
+import org.condast.symbiotic.ui.Dashboard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Label;
 
 public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 	private static final long serialVersionUID = 1L;
@@ -38,42 +40,112 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 	private Spinner foodSpinner;
 	private LogComposite logComposite;
 	private Player player;
-	
+
 	private ExecuteThread executor;
 	private Handler handler;
+	private Group grpSelection;
+	private Button btnTrail;
+	private Button btnFade;
+	private Spinner fadeSpinner;
 
 	public EnvironmentComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(3, true ));
-        
+
 		dashboard = new Dashboard(this, SWT.BORDER);
-        dashboard.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
-        dashboard.setEnabled(true);
+		GridData gd_dashboard = new GridData( SWT.FILL, SWT.FILL, true, true );
+		gd_dashboard.verticalSpan = 2;
+		dashboard.setLayoutData( gd_dashboard);
+		dashboard.setEnabled(true);
 
-        canvas = new EnvironmentCanvas<>(this, SWT.BORDER);
-        canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true,2,2 ));
-       
-        logComposite = new LogComposite(this, SWT.BORDER);
-        logComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
-        logComposite.activate(true);
+		canvas = new EnvironmentCanvas<>(this, SWT.BORDER);
+		GridData gd_canvas = new GridData( SWT.FILL, SWT.FILL, true, true,1,1 );
+		gd_canvas.horizontalSpan = 2;
+		gd_canvas.verticalSpan= 3;
+		gd_canvas.grabExcessHorizontalSpace = true;
+		canvas.setLayoutData( gd_canvas);
 
-        player = new Player( this, SWT.BORDER );
-        player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ));
-        
-        Group foodGroup = new Group(this, SWT.NONE );
-        foodGroup.setText("Food");
-        foodGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2,1 ));
-        foodGroup.setLayout(new FillLayout());
-        foodSpinner = new Spinner( foodGroup, SWT.BORDER);
-        foodSpinner.setMaximum(100);
-        foodSpinner.setSelection(1);
-        handler = new Handler(getDisplay());
+		player = new Player( this, SWT.BORDER );
+		player.setLayoutData( new GridData( SWT.LEFT, SWT.FILL, false, false ));
+
+		logComposite = new LogComposite(this, SWT.BORDER);
+		logComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
+		logComposite.activate(true);
+
+		grpSelection = new Group(this, SWT.NONE);
+		grpSelection.setLayout(new GridLayout(3, false));
+		grpSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpSelection.setText("Selection");
+
+		btnTrail = new Button(grpSelection, SWT.CHECK);
+		GridData gd_btnTrail = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		gd_btnTrail.widthHint = 64;
+		btnTrail.setLayoutData(gd_btnTrail);
+		btnTrail.setText("Trail");
+		btnTrail.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				canvas.setTrail( button.getSelection() );
+				super.widgetSelected(e);
+			}
+			
+		});
+		
+		btnFade = new Button(grpSelection, SWT.CHECK);
+		GridData gd_btnFade = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		gd_btnFade.widthHint = 62;
+		btnFade.setLayoutData(gd_btnFade);
+		btnFade.setText("Fade");
+		btnFade.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				fadeSpinner.setEnabled(button.getSelection());
+				canvas.setFade(button.getSelection());
+				super.widgetSelected(e);
+			}
+			
+		});
+		
+		fadeSpinner = new Spinner(grpSelection, SWT.BORDER);
+		GridData gd_spinner = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_spinner.widthHint = 58;
+		fadeSpinner.setLayoutData(gd_spinner);
+		fadeSpinner.setSelection(150);
+		fadeSpinner.setEnabled(btnFade.getSelection());
+		fadeSpinner.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Spinner spinner = (Spinner) e.widget;
+				canvas.setFadeValue(spinner.getSelection());
+				super.widgetSelected(e);
+			}
+			
+		});
+
+		Group foodGroup = new Group(this, SWT.NONE );
+		foodGroup.setText("Food");
+		GridData gd_foodGroup = new GridData( SWT.FILL, SWT.CENTER, true, false, 1,1 );
+		gd_foodGroup.widthHint = 70;
+		foodGroup.setLayoutData( gd_foodGroup);
+		foodGroup.setLayout(new FillLayout());
+		foodSpinner = new Spinner( foodGroup, SWT.BORDER);
+		foodSpinner.setMaximum(100);
+		foodSpinner.setSelection(1);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		new Label(this, SWT.NONE);
+		handler = new Handler(getDisplay());
 	}
 
 	private void onUpdateEnvironment( EnvironmentEvent<IOrganism<E>> event ) {
 		handler.addData(event.getOrganism());
 	}
-	
+
 	public void setInput( IEnvironment<IOrganism<E>> environment ) {
 		player.setInput(environment);
 		canvas.setInput(environment);
@@ -95,7 +167,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 					PlayerImages.Images.NEXT,
 					PlayerImages.Images.RESET);
 		}
-			
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public void setInput(IEnvironment<IOrganism<E>> input) {
@@ -109,9 +181,9 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			super.setInput(input);
 			if( input != null )
 				input.addListener(l->onUpdateEnvironment(l));
-	        dashboard.setInput( (IOrganism<Form>) input.getOrganism());
+			dashboard.setInput( (IOrganism<Form>) input.getOrganism());
 		}
-		
+
 		private void stop() {
 			executor.stop();
 			//environment.removeListener(handler);
@@ -199,7 +271,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			super(true);
 			this.environment = environment;		}
 
-		
+
 		@Override
 		public ExecutorService onCreateService() {
 			service = new ScheduledThreadPoolExecutor(3);
@@ -212,7 +284,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			return false;
 		}
 
-		
+
 		@Override
 		protected void onStart() {
 			int time = super.getTime(); 
@@ -226,7 +298,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 			if( environment.noFood())
 				stop();
 		}
-		
+
 	}
 
 	private class Handler extends AbstractSessionHandler<IOrganism<E>>{

@@ -53,7 +53,7 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 			return false;
 
 		//Secondly update the eyes to find the nearest food source
-		int maxVision = environment.getX()+environment.getBorder().getX();//add a ceiling
+		int maxVision = environment.getLength()+environment.getBorder().getX();//add a ceiling
 		Eye<Organism2D.Form> eye = (Eye<Organism2D.Form>) super.getSymbiot(Form.LEFT_EYE);
 		eye.setLocation(getX(), getY());
 		eye.setMaxVision(maxVision);

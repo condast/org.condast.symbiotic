@@ -19,12 +19,12 @@ public class Environment1D extends AbstractEnvironment<Organism2D.Form> {
 	}
 
 	public boolean addFood( int x ) {
-		int y = getY()/2;
+		int y = getWidth()/2;
 		return super.addFood(x, y);
 	}
 
 	public int getNearestFoodDistance(int x) {
-		int y = getY()/2;
+		int y = getWidth()/2;
 		return super.getNearestFoodDistance(x, y);
 	}
 
@@ -32,11 +32,11 @@ public class Environment1D extends AbstractEnvironment<Organism2D.Form> {
 	public void init( int amountFood) {
 		this.clear();
 		int border = super.getBorder().getX();
-		int y = getY()/2;
+		int y = getWidth()/2;
 		logger.info("Environment: {" + border + "}");
-		int xo = getX()/2;
+		int xo = getLength()/2;
 		int range = 2*border;
-		int lengthx = getX() - range;
+		int lengthx = getLength() - range;
 		addFood(xo);
 		for( int i=1; i<amountFood;i++) {
 			xo = border + (int) ( lengthx * Math.random());
