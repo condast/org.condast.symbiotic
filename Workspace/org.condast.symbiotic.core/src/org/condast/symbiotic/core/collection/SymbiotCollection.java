@@ -6,14 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.condast.symbiotic.core.DefaultBehaviour;
-import org.condast.symbiotic.core.def.IBehaviour;
 import org.condast.symbiotic.core.def.ISymbiot;
 
 public class SymbiotCollection implements ISymbiotCollection{
 
-	private IBehaviour behaviour;
-	
 	private Collection<ISymbiot> symbiots;
 	
 	private long counter;
@@ -23,17 +19,8 @@ public class SymbiotCollection implements ISymbiotCollection{
 	 */
 	private double stress;
 
-	public SymbiotCollection(  ) {
-		this( IBehaviour.DEFAULT_WEIGHT_STEP, false );
-	}
-	
-	public SymbiotCollection( double weightStep, boolean inclusive ) {
-		this( new DefaultBehaviour( weightStep, inclusive ));
-	}
-
-	public SymbiotCollection( IBehaviour behaviour ) {
+	public SymbiotCollection() {
 		this.stress = 0;
-		this.behaviour = behaviour;
 		this.counter = 0;
 		symbiots = new ArrayList<ISymbiot>();
 	}
@@ -52,16 +39,6 @@ public class SymbiotCollection implements ISymbiotCollection{
 		return counter;
 	}
 
-	/**
-	 * If the behaviours is inclusive, then the stress of all the symbiots are 
-	 * used for all calculations. This by definition has complexity of O(n^2) 
-	 * @return
-	 */
-	@Override
-	public boolean isInclusive() {
-		return this.behaviour.isInclusive();
-	}
-	
 	/**
 	 * returns the symbiot with the given identifier
 	 * @param identifier
@@ -205,14 +182,13 @@ public class SymbiotCollection implements ISymbiotCollection{
 			return;
 		double result = 0;
 
-		behaviour.setStress( this.stress );
 		Iterator<ISymbiot> iterator = symbiots.iterator();
 		while( iterator.hasNext() ) {
 			ISymbiot source = iterator.next();
 			if(! source.isActive())
 				continue;
 			result += source.getStress();
-			behaviour.updateWeights(source);
+			source.setLearning(true);
 			source.update();
 		}
 		result/=symbiots.size();

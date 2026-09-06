@@ -54,6 +54,7 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 		stress += factor;
 		stress = NumberUtils.clipRange(-1, 1, stress);
 		setStress( stress );
+		this.setLearning(true);
 		super.update();
 	}
 }

@@ -38,6 +38,8 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		NAME,
 		DISTANCE,
 		ANGLE,
+		ACTIVE,
+		LEARNING,
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
@@ -184,6 +186,12 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 					AngleControl ac  = (AngleControl) symbiot;
 					retval = String.valueOf( StringStyler.prettyString( ac.getAngle().name() ));
 				}
+				break;
+			case ACTIVE:
+				retval =symbiot.isActive()?"1":"0";
+				break;
+			case LEARNING:
+				retval =symbiot.isLearning()?"1":"0";
 				break;
 			case WEIGHT:
 				retval = String.format("%,.4f", symbiot.getOverallWeight());

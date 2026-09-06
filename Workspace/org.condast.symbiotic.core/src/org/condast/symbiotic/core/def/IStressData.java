@@ -3,6 +3,14 @@ package org.condast.symbiotic.core.def;
 public interface IStressData {
 
 	/**
+	 * the default step for increasing or decreasing the weight of stress signals
+	 */
+	public static double DEFAULT_WEIGHT_STEP = 0.02d;
+
+	//The weights change in smaller steps near the zero value
+	public static double DEFAULT_ZERO_ADJUST = 4;
+
+	/**
 	 * Get the target symbiot
 	 * @return
 	 */
@@ -33,13 +41,13 @@ public interface IStressData {
 	 */
 	double getWeight();
 
+	//void setWeight( double weight );
+
 	/**
 	 * weight minus previous weight
 	 * @return
 	 */
 	double getWeightDelta();
-
-	void setWeight( double weight );
 	
 	void update();
 

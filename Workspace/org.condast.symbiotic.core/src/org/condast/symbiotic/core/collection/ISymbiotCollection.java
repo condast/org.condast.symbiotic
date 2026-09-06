@@ -26,13 +26,6 @@ public interface ISymbiotCollection extends Collection<ISymbiot>{
 	ISymbiot get(String identifier);
 
 	/**
-	 * If the behaviours is inclusive, then the stress of all the symbiots are 
-	 * used for all calculations. This by definition has complexity of O(n^2) 
-	 * @return
-	 */
-	boolean isInclusive();
-
-	/**
 	 * clear the symbiots
 	 */
 	void clear();

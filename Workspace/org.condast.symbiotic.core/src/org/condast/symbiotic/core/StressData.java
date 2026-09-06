@@ -8,17 +8,23 @@ public class StressData implements IStressData {
 
 	private double weight;
 	private double previousWeight;
+	private double weightStep; //The increase or decrease of stress per cycle
 
 	private double stress;
 	private double previousStress;
 	private ISymbiot target;
-	
+
 	public StressData(ISymbiot target) {
-		this( target, 0f );
+		this( target, IStressData.DEFAULT_WEIGHT_STEP, 0d );
+	}
+
+	public StressData(ISymbiot target, double weightStep) {
+		this( target, weightStep, 0d );
 	}
 	
-	public StressData(ISymbiot target, float weight) {
+	public StressData(ISymbiot target, double weightStep, double weight) {
 		super();
+		this.weightStep = weightStep;
 		this.weight = weight;
 		this.previousWeight = weight;
 		this.previousStress = 0;
@@ -77,12 +83,6 @@ public class StressData implements IStressData {
 		return weight;
 	}
 	
-	@Override
-	public void setWeight(double weight) {
-		this.previousWeight = this.weight;
-		this.weight = NumberUtils.clipRange(-1, 1, weight );
-	}
-
 	/**
 	 * weight minus previous weight
 	 * @return
@@ -100,11 +100,31 @@ public class StressData implements IStressData {
 	public double getDelta(){
 		return this.stress - this.previousStress;
 	}
-	
+
+	/**
+	 * Update the specific weight.
+	 * In this case the weight is adjusted according to the local stress delta
+	 * @param data
+	 */
+	protected void updateWeight() {
+		double step = isJump(0.5) ? weightStep/DEFAULT_ZERO_ADJUST: this.weightStep;
+		double stressDelta = getDelta();
+		//stressDelta <=0 is good, because this means that the stress is decreasing
+		
+		if( weight < 0) {
+			weight += step * stressDelta;
+		}else {
+			weight -= step * stressDelta;
+		}
+		weight = NumberUtils.clipRange(-1, 1, weight);				
+	}
+
+
 	@Override
 	public void update () {
 		if(Math.abs( this.previousStress - this.stress ) > Double.MIN_VALUE )
 			this.previousStress = this.stress;
 		this.stress = this.target.getStress();
+		this.updateWeight();
 	}
 }

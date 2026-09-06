@@ -28,17 +28,26 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	private double oldStress, stress;
 	private boolean active;
 	
+	//If true, the symbiot will actively change its stress, based on the input stress signals.
+	//By default learning starts if stress increaeses
+	private boolean learning;
+	
 	private Map<String, IStressData> signals;
 
 	public Symbiot( String id ) {
 		this( id, true );
 	}
 
-	public Symbiot( String id, boolean active ) {
+	public Symbiot( String id,  boolean active ) {
+		this( id, true, active );
+	}
+	
+	public Symbiot( String id, boolean learning, boolean active ) {
 		if( id == null )
 			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.active = active;
+		this.learning = learning;
 		this.stress = 0; 
 		this.oldStress = 0;
 		this.signals = new HashMap<String, IStressData>();
@@ -54,7 +63,17 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public boolean isActive() {
 		return active;
 	}
-	
+
+	@Override
+	public boolean isLearning() {
+		return learning;
+	}
+
+	@Override
+	public void setLearning(boolean learning) {
+		this.learning = learning;
+	}
+
 	@Override
 	public void clear() {
 		this.clearStress();
@@ -100,6 +119,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public void setStress(double stress) {
 		if( Math.abs(stress) > 1d)
 			throw new NumberFormatException( S_ERR_INVALID_STRESS + stress);
+		this.learning = (this.stress > this.oldStress);
 		this.oldStress = this.stress;
 		this.stress = stress;
 	}
@@ -195,7 +215,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 
 	@Override
 	public void update() {
-		if(!this.active)
+		if(!this.active || !this.learning )
 			return;
 		signals.values().forEach(d-> d.update());
 		this.notifySymbiotChanged(new StressEvent (this));
