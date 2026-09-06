@@ -20,7 +20,7 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 	}
 
 	@Override
-	protected IProcess<Double, Integer> createProcess(ISymbiot symbiot) {
+	protected IProcess<Double, Integer> createInternal(ISymbiot symbiot) {
 		return new FlagellumProcess( symbiot, false, FlagellumProcess.DEFAULT_FACTOR_STEP * 0.01 );
 	}
 

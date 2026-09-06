@@ -3,9 +3,11 @@ package org.condast.symbiotic.core.growth;
 import java.util.Collection;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
+import org.condast.symbiotic.core.process.AbstractInternal;
+import org.condast.symbiotic.core.process.IInternal;
 
 /**
  * A hidden symbiot does not have I/O , and therefore can be potentially pruned
@@ -13,15 +15,13 @@ import org.condast.symbiotic.core.def.ISymbiot;
  * @param <I>
  * @param <O>
  */
-public class HiddenSymbiot extends Symbiot{
+public class HiddenSymbiot extends AbstractInternalSymbiot<Double>{
 
 	public static int DEFAULT_THRESHOLD_PERCENT = 10;
 
 	private boolean hidden; //Hidden symbiots don't have I/O and can be pruned
 	private int threshold;
 	
-	private double isolation;
-
 	public HiddenSymbiot( String form) {
 		this( form, true, DEFAULT_THRESHOLD_PERCENT);
 	}
@@ -38,7 +38,21 @@ public class HiddenSymbiot extends Symbiot{
 		super( formId, active);
 		this.hidden = hidden;
 		this.threshold = NumberUtils.clipRange(100, threshold);
-		this.isolation = 0;
+	}
+
+	
+	@Override
+	protected IInternal<Double> createInternal(ISymbiot symbiot) {
+		return new AbstractInternal<Double>( this ) {
+			@Override
+			protected double normalisedInput(Double input) {
+				boolean isolated = isIsolated(symbiot, threshold );
+				double stress =  isolated? getStress() + DEFAULT_NORMALISED_STEP: getStress() - DEFAULT_NORMALISED_STEP;
+				stress = NumberUtils.clipRange(-1,  1, stress );
+				setStress( stress );
+				return stress;
+			}		
+		};
 	}
 
 	public boolean isHidden() {
@@ -47,10 +61,6 @@ public class HiddenSymbiot extends Symbiot{
 
 	public int getThreshold() {
 		return threshold;
-	}
-
-	public void reset() {
-		this.isolation = 0;
 	}
 
 	/**
@@ -69,8 +79,6 @@ public class HiddenSymbiot extends Symbiot{
 		if( !this.hidden)
 			return;
 		
-		this.isolation = getIsolationRatio(this, this.threshold );
-		super.setStress( this.isolation);
 	}
 	
 	/**

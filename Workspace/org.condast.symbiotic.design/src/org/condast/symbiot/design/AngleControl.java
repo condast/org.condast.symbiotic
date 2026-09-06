@@ -2,14 +2,14 @@ package org.condast.symbiot.design;
 
 import org.condast.commons.strings.StringStyler;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
-import org.condast.symbiotic.core.process.AbstractProcess;
-import org.condast.symbiotic.core.process.IProcess;
+import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
+import org.condast.symbiotic.core.process.AbstractInternal;
+import org.condast.symbiotic.core.process.IInternal;
 
 /**
  * The angle of movement of the organism
  */
-public class AngleControl extends AbstractProcessSymbiot<Organism2D.Form, Integer, Double>{
+public class AngleControl extends AbstractInternalSymbiot<Integer>{
 
 	public enum Angle{
 		ZERO(0),
@@ -91,24 +91,14 @@ public class AngleControl extends AbstractProcessSymbiot<Organism2D.Form, Intege
 	}
 
 	public AngleControl( Organism2D.Form form, AngleBehaviour behaviour ) {
-		super( form );
+		super( form.name() );
 		this.angle = Angle.ZERO;
 		this.behaviour = behaviour;
 	}
 
 	@Override
-	protected IProcess<Integer, Double> createProcess(ISymbiot symbiot) {
-		return new Process( symbiot );
-	}
-
-	@Override
-	public void setInput(Integer input) {
-		super.getProcess().setInput(input);
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
+	protected IInternal<Integer> createInternal(ISymbiot symbiot) {
+		return new Internal( symbiot );
 	}
 
 	public Angle getAngle() {
@@ -212,9 +202,9 @@ public class AngleControl extends AbstractProcessSymbiot<Organism2D.Form, Intege
 		return this.angle;
 	}
 	
-	private class Process extends AbstractProcess<Integer, Double>{
+	private class Internal extends AbstractInternal<Integer>{
 
-		protected Process(ISymbiot symbiot) {
+		protected Internal(ISymbiot symbiot) {
 			super(symbiot);
 		}
 
@@ -224,15 +214,8 @@ public class AngleControl extends AbstractProcessSymbiot<Organism2D.Form, Intege
 		}
 
 		@Override
-		protected double normalisedInput() {
-			return super.getInput();
-		}
-
-		@Override
-		protected Double transformOutput(double output) {
-			double factor = getFactor();
-			return 0d;
+		protected double normalisedInput( Integer input) {
+			return (input == null )? 0: input;
 		}
 	}
-
 }

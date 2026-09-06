@@ -2,12 +2,9 @@ package org.condast.symbiotic.core.process;
 
 import org.condast.symbiotic.core.def.ISymbiot;
 
-public abstract class AbstractProcess<I, O extends Object> implements IProcess<I, O> {
+public abstract class AbstractProcess<I, O extends Object> extends AbstractInternal<I> implements IProcess<I, O> {
 
-	private I input;
 	private double output;
-	
-	private ISymbiot symbiot;
 	
 	/**
 	 * The default behaviour of a process is to add a factor to the output
@@ -28,11 +25,9 @@ public abstract class AbstractProcess<I, O extends Object> implements IProcess<I
 	}
 
 	protected AbstractProcess(ISymbiot symbiot, I input, boolean addFactor) {
-		super();
+		super( symbiot, input );
 		this.addFactor = addFactor;
-		this.input = input;
 		this.output = 0;
-		this.symbiot = symbiot;
 	}
 
 	protected boolean isAddFactor() {
@@ -41,27 +36,6 @@ public abstract class AbstractProcess<I, O extends Object> implements IProcess<I
 
 	protected void setAddFactor(boolean addFactor) {
 		this.addFactor = addFactor;
-	}
-
-	/**
-	 * Transform the input to a double <-1,1>
-	 * @param output
-	 * @return
-	 */
-	protected abstract double normalisedInput();
-
-	protected I getInput() {
-		return input;
-	}
-
-	@Override
-	public void setInput(I input) {
-		this.input = input;
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return symbiot;
 	}
 
 	@Override

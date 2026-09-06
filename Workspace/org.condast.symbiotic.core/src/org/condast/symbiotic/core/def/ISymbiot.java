@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface ISymbiot{
 
+	public static double DEFAULT_NORMALISED_STEP = 0.1d;
+	
 	String getId();
 
 	/**

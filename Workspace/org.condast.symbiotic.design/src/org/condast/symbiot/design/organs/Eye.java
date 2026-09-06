@@ -1,43 +1,32 @@
 package org.condast.symbiot.design.organs;
 
-import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
-import org.condast.symbiotic.core.process.AbstractProcess;
-import org.condast.symbiotic.core.process.IProcess;
+import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
+import org.condast.symbiotic.core.process.AbstractInternal;
+import org.condast.symbiotic.core.process.IInternal;
 
-public class Eye<E extends Enum<E>> extends AbstractProcessSymbiot<E, Integer, Double> {
+public class Eye<E extends Enum<E>> extends AbstractInternalSymbiot<Integer> {
 
 	private int x,y;
 	private int maxVision;
 	private int angle;
 	
 	public Eye( E form, boolean active) {
-		super( form, active);
+		super( form.name(), active);
 		this.maxVision = Integer.MAX_VALUE;
 	}
 
 	@Override
-	protected IProcess<Integer, Double> createProcess(ISymbiot symbiot) {
-		return new Process( symbiot );
+	protected IInternal<Integer> createInternal(ISymbiot symbiot) {
+		return new Internal( symbiot );
 	}
 
-	public int getInput() {
-		Process process = (Eye<E>.Process) getProcess();
-		Integer inp = process.getInput();
+	public Integer getInput() {
+		Internal internal = (Eye<E>.Internal) getInternal();
+		Integer inp = internal.getInput();
 		return (inp == null )?0: inp;
 	}
 	
-	@Override
-	public void setInput(Integer input) {
-		getProcess().setInput(input);
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
-	}
-
 	public int getMaxVision() {
 		return maxVision;
 	}
@@ -66,44 +55,16 @@ public class Eye<E extends Enum<E>> extends AbstractProcessSymbiot<E, Integer, D
 	public void setAngle(int angle) {
 		this.angle = angle;
 	}
-	
-	@Override
-	public void update() {
-		double stress = getProcess().getStress();
-		stress = NumberUtils.clipRange( -1, 1, stress);
-		setStress( stress);
-		super.update();
-	}
 
-	private class Process extends AbstractProcess<Integer, Double>{
+	private class Internal extends AbstractInternal<Integer>{
 
-		protected Process(ISymbiot symbiot) {
+		protected Internal(ISymbiot symbiot) {
 			super(symbiot);
 		}
 	
 		@Override
-		public Integer getInput() {
-			return super.getInput();
-		}
-
-
-		@Override
-		public double getStress() {
-			return normalisedInput();
-		}
-
-		@Override
-		protected double normalisedInput() {
-			Integer input = super.getInput();
+		protected double normalisedInput( Integer input ) {
 			return (input == null )?0: Math.abs( input.doubleValue()/maxVision);
-		}
-
-		/**
-		 * No specific output
-		 */
-		@Override
-		protected Double transformOutput(double output) {
-			return 0d;
 		}
 	}
 }

@@ -1,41 +1,29 @@
 package org.condast.symbiotic.core.enumid;
 
-import org.condast.symbiotic.core.Symbiot;
-import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.core.process.IProcess;
 
-public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object, O extends Object> extends Symbiot implements IProcess<I,O>{
+public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object, O extends Object> extends AbstractInternalSymbiot<I> implements IProcess<I,O>{
 
 	private E form;
 	
 	private IProcess<I,O> process; 
 
+	@SuppressWarnings("unchecked")
 	protected AbstractProcessSymbiot(E form) {
 		super(form.name());
 		this.form = form;
-		this.process = this.createProcess( this );
+		this.process = (IProcess<I, O>) this.createInternal( this );
 	}
 
+	@SuppressWarnings("unchecked")
 	public AbstractProcessSymbiot( E form, boolean active) {
 		super( form.name(), active);
 		this.form = form;
-		this.process = this.createProcess( this );
+		this.process = (IProcess<I, O>) this.createInternal( this );
 	}
-
-	protected abstract IProcess<I,O> createProcess( ISymbiot symbiot);
 	
 	public E getForm() {
 		return form;
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
-	}
-
-	@Override
-	public void setInput( I input) {
-		process.setInput(input);
 	}
 
 	protected IProcess<I, O> getProcess() {

@@ -17,7 +17,7 @@ public class Flagellum1D extends AbstractProcessSymbiot<Organism1D.Form, Double,
 	 * instead the factor is the normalised output
 	 */
 	@Override
-	protected IProcess<Double, Integer> createProcess(ISymbiot symbiot) {
+	protected IProcess<Double, Integer> createInternal(ISymbiot symbiot) {
 		return new FlagellumProcess( symbiot, false );
 	}
 

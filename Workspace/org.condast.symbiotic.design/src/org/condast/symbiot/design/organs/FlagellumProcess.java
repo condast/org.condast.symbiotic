@@ -28,7 +28,7 @@ public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 	}
 
 	@Override
-	protected double normalisedInput() {
+	protected double normalisedInput( Double input) {
 		return super.getInput();
 	}
 
@@ -37,5 +37,11 @@ public class FlagellumProcess extends AbstractProcess<Double, Integer>{
 		if( output > step)
 			return 1;
 		return ( output < -step)? -1: 0;
+	}
+
+	@Override
+	protected double onCalculateStress(ISymbiot symbiot, Double input) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
