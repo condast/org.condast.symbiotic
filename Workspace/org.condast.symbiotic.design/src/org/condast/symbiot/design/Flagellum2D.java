@@ -1,37 +1,24 @@
 package org.condast.symbiot.design;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiot.design.organs.FlagellumProcess;
-import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
-import org.condast.symbiotic.core.process.IProcess;
+import org.condast.symbiot.design.Organism2D.Form;
+import org.condast.symbiotic.core.def.IStressData;
+import org.condast.symbiotic.core.special.AbstractOutputSymbiot;
 
-public class Flagellum2D extends AbstractProcessSymbiot<Organism2D.Form, Double, Integer> {
+public class Flagellum2D extends AbstractOutputSymbiot<Integer> {
 
 	public Flagellum2D( Organism2D.Form form, boolean active) {
-		super( form, active);
+		super( form.name(), active);
 	}
 
 	@Override
-	protected IProcess<Double, Integer> createInternal(ISymbiot symbiot) {
-		return new FlagellumProcess( symbiot );
-	}
-
-	@Override
-	public void setInput(Double input) {
-		super.getProcess().setInput(input);
-	}
-
-	@Override
-	public ISymbiot getSymbiot() {
-		return this;
-	}
-
-	@Override
-	public boolean enableUpdate(String reference) {
-		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
-		boolean retval = false;
-		switch( super.getForm() ) {
+	public boolean enableUpdate( IStressData data) {
+		boolean retval = super.enableUpdate(data);
+		if(!retval )
+			return retval;
+		Form form = Form.valueOf(super.getId());
+		Organism2D.Form refForm = Organism2D.Form.valueOf( data.getReference());
+		switch( form ) {
 		case LEFT_FLAGELLUM:
 			retval = Organism2D.Form.LEFT_EYE.equals(refForm) || Organism2D.Form.RIGHT_FLAGELLUM.equals(refForm);
 			break;
@@ -44,14 +31,15 @@ public class Flagellum2D extends AbstractProcessSymbiot<Organism2D.Form, Double,
 		return retval;
 	}
 
-	/**
-	 * The stress of the flagellum is equal to the factor
-	 */
 	@Override
-	public void update() {
-		double factor = getFactor();
+	public double getNormalisedOutput() {
+		return super.getOutput();
+	}
+
+	@Override
+	public Integer onUpdate(double factor) {
 		factor = NumberUtils.clipRange(-1, 1, factor);
 		setStress( factor );
-		super.update();
+		return (factor < -0.5)?-1:(factor >0.5)?1:0;
 	}
 }

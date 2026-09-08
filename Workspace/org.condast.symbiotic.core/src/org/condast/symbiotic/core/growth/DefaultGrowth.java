@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.condast.commons.Utils;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.core.special.HiddenSymbiot;
 
 public class DefaultGrowth implements IGrowth {
 

@@ -1,5 +1,7 @@
 package org.condast.symbiotic.core;
 
+import java.util.Collection;
+
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
@@ -102,6 +104,21 @@ public class StressData implements IStressData {
 	}
 
 	/**
+	 * Returns true if the given symbiot is isolated from the target, by the given threshold factor (0..100)
+	 */
+	@Override
+	public boolean isIsolated( ISymbiot symbiot, int threshold) {
+		Collection<IStressData> signals = symbiot.getSignals().values();
+		if(( signals == null ) || signals.isEmpty())
+			return true;
+
+		double th = ((double)threshold)/MAX_PERCENT;
+		IStressData data = target.getStressData( symbiot.getId());
+		double weight = Math.abs( data.getWeight());
+		return ( weight >= th);
+	}
+
+	/**
 	 * Update the specific weight.
 	 * In this case the weight is adjusted according to the local stress delta
 	 * @param data
@@ -109,8 +126,8 @@ public class StressData implements IStressData {
 	protected void updateWeight() {
 		double step = isJump(0.5) ? weightStep/DEFAULT_ZERO_ADJUST: this.weightStep;
 		double stressDelta = getDelta();
-		//stressDelta <=0 is good, because this means that the stress is decreasing
 		
+		//stressDelta <=0 is good, because this means that the stress is decreasing
 		if( weight < 0) {
 			weight += step * stressDelta;
 		}else {
@@ -120,11 +137,18 @@ public class StressData implements IStressData {
 	}
 
 
+	/**
+	 * The weights are updated if the stress is not zero
+	 */
 	@Override
-	public void update () {
-		if(Math.abs( this.previousStress - this.stress ) > Double.MIN_VALUE )
-			this.previousStress = this.stress;
+	public boolean update ( boolean learning ) {
+		boolean retval = Math.abs( getDelta()) > Double.MIN_VALUE;
+		if( !retval && !learning )
+			return false;
+		
+		this.previousStress = this.stress;
 		this.stress = this.target.getStress();
 		this.updateWeight();
+		return true;
 	}
 }

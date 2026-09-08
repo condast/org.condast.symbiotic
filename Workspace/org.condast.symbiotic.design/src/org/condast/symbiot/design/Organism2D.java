@@ -6,15 +6,17 @@ import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.commons.strings.StringStyler;
+import org.condast.symbiot.design.AngleControl.Angle;
 import org.condast.symbiot.design.organs.Eye;
 import org.condast.symbiot.design.organs.Flagellum;
 import org.condast.symbiot.design.organs.Stomach;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
+import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
-//import org.condast.symbiotic.core.growth.HiddenSymbiot;
+import org.condast.symbiotic.ecosystem.organism.OrganismSymbiot;
 
 public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 
@@ -40,8 +42,15 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		}
 	}
 
+	private AngleControl angleControl;
+	
 	public Organism2D() {
 		super();
+		this.angleControl =new AngleControl( Form.ANGLE);
+	}
+	
+	public AngleControl getAngleControl() {
+		return angleControl;
 	}
 
 	/**
@@ -56,17 +65,14 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		Eye<Organism2D.Form> rightEye = new Eye<>( Form.RIGHT_EYE, true);
 		design.put(Form.RIGHT_EYE, rightEye);
 
-		AngleControl angleControl = new AngleControl( Form.ANGLE);
-		design.put(Form.ANGLE, angleControl);
-
 		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true);
 		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
 		
 		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);
 		
-		Stomach stomach = new Stomach( Form.STOMACH, true );
-		design.put( Form.STOMACH, stomach);
+		//Stomach stomach = new Stomach( Form.STOMACH, true );
+		//design.put( Form.STOMACH, stomach);
 	}
 	
 	@Override
@@ -156,7 +162,6 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		int y= getY();
 		int offset = 1;		
 
-		AngleControl angleControl = (AngleControl) super.getSymbiot( Organism2D.Form.ANGLE);
 		switch( angleControl.getAngle() ) {
 		case NORTH:
 			leftEye.setLocation(x-offset, y-offset);
@@ -246,8 +251,7 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		int outRight = rightFlagellum.getOutput();		
 		
 		//Calculate the angle of movement
-		AngleControl angleControl = (AngleControl) super.getSymbiot( Organism2D.Form.ANGLE);
-		AngleControl.Angle movement =  angleControl.update(outLeft, outRight);
+		AngleControl.Angle movement =  this.angleControl.update(outLeft, outRight);
 		move( movement );		
 		super.setX( NumberUtils.clipRange(env.getLength(), super.getX()));
 		super.setY( NumberUtils.clipRange(env.getWidth(), super.getY()));
@@ -262,5 +266,34 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		builder.append(",");
 		builder.append(rightFlagellum.getOutput());
 		builder.append(")");
+	}
+
+	@Override
+	public ISymbiot toSymbiot() {
+		return new AngleSymbiot(super.getSymbiotCollection());
+	}
+	
+	private class AngleSymbiot extends OrganismSymbiot implements IInputSymbiot<AngleControl.Angle>{
+
+		public AngleSymbiot(ISymbiotCollection symbiots) {
+			super(symbiots);
+		}
+
+		@Override
+		public Angle getInput() {
+			return angleControl.getAngle();
+		}
+
+		@Override
+		public void setInput(Angle input) {
+			// NOTHING	
+		}
+
+		@Override
+		public String toString() {
+			return angleControl.toString();
+		}	
+		
+		
 	}
 }

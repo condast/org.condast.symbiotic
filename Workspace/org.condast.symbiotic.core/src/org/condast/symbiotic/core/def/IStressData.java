@@ -2,6 +2,12 @@ package org.condast.symbiotic.core.def;
 
 public interface IStressData {
 
+	public static int MAX_PERCENT = 100;
+
+	//The weights change in smaller steps near the zero value
+	public static int DEFAULT_ISOLATION_THRESHOLD = 10; //(percent)
+
+	public static double DEFAULT_NORMALISED_STEP = 0.1d;
 	/**
 	 * the default step for increasing or decreasing the weight of stress signals
 	 */
@@ -49,8 +55,6 @@ public interface IStressData {
 	 */
 	double getWeightDelta();
 	
-	void update();
-
 	/**
 	 * if true, then the PREVIOUS stress is approximately zero. 
 	 * This can be used for fine tuning around the zero value
@@ -67,4 +71,16 @@ public interface IStressData {
 	 * @return
 	 */
 	boolean isJump(double factor);
+
+	/**
+	 * Returns true if the given symbiot is isolated from the target, by the given threshold factor (0..100)
+	 */
+	boolean isIsolated(ISymbiot symbiot, int threshold);
+
+	/**
+	 * Update the stress data. Returns false if everything stays the same. If the symbiot is learning, then update may be 
+	 * enforced
+	 * @return
+	 */
+	boolean update( boolean learning );
 }

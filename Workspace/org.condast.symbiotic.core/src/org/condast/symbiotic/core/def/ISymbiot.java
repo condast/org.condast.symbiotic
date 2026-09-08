@@ -4,8 +4,6 @@ import java.util.Map;
 
 public interface ISymbiot{
 
-	public static double DEFAULT_NORMALISED_STEP = 0.1d;
-	
 	String getId();
 
 	/**
@@ -102,16 +100,10 @@ public interface ISymbiot{
 
 	/**
 	 * Get the factor of the symbiot. This is defined as sigma( w.s)
+	 * THIS IS THE DEFAULT OUTPUT OF A SYMBIOT 
 	 */
 	double getFactor();
 
-	/**
-	 * If true, then the stress data for the given reference will be updated
-	 * @param reference
-	 * @return
-	 */
-	public boolean enableUpdate( String reference );
-	
 	/**
 	 * Update the stress influence for influencing symbiots
 	 * @param symbiot

@@ -1,11 +1,8 @@
 package org.condast.symbiot.design.organs;
 
-import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
-import org.condast.symbiotic.core.process.AbstractInternal;
-import org.condast.symbiotic.core.process.IInternal;
+import org.condast.symbiotic.core.special.AbstractInputSymbiot;
 
-public class Eye<E extends Enum<E>> extends AbstractInternalSymbiot<Integer> {
+public class Eye<E extends Enum<E>> extends AbstractInputSymbiot<Integer> {
 
 	private int x,y;
 	private int maxVision;
@@ -16,14 +13,8 @@ public class Eye<E extends Enum<E>> extends AbstractInternalSymbiot<Integer> {
 		this.maxVision = Integer.MAX_VALUE;
 	}
 
-	@Override
-	protected IInternal<Integer> createInternal(ISymbiot symbiot) {
-		return new Internal( symbiot );
-	}
-
 	public Integer getInput() {
-		Internal internal = (Eye<E>.Internal) getInternal();
-		Integer inp = internal.getInput();
+		Integer inp = super.getInput();
 		return (inp == null )?0: inp;
 	}
 	
@@ -56,15 +47,9 @@ public class Eye<E extends Enum<E>> extends AbstractInternalSymbiot<Integer> {
 		this.angle = angle;
 	}
 
-	private class Internal extends AbstractInternal<Integer>{
-
-		protected Internal(ISymbiot symbiot) {
-			super(symbiot);
-		}
 	
-		@Override
-		protected double normalisedInput( Integer input ) {
-			return (input == null )?0: Math.abs( input.doubleValue()/maxVision);
-		}
+	@Override
+	protected double createStress(Integer input) {
+		return (input == null )?0: Math.abs( input.doubleValue()/maxVision);
 	}
 }

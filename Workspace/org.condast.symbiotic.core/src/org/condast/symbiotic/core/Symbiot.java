@@ -119,7 +119,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public void setStress(double stress) {
 		if( Math.abs(stress) > 1d)
 			throw new NumberFormatException( S_ERR_INVALID_STRESS + stress);
-		this.learning = (this.stress > this.oldStress);
+		this.learning = (Math.abs(this.stress) > Math.abs(this.oldStress));
 		this.oldStress = this.stress;
 		this.stress = stress;
 	}
@@ -180,7 +180,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	}
 
 	/**
-	 * Get the output of the symbiot. This is defined as sigma( w.s)
+	 * Get the output of the symbiot. This is defined as sigma(w.s)
 	 */
 	@Override
 	public double getFactor() {
@@ -208,16 +208,30 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		return signals;
 	}
 	
-	@Override
-	public boolean enableUpdate(String reference) {
-		return !this.id.equals(reference);
+	/**
+	 * The stress is updated if it isn't based on its own stress
+	 * @param reference
+	 * @return
+	 */
+	protected boolean enableUpdate( IStressData data) {
+		return !this.id.equals(data.getReference() );
 	}
 
 	@Override
 	public void update() {
-		if(!this.active || !this.learning )
+		if(!this.active )
 			return;
-		signals.values().forEach(d-> d.update());
+		if( !this.learning )
+			this.learning = isIsolated(this, IStressData.DEFAULT_ISOLATION_THRESHOLD);
+
+		//The stress is decreasing and the symbiot is not isolated
+		if( !this.learning )
+			return;
+
+		signals.values().forEach(d-> {
+			if( this.enableUpdate(d))	
+				d.update( this.learning);
+		});
 		this.notifySymbiotChanged(new StressEvent (this));
 	}
 
@@ -225,5 +239,36 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public int compareTo(ISymbiot arg0) {
 		return this.id.compareTo(arg0.getId());
 	}	
+	
+	/**
+	 * Returns true if the symbiot is isolated from the others, by the given threshold factor (0..100)
+	 */
+	public static boolean isIsolated( ISymbiot symbiot, int threshold) {
+		Collection<IStressData> signals = symbiot.getSignals().values();
+		if(( signals == null ) || signals.isEmpty())
+			return true;
+
+		for( IStressData data: signals ) {
+			if( !data.isIsolated( symbiot, threshold ))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Get the ratio of the isolation between symbiots, based on the given threshold 
+	 */
+	public static double getIsolationRatio( ISymbiot symbiot, int threshold) {
+		int count = 0;
+		Collection<IStressData> signals = symbiot.getSignals().values();
+		if(( signals == null ) || signals.isEmpty())
+			return count;
+
+		for( IStressData data: signals ) {
+			if( data.isIsolated( symbiot, threshold ))
+				count++;
+		}
+		return ((double)count/signals.size());
+	}
 	
 }
