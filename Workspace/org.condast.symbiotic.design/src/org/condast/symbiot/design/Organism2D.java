@@ -71,8 +71,8 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);
 		
-		Stomach stomach = new Stomach( Form.STOMACH, true );
-		design.put( Form.STOMACH, stomach);
+		//Stomach stomach = new Stomach( Form.STOMACH, true );
+		//design.put( Form.STOMACH, stomach);
 	}
 	
 	@Override

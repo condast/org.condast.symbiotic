@@ -2,6 +2,7 @@ package org.condast.symbiot.design;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiot.design.Organism2D.Form;
+import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.special.AbstractOutputSymbiot;
 
 public class Flagellum2D extends AbstractOutputSymbiot<Integer> {
@@ -11,10 +12,12 @@ public class Flagellum2D extends AbstractOutputSymbiot<Integer> {
 	}
 
 	@Override
-	public boolean enableUpdate(String reference) {
-		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
-		boolean retval = false;
+	public boolean enableUpdate( IStressData data) {
+		boolean retval = super.enableUpdate(data);
+		if(!retval )
+			return retval;
 		Form form = Form.valueOf(super.getId());
+		Organism2D.Form refForm = Organism2D.Form.valueOf( data.getReference());
 		switch( form ) {
 		case LEFT_FLAGELLUM:
 			retval = Organism2D.Form.LEFT_EYE.equals(refForm) || Organism2D.Form.RIGHT_FLAGELLUM.equals(refForm);

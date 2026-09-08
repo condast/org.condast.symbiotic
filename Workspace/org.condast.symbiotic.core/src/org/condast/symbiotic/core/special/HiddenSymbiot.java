@@ -1,10 +1,7 @@
 package org.condast.symbiotic.core.special;
 
-import java.util.Collection;
-
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
-import org.condast.symbiotic.core.def.ISymbiot;
 
 /**
  * A hidden symbiot does not have I/O , and therefore can be potentially pruned
@@ -55,7 +52,7 @@ public class HiddenSymbiot extends AbstractInputSymbiot<Double>{
 	@Override
 	protected double createStress(Double input) {
 		boolean isolated = isIsolated(this, threshold );
-		double stress =  isolated? getStress() + DEFAULT_NORMALISED_STEP: getStress() - DEFAULT_NORMALISED_STEP;
+		double stress =  isolated? getStress() + IStressData.DEFAULT_NORMALISED_STEP: getStress() - IStressData.DEFAULT_NORMALISED_STEP;
 		stress = NumberUtils.clipRange(-1,  1, stress );
 		setStress( stress );
 		return stress;
@@ -72,46 +69,4 @@ public class HiddenSymbiot extends AbstractInputSymbiot<Double>{
 			return;
 		
 	}
-	
-	/**
-	 * Returns true if the symbiot is isolated from the others, by the given threshold factor
-	 */
-	public static boolean isIsolated( ISymbiot symbiot, int threshold) {
-		Collection<IStressData> signals = symbiot.getSignals().values();
-		if(( signals == null ) || signals.isEmpty())
-			return true;
-
-		double th = threshold/100d;
-		for( IStressData source: signals ) {
-			ISymbiot target = source.getTarget();
-			IStressData tsd = target.getSignals().get( symbiot.getId());
-			double stress = Math.abs( tsd.getStress());
-			if( stress >= th)
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Get the ratio of the isolation between symbiots, based on the given threshold 
-	 */
-	public static double getIsolationRatio( ISymbiot symbiot, int threshold) {
-		int count = 0;
-		Collection<IStressData> signals = symbiot.getSignals().values();
-		if(( signals == null ) || signals.isEmpty())
-			return count;
-
-		double th = threshold/100d;
-		for( IStressData source: signals ) {
-			ISymbiot target = source.getTarget();
-			IStressData tsd = target.getSignals().get( symbiot.getId());
-			if( tsd == null )
-				continue;
-			double stress = Math.abs( tsd.getStress());
-			if( stress < th)
-				count++;
-		}
-		return ((double)count/signals.size());
-	}
-
 }

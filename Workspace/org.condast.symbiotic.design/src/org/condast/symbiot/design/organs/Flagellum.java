@@ -3,6 +3,7 @@ package org.condast.symbiot.design.organs;
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiot.design.Organism2D;
 import org.condast.symbiot.design.Organism2D.Form;
+import org.condast.symbiotic.core.def.IStressData;
 
 public class Flagellum extends FlagellumSymbiot<Organism2D.Form> {
 
@@ -18,11 +19,13 @@ public class Flagellum extends FlagellumSymbiot<Organism2D.Form> {
 	}
 
 	@Override
-	public boolean enableUpdate(String reference) {
-		boolean retval = false;
-		if( !Organism2D.Form.isForm(reference) )
+	public boolean enableUpdate( IStressData data ) {
+		boolean retval = super.enableUpdate(data);
+		if(!retval )
 			return retval;
-		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
+		if( !Organism2D.Form.isForm( data.getReference()) )
+			return retval;
+		Organism2D.Form refForm = Organism2D.Form.valueOf( data.getReference());
 		Form form = Form.valueOf(super.getId());
 		switch( form ) {
 		case LEFT_FLAGELLUM:
