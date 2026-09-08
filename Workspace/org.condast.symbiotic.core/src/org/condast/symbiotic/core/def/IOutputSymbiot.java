@@ -1,11 +1,11 @@
-package org.condast.symbiotic.core.process;
+package org.condast.symbiotic.core.def;
 
 /**
  * A process transforms an input into an output. It also generates a stress signal
  * @param <I>
  * @param <O>
  */
-public interface IProcess<I extends Object, O extends Object> extends IInternal<I>{
+public interface IOutputSymbiot<O extends Object>{
 
 	O getOutput();
 	

@@ -15,4 +15,5 @@ Import-Package: com.tinkerpop.blueprints,
  org.condast.symbiotic.core.collection,
  org.condast.symbiotic.core.def,
  org.condast.symbiotic.core.growth,
+ org.condast.symbiotic.core.special,
  org.condast.symbiotic.core.transformation

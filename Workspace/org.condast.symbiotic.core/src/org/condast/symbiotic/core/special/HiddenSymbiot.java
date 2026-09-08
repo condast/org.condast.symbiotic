@@ -1,13 +1,10 @@
-package org.condast.symbiotic.core.growth;
+package org.condast.symbiotic.core.special;
 
 import java.util.Collection;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
-import org.condast.symbiotic.core.process.AbstractInternal;
-import org.condast.symbiotic.core.process.IInternal;
 
 /**
  * A hidden symbiot does not have I/O , and therefore can be potentially pruned
@@ -15,7 +12,7 @@ import org.condast.symbiotic.core.process.IInternal;
  * @param <I>
  * @param <O>
  */
-public class HiddenSymbiot extends AbstractInternalSymbiot<Double>{
+public class HiddenSymbiot extends AbstractInputSymbiot<Double>{
 
 	public static int DEFAULT_THRESHOLD_PERCENT = 10;
 
@@ -39,22 +36,7 @@ public class HiddenSymbiot extends AbstractInternalSymbiot<Double>{
 		this.hidden = hidden;
 		this.threshold = NumberUtils.clipRange(100, threshold);
 	}
-
 	
-	@Override
-	protected IInternal<Double> createInternal(ISymbiot symbiot) {
-		return new AbstractInternal<Double>( this ) {
-			@Override
-			protected double normalisedInput(Double input) {
-				boolean isolated = isIsolated(symbiot, threshold );
-				double stress =  isolated? getStress() + DEFAULT_NORMALISED_STEP: getStress() - DEFAULT_NORMALISED_STEP;
-				stress = NumberUtils.clipRange(-1,  1, stress );
-				setStress( stress );
-				return stress;
-			}		
-		};
-	}
-
 	public boolean isHidden() {
 		return hidden;
 	}
@@ -69,6 +51,16 @@ public class HiddenSymbiot extends AbstractInternalSymbiot<Double>{
 	public boolean isIsolated() {
 		return isIsolated( this, this.threshold);
 	}
+
+	@Override
+	protected double createStress(Double input) {
+		boolean isolated = isIsolated(this, threshold );
+		double stress =  isolated? getStress() + DEFAULT_NORMALISED_STEP: getStress() - DEFAULT_NORMALISED_STEP;
+		stress = NumberUtils.clipRange(-1,  1, stress );
+		setStress( stress );
+		return stress;
+	}
+
 
 	/**
 	 * The stress of a hidden symbiot is based on its isolation

@@ -134,11 +134,9 @@ public class Dashboard extends Composite {
 
 		@Override
 		protected void onHandleSession(SessionEvent<OrganismEvent<Organism2D.Form>> sevent) {
-			IOrganism<Organism2D.Form> organism = sevent.getData().getOrganism();
-			if( organism instanceof Organism2D) {
-				AngleControl ac = (AngleControl) organism.getSymbiot( Organism2D.Form.ANGLE);
-				ac.setBehaviour(AngleBehaviour.values()[ angleCombo.getSelectionIndex()]);
-			}
+			Organism2D organism = (Organism2D) sevent.getData().getOrganism();
+			AngleControl ac = (AngleControl) organism.getAngleControl();
+			ac.setBehaviour(AngleBehaviour.values()[ angleCombo.getSelectionIndex()]);
 			
 			lblAngleLabel.setText( organism.log());
 			sm.refresh();

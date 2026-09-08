@@ -102,6 +102,7 @@ public interface ISymbiot{
 
 	/**
 	 * Get the factor of the symbiot. This is defined as sigma( w.s)
+	 * THIS IS THE DEFAULT OUTPUT OF A SYMBIOT 
 	 */
 	double getFactor();
 

@@ -180,7 +180,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	}
 
 	/**
-	 * Get the output of the symbiot. This is defined as sigma( w.s)
+	 * Get the output of the symbiot. This is defined as sigma(w.s)
 	 */
 	@Override
 	public double getFactor() {

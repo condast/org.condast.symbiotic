@@ -59,7 +59,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 		dashboard.setEnabled(true);
 
 		canvas = new EnvironmentCanvas<>(this, SWT.BORDER);
-		GridData gd_canvas = new GridData( SWT.FILL, SWT.FILL, true, true,1,1 );
+		GridData gd_canvas = new GridData( SWT.FILL, SWT.FILL, true, true );
 		gd_canvas.horizontalSpan = 2;
 		gd_canvas.verticalSpan= 3;
 		gd_canvas.grabExcessHorizontalSpace = true;
@@ -74,11 +74,11 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 
 		grpSelection = new Group(this, SWT.NONE);
 		grpSelection.setLayout(new GridLayout(3, false));
-		grpSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		grpSelection.setText("Selection");
 
 		btnTrail = new Button(grpSelection, SWT.CHECK);
-		GridData gd_btnTrail = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		GridData gd_btnTrail = new GridData(SWT.FILL, SWT.FILL, false, false);
 		gd_btnTrail.widthHint = 64;
 		btnTrail.setLayoutData(gd_btnTrail);
 		btnTrail.setText("Trail");

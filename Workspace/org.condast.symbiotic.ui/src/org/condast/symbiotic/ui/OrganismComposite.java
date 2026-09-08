@@ -10,12 +10,12 @@ import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.AbstractTableComposite;
 import org.condast.commons.ui.widgets.table.ITableEventListener.TableEvents;
-import org.condast.symbiot.design.AngleControl;
 import org.condast.symbiot.design.Organism2D;
 import org.condast.symbiot.design.organs.Eye;
 import org.condast.commons.ui.widgets.table.TableEvent;
+import org.condast.symbiotic.core.def.IInputSymbiot;
+import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.process.IProcess;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganismListener;
 import org.condast.symbiotic.ecosystem.organism.OrganismEvent;
@@ -36,16 +36,15 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 
 	private enum Columns{
 		NAME,
-		DISTANCE,
-		ANGLE,
-		ACTIVE,
+		INPUT,
 		LEARNING,
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
 		FACTOR,
 		NORM_OUTPUT,
-		OUTPUT;
+		OUTPUT,	
+		ACTIVE;
 
 		@Override
 		public String toString() {
@@ -160,31 +159,21 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	private class SymbiotLabelProvider extends LabelProvider implements ITableLabelProvider{
 		private static final long serialVersionUID = 1L;
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public String getColumnText( Object element, int columnIndex ) {
 			String retval = null;
 			Columns column = Columns.values()[ columnIndex ];
 			ISymbiot symbiot = (ISymbiot) element;
-			IProcess<?,?> process = null;
+			IOutputSymbiot<?> os = null;
 
 			switch( column){
 			case NAME:
 				retval = symbiot.getId();
 				break;
-			case DISTANCE:
-				if( symbiot instanceof Eye ) {
-					Eye<Organism2D.Form> is  = (Eye<Organism2D.Form>) symbiot;
-					retval = String.valueOf( is.getInput() );
-				}
-				break;
-			case ANGLE:
-				if( symbiot instanceof Eye ) {
-					Eye<Organism2D.Form> eye  = (Eye<Organism2D.Form>) symbiot;
-					retval = String.valueOf( eye.getAngle());
-				} else 	if( symbiot instanceof AngleControl ) {
-					AngleControl ac  = (AngleControl) symbiot;
-					retval = String.valueOf( StringStyler.prettyString( ac.getAngle().name() ));
+			case INPUT:
+				if( symbiot instanceof IInputSymbiot) {
+					IInputSymbiot<?> is  = (IInputSymbiot<?>) symbiot;
+					retval = is.toString();
 				}
 				break;
 			case ACTIVE:
@@ -206,16 +195,19 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = String.format("%,.6f", symbiot.getFactor());
 				break;
 			case NORM_OUTPUT:
-				if(!(symbiot instanceof IProcess ))
+				if(!(symbiot instanceof IOutputSymbiot ))
 					break;
-				process = (IProcess<?, ?>) symbiot;
-				retval = String.format("%,.6f", process.getNormalisedOutput());
+				os = (IOutputSymbiot<?>) symbiot;
+				retval = String.format("%,.6f", os.getNormalisedOutput());
 				break;
 			case OUTPUT:
-				if(!(symbiot instanceof IProcess ))
-					break;
-				process = (IProcess<?, ?>) symbiot;
-				retval = process.getOutput().toString();
+				if((symbiot instanceof IOutputSymbiot )) {
+					os = (IOutputSymbiot<?>) symbiot;
+					retval = os.toString();
+				}else if( symbiot instanceof Eye) {
+					Eye<?> eye = (Eye<?>) symbiot;
+					retval = String.valueOf( eye.getAngle());
+				}
 				break;
 			default:
 				break;

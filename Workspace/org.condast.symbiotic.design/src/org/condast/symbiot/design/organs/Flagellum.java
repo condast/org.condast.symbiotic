@@ -2,11 +2,9 @@ package org.condast.symbiot.design.organs;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiot.design.Organism2D;
-import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractProcessSymbiot;
-import org.condast.symbiotic.core.process.IProcess;
+import org.condast.symbiot.design.Organism2D.Form;
 
-public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, Integer> {
+public class Flagellum extends FlagellumSymbiot<Organism2D.Form> {
 
 	private boolean oneEye;
 	
@@ -20,17 +18,13 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 	}
 
 	@Override
-	protected IProcess<Double, Integer> createInternal(ISymbiot symbiot) {
-		return new FlagellumProcess( symbiot, false, FlagellumProcess.DEFAULT_FACTOR_STEP * 0.01 );
-	}
-
-	@Override
 	public boolean enableUpdate(String reference) {
 		boolean retval = false;
 		if( !Organism2D.Form.isForm(reference) )
 			return retval;
 		Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
-		switch( super.getForm() ) {
+		Form form = Form.valueOf(super.getId());
+		switch( form ) {
 		case LEFT_FLAGELLUM:
 			retval = Organism2D.Form.LEFT_EYE.equals(refForm) || Organism2D.Form.RIGHT_FLAGELLUM.equals(refForm);
 			break;
@@ -44,17 +38,18 @@ public class Flagellum extends AbstractProcessSymbiot<Organism2D.Form, Double, I
 		return retval;
 	}
 
-	/**
-	 * The stress of the flagellum is equal to the factor
-	 */
 	@Override
-	public void update() {
+	public Integer getOutput() {
+		return ( super.getOutput() == null )? 0: super.getOutput();
+	}
+	
+	@Override
+	public Integer onUpdate(double factor) {
 		double stress = getStress();
-		double factor = getFactor();
 		stress += factor;
 		stress = NumberUtils.clipRange(-1, 1, stress);
 		setStress( stress );
 		this.setLearning(true);
-		super.update();
+		return super.onUpdate(factor);
 	}
 }

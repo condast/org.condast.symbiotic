@@ -1,15 +1,11 @@
 package org.condast.symbiot.design;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiotic.core.def.ISymbiot;
-import org.condast.symbiotic.core.enumid.AbstractInternalSymbiot;
-import org.condast.symbiotic.core.process.AbstractInternal;
-import org.condast.symbiotic.core.process.IInternal;
 
 /**
  * The angle of movement of the organism
  */
-public class AngleControl extends AbstractInternalSymbiot<Integer>{
+public class AngleControl{
 
 	public enum Angle{
 		ZERO(0),
@@ -91,14 +87,8 @@ public class AngleControl extends AbstractInternalSymbiot<Integer>{
 	}
 
 	public AngleControl( Organism2D.Form form, AngleBehaviour behaviour ) {
-		super( form.name() );
 		this.angle = Angle.ZERO;
 		this.behaviour = behaviour;
-	}
-
-	@Override
-	protected IInternal<Integer> createInternal(ISymbiot symbiot) {
-		return new Internal( symbiot );
 	}
 
 	public Angle getAngle() {
@@ -170,19 +160,6 @@ public class AngleControl extends AbstractInternalSymbiot<Integer>{
 		return ( outLeft == 1 )? Angle.rightTurn( this.angle): Angle.leftTurn(this.angle);
 	}
 
-	@Override
-	public boolean enableUpdate(String reference) {
-		boolean retval = false;
-		switch( this.behaviour) {
-		case SYMBIOTIC_ANGLE:
-			Organism2D.Form refForm = Organism2D.Form.valueOf(reference);
-			//retval = (Form.LEFT_FLAGELLUM.equals(refForm) || Form.RIGHT_FLAGELLUM.equals(refForm));
-		default:
-			break;
-		}
-		return retval;
-	}
-
 	public Angle update( int outLeft, int outRight )
 	{
 		switch( this.behaviour) {
@@ -201,21 +178,9 @@ public class AngleControl extends AbstractInternalSymbiot<Integer>{
 		}
 		return this.angle;
 	}
-	
-	private class Internal extends AbstractInternal<Integer>{
 
-		protected Internal(ISymbiot symbiot) {
-			super(symbiot);
-		}
-
-		@Override
-		public double getStress() {
-			return 0;
-		}
-
-		@Override
-		protected double normalisedInput( Integer input) {
-			return (input == null )? 0: input;
-		}
+	@Override
+	public String toString() {
+		return this.angle.toString();
 	}
 }
