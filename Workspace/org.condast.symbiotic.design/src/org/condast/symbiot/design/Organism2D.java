@@ -229,8 +229,8 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		int distance = environment.getNearestFoodDistance(leftEye.getX(), leftEye.getY());
 		leftEye.setInput( distance);
 		leftEye.setAngle(angle);
-		if( distance < 2)
-			stomach.reset();
+		//if( distance < 2)
+		//	stomach.reset();
 
 		distance = environment.getNearestFoodDistance(rightEye.getX(), rightEye.getY());
 		rightEye.setInput(distance);
