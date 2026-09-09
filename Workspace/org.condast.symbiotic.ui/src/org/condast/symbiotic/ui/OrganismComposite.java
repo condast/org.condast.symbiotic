@@ -10,12 +10,12 @@ import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.AbstractTableComposite;
 import org.condast.commons.ui.widgets.table.ITableEventListener.TableEvents;
-import org.condast.symbiot.design.Organism2D;
-import org.condast.symbiot.design.organs.Eye;
 import org.condast.commons.ui.widgets.table.TableEvent;
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.IOutputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.design.Organism2D;
+import org.condast.symbiotic.design.organs.Eye;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganismListener;
 import org.condast.symbiotic.ecosystem.organism.OrganismEvent;
@@ -37,14 +37,11 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 	private enum Columns{
 		NAME,
 		INPUT,
-		LEARNING,
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
-		FACTOR,
 		NORM_OUTPUT,
-		OUTPUT,	
-		ACTIVE;
+		OUTPUT;
 
 		@Override
 		public String toString() {
@@ -176,12 +173,6 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 					retval = is.toString();
 				}
 				break;
-			case ACTIVE:
-				retval =symbiot.isActive()?"1":"0";
-				break;
-			case LEARNING:
-				retval =symbiot.isLearning()?"1":"0";
-				break;
 			case WEIGHT:
 				retval = String.format("%,.4f", symbiot.getOverallWeight());
 				break;
@@ -190,9 +181,6 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				break;
 			case STRESS_DELTA:
 				retval = String.format("%,.6f", symbiot.getDeltaStress());
-				break;
-			case FACTOR:
-				retval = String.format("%,.6f", symbiot.getFactor());
 				break;
 			case NORM_OUTPUT:
 				if(!(symbiot instanceof IOutputSymbiot ))

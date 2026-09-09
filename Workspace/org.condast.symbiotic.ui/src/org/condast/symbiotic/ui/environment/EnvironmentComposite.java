@@ -8,12 +8,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.condast.commons.thread.AbstractExecuteThread;
 import org.condast.commons.ui.widgets.logger.LogComposite;
-import org.condast.symbiot.design.Organism2D.Form;
 import org.condast.commons.ui.player.PlayerComposite;
 import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
+import org.condast.symbiotic.design.Organism2D.Form;
 import org.condast.symbiotic.ecosystem.environment.EnvironmentEvent;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;

@@ -1,4 +1,4 @@
-package org.condast.symbiot.design;
+package org.condast.symbiotic.design;
 
 //import java.util.ArrayList;
 //import java.util.List;
@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiot.design.AngleControl.Angle;
-import org.condast.symbiot.design.organs.Eye;
-import org.condast.symbiot.design.organs.Flagellum;
-import org.condast.symbiot.design.organs.Stomach;
 import org.condast.symbiotic.core.collection.ISymbiotCollection;
 import org.condast.symbiotic.core.def.IInputSymbiot;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.design.AngleControl.Angle;
+import org.condast.symbiotic.design.organs.Eye;
+import org.condast.symbiotic.design.organs.Flagellum;
+import org.condast.symbiotic.design.organs.Stomach;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
@@ -229,14 +229,14 @@ public class Organism2D extends AbstractOrganism<Organism2D.Form>{
 		int distance = environment.getNearestFoodDistance(leftEye.getX(), leftEye.getY());
 		leftEye.setInput( distance);
 		leftEye.setAngle(angle);
-		if( distance < 2)
-			stomach.reset();
+		//if( distance < 2)
+		//	stomach.reset();
 
 		distance = environment.getNearestFoodDistance(rightEye.getX(), rightEye.getY());
 		rightEye.setInput(distance);
 		rightEye.setAngle(angle);
-		if( distance < 2)
-			stomach.reset();
+		//if(( distance < 2)
+		//	stomach.reset();
 		//IGrowth growth = new DefaultGrowth();
 		//growth.prune( super.getSymbiotCollection());
 		return true;

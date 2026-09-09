@@ -188,7 +188,6 @@ public class SymbiotCollection implements ISymbiotCollection{
 			if(! source.isActive())
 				continue;
 			result += source.getStress();
-			source.setLearning(true);
 			source.update();
 		}
 		result/=symbiots.size();

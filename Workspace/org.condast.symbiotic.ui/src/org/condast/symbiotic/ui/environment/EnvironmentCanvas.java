@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiotic.design.Organism2D;
 import org.condast.symbiotic.ecosystem.environment.EnvironmentEvent;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.environment.ILocation;

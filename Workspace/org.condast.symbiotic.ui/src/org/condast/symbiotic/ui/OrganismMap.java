@@ -3,7 +3,7 @@ package org.condast.symbiotic.ui;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.xy.AbstractXYGraph;
-import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiotic.design.Organism2D;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganismListener;
 import org.condast.symbiotic.ecosystem.organism.OrganismEvent;

@@ -34,7 +34,10 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		WEIGHT,
 		WEIGHT_DELTA,
 		STRESS,
-		STRESS_DELTA;
+		STRESS_DELTA,
+		FACTOR,
+		ACTIVE,
+		LEARNING;
 
 		@Override
 		public String toString() {
@@ -142,6 +145,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 			String retval = null;
 			Columns column = Columns.values()[ columnIndex ];
 			IStressData stress = (IStressData) element;
+			ISymbiot target = stress.getTarget();
 			switch( column){
 			case NAME:
 				retval = stress.getReference();
@@ -157,6 +161,15 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 				break;
 			case STRESS_DELTA:
 				retval = String.format("%,.8f", stress.getDelta());
+				break;
+			case FACTOR:
+				retval = String.format("%,.6f", target.getFactor());
+				break;
+			case ACTIVE:
+				retval =target.isActive()?"1":"0";
+				break;
+			case LEARNING:
+				retval =target.isLearning()?"1":"0";
 				break;
 			default:
 				break;

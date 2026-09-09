@@ -1,4 +1,4 @@
-package org.condast.symbiot.design;
+package org.condast.symbiotic.design;
 
 import org.condast.commons.strings.StringStyler;
 

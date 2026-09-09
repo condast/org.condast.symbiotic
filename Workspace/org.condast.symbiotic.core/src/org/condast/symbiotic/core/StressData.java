@@ -17,18 +17,18 @@ public class StressData implements IStressData {
 	private ISymbiot target;
 
 	public StressData(ISymbiot target) {
-		this( target, IStressData.DEFAULT_WEIGHT_STEP, 0d );
+		this( target, IStressData.DEFAULT_WEIGHT_STEP, IStressData.DEFAULT_WEIGHT_STEP );
 	}
 
 	public StressData(ISymbiot target, double weightStep) {
-		this( target, weightStep, 0d );
+		this( target, weightStep, IStressData.DEFAULT_WEIGHT_STEP );
 	}
 	
 	public StressData(ISymbiot target, double weightStep, double weight) {
 		super();
 		this.weightStep = weightStep;
 		this.weight = weight;
-		this.previousWeight = weight;
+		this.previousWeight = 0;
 		this.previousStress = 0;
 		this.target = target;
 	}
@@ -54,6 +54,10 @@ public class StressData implements IStressData {
 	@Override
 	public double getStress() {
 		return this.stress;
+	}
+
+	protected void setStress(double stress) {
+		this.stress = stress;
 	}
 
 	/**
@@ -84,7 +88,11 @@ public class StressData implements IStressData {
 	public double getWeight() {
 		return weight;
 	}
-	
+
+	protected void setWeight(double weight) {
+		this.weight = weight;
+	}
+
 	/**
 	 * weight minus previous weight
 	 * @return
@@ -145,7 +153,10 @@ public class StressData implements IStressData {
 		boolean retval = Math.abs( getDelta()) > Double.MIN_VALUE;
 		if( !retval && !learning )
 			return false;
-		
+		if( learning ) {
+			this.weight = NumberUtils.clipRange(0,  1,this.weight + this.weightStep );
+			return false;
+		}
 		this.previousStress = this.stress;
 		this.stress = this.target.getStress();
 		this.updateWeight();

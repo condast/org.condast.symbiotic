@@ -1,10 +1,10 @@
-package org.condast.symbiot.design.test1;
+package org.condast.symbiotic.design.test1;
 
 import java.util.Map;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.symbiot.design.organs.Eye;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.design.organs.Eye;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;

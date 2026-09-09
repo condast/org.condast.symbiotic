@@ -1,5 +1,6 @@
-package org.condast.symbiot.design.organs;
+package org.condast.symbiotic.design.organs;
 
+import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.special.AbstractInputSymbiot;
 
 public class Eye<E extends Enum<E>> extends AbstractInputSymbiot<Integer> {
@@ -47,7 +48,12 @@ public class Eye<E extends Enum<E>> extends AbstractInputSymbiot<Integer> {
 		this.angle = angle;
 	}
 
-	
+	@Override
+	protected boolean enableUpdate(IStressData data) {
+		setLearning( Math.abs( getStress()) > 0.1);
+		return super.enableUpdate(data);
+	}
+
 	@Override
 	protected double createStress(Integer input) {
 		return (input == null )?0: Math.abs( input.doubleValue()/maxVision);

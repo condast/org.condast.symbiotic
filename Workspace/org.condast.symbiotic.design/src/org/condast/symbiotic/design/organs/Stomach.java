@@ -1,8 +1,8 @@
-package org.condast.symbiot.design.organs;
+package org.condast.symbiotic.design.organs;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiot.design.Organism2D;
 import org.condast.symbiotic.core.special.AbstractInputSymbiot;
+import org.condast.symbiotic.design.Organism2D;
 
 public class Stomach extends AbstractInputSymbiot<Integer> {
 

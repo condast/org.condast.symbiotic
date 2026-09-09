@@ -36,7 +36,6 @@ public interface ISymbiot{
 	 * @return
 	 */
 	double getStress();
-	void setStress(double stress);
 
 	/**
 	 * Get the (previous stress - current stress) as determined by the last setStress operation
@@ -56,13 +55,13 @@ public interface ISymbiot{
 	 * add a symbiot that influences the behaviour
 	 * @param symbiot
 	 */
-	void addInfluence( ISymbiot reference);
+	IStressData addInfluence( ISymbiot reference);
 
 	/**
 	 * add a symbiot that influences the behaviour, and provide an initial weight factor
 	 * @param symbiot
 	 */
-	void addInfluence(ISymbiot target, double initWeight);
+	IStressData addInfluence(ISymbiot target, double initWeight);
 
 	/**
 	 * Remove a symbiot that influences the behaviour

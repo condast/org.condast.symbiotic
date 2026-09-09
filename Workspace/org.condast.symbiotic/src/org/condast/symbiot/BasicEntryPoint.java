@@ -1,7 +1,7 @@
 package org.condast.symbiot;
 
-import org.condast.symbiot.design.Environment;
-import org.condast.symbiot.design.Organism2D;
+import org.condast.symbiotic.design.Environment;
+import org.condast.symbiotic.design.Organism2D;
 import org.condast.symbiotic.ui.environment.EnvironmentComposite;
 import org.eclipse.rap.rwt.application.AbstractEntryPoint;
 import org.eclipse.swt.SWT;

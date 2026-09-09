@@ -115,8 +115,7 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		return this.oldStress - stress; 
 	}
 
-	@Override
-	public void setStress(double stress) {
+	protected void setStress(double stress) {
 		if( Math.abs(stress) > 1d)
 			throw new NumberFormatException( S_ERR_INVALID_STRESS + stress);
 		this.learning = (Math.abs(this.stress) > Math.abs(this.oldStress));
@@ -129,15 +128,23 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		this.stress = 0f;
 	}
 
-	@Override
-	public void addInfluence( ISymbiot target ) {
-		this.signals.put(target.getId(), new StressData( target ));
+	protected void addInfluence( IStressData data ) {
+		this.signals.put( data.getReference(), data );
 	}
 
 	@Override
-	public void addInfluence( ISymbiot target, double initWeight ) {
+	public IStressData addInfluence( ISymbiot target ) {
+		IStressData data = new StressData( target );
+		this.addInfluence(data);
+		return data;
+	}
+
+	@Override
+	public IStressData addInfluence( ISymbiot target, double initWeight ) {
 		double weight = (initWeight < 0)?-NumberUtils.clip(0, Math.abs(initWeight)): NumberUtils.clip(0, Math.abs(initWeight));
-		this.signals.put(target.getId(), new StressData( target, (float) weight ));
+		IStressData data = new StressData( target, (float) weight );
+		this.addInfluence(data);
+		return data;
 	}
 
 	@Override
@@ -217,6 +224,16 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		return !this.id.equals(data.getReference() );
 	}
 
+	/**
+	 * Update the stress. The current stress is provided.The default behaviour is that the stress is
+	 * equal to the factor of the symbiot
+	 * @param currentStress
+	 * @return
+	 */
+	protected double onUpdateStress( double currentStress, double factor) {
+		return factor;
+	}
+	
 	@Override
 	public void update() {
 		if(!this.active )
@@ -227,7 +244,9 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 		//The stress is decreasing and the symbiot is not isolated
 		if( !this.learning )
 			return;
-
+		double newStress = this.onUpdateStress( this.stress, this.getFactor() );
+		setStress(newStress);
+		
 		signals.values().forEach(d-> {
 			if( this.enableUpdate(d))	
 				d.update( this.learning);

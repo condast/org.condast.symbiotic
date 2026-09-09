@@ -1,25 +1,21 @@
-package org.condast.symbiot.design.test1;
+package org.condast.symbiotic.design.test3;
 
 import java.util.logging.Logger;
 
+import org.condast.symbiotic.design.Organism2D;
 import org.condast.symbiotic.ecosystem.environment.AbstractEnvironment;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
 
-public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
+public class Environment3 extends AbstractEnvironment<Organism2D.Form> {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	public Environment1D( int x) {
+	public Environment3( int x) {
 		this( x, DEFAULT_BORDER );
 	}
 	
-	public Environment1D( int x, int border) {
+	public Environment3( int x, int border) {
 		super(x, x);
-	}
-
-	public int getNearestFoodDistance(int x) {
-		int y = getWidth()/2;
-		return super.getNearestFoodDistance(x, y);
 	}
 
 	@Override
@@ -28,14 +24,11 @@ public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
 		int border = super.getBorder().getX();
 		int y = getWidth()/2;
 		logger.info("Environment: {" + border + "}");
-		int xo;
+		int xo = getLength()/2;
 		int range = 2*border;
-		int lengthx = getLength() - range;
-		for( int i=0; i<amountFood;i++) {
-			xo = border + (int) ( lengthx * Math.random());
-			addFood(xo, y);
-		}
-		IOrganism<Organism1D.Form> organism = super.getOrganism();
+		int lengthx = range;
+		addFood(xo, y);
+		IOrganism<Organism2D.Form> organism = super.getOrganism();
 		Object food = null;
 		do{
 			xo = border + (int) (lengthx * Math.random());
@@ -44,6 +37,5 @@ public class Environment1D extends AbstractEnvironment<Organism1D.Form> {
 		organism.setLocation(xo, y);
 		logger.info("Organism added at: {" + xo + "}");
 		super.setOrganism(organism);
-
 	}
 }

@@ -14,7 +14,7 @@ Import-Package: org.condast.commons.number,
  org.condast.symbiotic.core.special,
  org.condast.symbiotic.ecosystem.environment,
  org.condast.symbiotic.ecosystem.organism
-Export-Package: org.condast.symbiot.design,
- org.condast.symbiot.design.organs,
- org.condast.symbiot.design.test1,
- org.condast.symbiot.design.test2
+Export-Package: org.condast.symbiotic.design,
+ org.condast.symbiotic.design.organs,
+ org.condast.symbiotic.design.test1,
+ org.condast.symbiotic.design.test2

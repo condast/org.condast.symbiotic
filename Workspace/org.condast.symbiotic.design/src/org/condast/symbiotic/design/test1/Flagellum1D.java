@@ -1,4 +1,4 @@
-package org.condast.symbiot.design.test1;
+package org.condast.symbiotic.design.test1;
 
 import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.special.AbstractOutputSymbiot;

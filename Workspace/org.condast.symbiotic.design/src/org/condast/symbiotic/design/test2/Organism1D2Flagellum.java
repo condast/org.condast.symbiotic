@@ -1,12 +1,12 @@
-package org.condast.symbiot.design.test2;
+package org.condast.symbiotic.design.test2;
 
 import java.util.Map;
 
-import org.condast.symbiot.design.Organism2D;
-import org.condast.symbiot.design.Organism2D.Form;
-import org.condast.symbiot.design.organs.Eye;
-import org.condast.symbiot.design.organs.Flagellum;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.design.Organism2D;
+import org.condast.symbiotic.design.Organism2D.Form;
+import org.condast.symbiotic.design.organs.Eye;
+import org.condast.symbiotic.design.organs.Flagellum;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;
 import org.condast.symbiotic.ecosystem.organism.AbstractOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
@@ -26,11 +26,11 @@ public class Organism1D2Flagellum extends AbstractOrganism<Organism2D.Form>{
 		Eye<Organism2D.Form> eye = new Eye<Organism2D.Form>( Organism2D.Form.LEFT_EYE, true);
 		design.put(Form.LEFT_EYE, eye);
 		
-		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true, true);
+		Flagellum leftFlagellum = new Flagellum( Form.LEFT_FLAGELLUM, true);
 		leftFlagellum.addInfluence(eye);
 		design.put(Form.LEFT_FLAGELLUM, leftFlagellum);
 		
-		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true, true);
+		Flagellum rightFlagellum = new Flagellum(Form.RIGHT_FLAGELLUM, true);
 		rightFlagellum.addInfluence(eye);
 		rightFlagellum.addInfluence(leftFlagellum);
 		design.put(Form.RIGHT_FLAGELLUM, rightFlagellum);		

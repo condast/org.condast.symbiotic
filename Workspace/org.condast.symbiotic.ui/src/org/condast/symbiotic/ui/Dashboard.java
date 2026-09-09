@@ -1,13 +1,14 @@
 package org.condast.symbiotic.ui;
 
+import org.condast.commons.strings.StringStyler;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.ITableEventListener;
 import org.condast.commons.ui.widgets.table.TableEvent;
-import org.condast.symbiot.design.AngleControl;
-import org.condast.symbiot.design.Organism2D;
-import org.condast.symbiot.design.AngleControl.AngleBehaviour;
 import org.condast.symbiotic.core.def.ISymbiot;
+import org.condast.symbiotic.design.AngleControl;
+import org.condast.symbiotic.design.Organism2D;
+import org.condast.symbiotic.design.AngleControl.AngleBehaviour;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;
 import org.condast.symbiotic.ecosystem.organism.IOrganismListener;
 import org.condast.symbiotic.ecosystem.organism.OrganismEvent;
@@ -25,11 +26,24 @@ import org.eclipse.swt.widgets.Group;
 public class Dashboard extends Composite {
 	private static final long serialVersionUID = 1L;
 
+	private enum Tabs{
+		SYMBIOT,
+		WEIGHTS,
+		DEPENDENCIES,
+		ORGANISM;
+
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.name());
+		}	
+	}
+
 	private OrganismComposite oc;
 	
 	private OrganismMap om;
 	private SymbiotComposite sm;
 	private WeightComposite wc;
+	private DependencyComposite dc;
 	
 	private Label lblAngleLabel;
 	private Combo angleCombo;
@@ -76,19 +90,25 @@ public class Dashboard extends Composite {
 		tabFolder.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ));
 
 		TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Symbiot");
+		tabItem.setText( Tabs.SYMBIOT.toString());
 		sm = new SymbiotComposite(tabFolder, SWT.BORDER);
 		sm.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(sm);
 
 		tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Weights");
+		tabItem.setText( Tabs.WEIGHTS.toString());
 		wc = new WeightComposite(tabFolder, SWT.BORDER);
 		wc.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(wc);
 
 		tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("Organism");
+		tabItem.setText(Tabs.DEPENDENCIES.toString());
+		dc = new DependencyComposite(tabFolder, SWT.BORDER);
+		dc.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
+		tabItem.setControl(dc);
+
+		tabItem = new TabItem(tabFolder, SWT.NULL);
+		tabItem.setText(Tabs.ORGANISM.toString());
 		om = new OrganismMap(tabFolder, SWT.BORDER);
 		om.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ));
 		tabItem.setControl(om);
@@ -108,6 +128,7 @@ public class Dashboard extends Composite {
 		om.setInput(organism);
 		sm.setInput(oc.getInput());
 		wc.setInput(organism);
+		dc.setInput(organism);
 		organism.addListener( handler);
 	}
 
@@ -117,6 +138,7 @@ public class Dashboard extends Composite {
 		this.oc.dispose();
 		this.om.dispose();
 		this.wc.dispose();
+		this.dc.dispose();
 		this.sm.dispose();
 		super.dispose();
 	}

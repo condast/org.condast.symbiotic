@@ -1,21 +1,26 @@
-package org.condast.symbiot.design.organs;
+package org.condast.symbiotic.design.organs;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiot.design.Organism2D;
-import org.condast.symbiot.design.Organism2D.Form;
 import org.condast.symbiotic.core.def.IStressData;
+import org.condast.symbiotic.core.special.AbstractOutputSymbiot;
+import org.condast.symbiotic.design.Organism2D;
+import org.condast.symbiotic.design.Organism2D.Form;
 
-public class Flagellum extends FlagellumSymbiot<Organism2D.Form> {
+public class Flagellum extends AbstractOutputSymbiot<Integer> {
 
+	public static final double DEFAULT_FACTOR_STEP = 0.00001d;
+	
+	private double step;
 	private boolean oneEye;
 	
 	public Flagellum( Organism2D.Form form, boolean active) {
-		this( form, false, active );
+		this( form, false, DEFAULT_FACTOR_STEP, active );
 	}
 	
-	public Flagellum( Organism2D.Form form, boolean oneEye, boolean active) {
-		super( form, active);
+	public Flagellum( Organism2D.Form form, boolean oneEye, double step, boolean active) {
+		super( form.name(), active);
 		this.oneEye = oneEye;
+		this.step = step;
 	}
 
 	@Override
@@ -40,19 +45,28 @@ public class Flagellum extends FlagellumSymbiot<Organism2D.Form> {
 		}
 		return retval;
 	}
-
+	
 	@Override
 	public Integer getOutput() {
 		return ( super.getOutput() == null )? 0: super.getOutput();
 	}
 	
 	@Override
+	protected double onUpdateStress(double currentStress, double factor) {
+		return NumberUtils.clipRange(-1, 1, currentStress + factor );
+	}
+
+	@Override
+	public double getNormalisedOutput() {
+		Integer output = super.getOutput();
+		return ( output == null )? 0: output;
+	}
+	
+	@Override
 	public Integer onUpdate(double factor) {
-		double stress = getStress();
-		stress += factor;
-		stress = NumberUtils.clipRange(-1, 1, stress);
-		setStress( stress );
 		this.setLearning(true);
-		return super.onUpdate(factor);
+		if( factor > step)
+			return 1;
+		return ( factor < -step)? -1: 0;
 	}
 }
