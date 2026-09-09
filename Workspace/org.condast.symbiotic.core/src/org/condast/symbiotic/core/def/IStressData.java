@@ -8,6 +8,12 @@ public interface IStressData {
 	public static int DEFAULT_ISOLATION_THRESHOLD = 10; //(percent)
 
 	public static double DEFAULT_NORMALISED_STEP = 0.1d;
+
+	/**
+	 * the default initial weight when starting
+	 */
+	public static double DEFAULT_INITIAL_WEIGHT = 0.5d;
+
 	/**
 	 * the default step for increasing or decreasing the weight of stress signals
 	 */
@@ -63,14 +69,6 @@ public interface IStressData {
 	 * @return
 	 */
 	boolean isZero();
-
-	/**
-	 * if true, then the change in stress is larger than the factor. This happens, for instance
-	 * at the first iteration
-	 * @param factor
-	 * @return
-	 */
-	boolean isJump(double factor);
 
 	/**
 	 * Returns true if the given symbiot is isolated from the target, by the given threshold factor (0..100)

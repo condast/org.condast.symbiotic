@@ -40,6 +40,7 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		WEIGHT,
 		STRESS,
 		STRESS_DELTA,
+		FACTOR,
 		NORM_OUTPUT,
 		OUTPUT;
 
@@ -49,10 +50,14 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 		}
 		
 		public int getWeight() {
-			int weight = 10;
+			int weight = 20;
 			switch( this ) {
 			case NAME:
-				weight = 20;
+				weight = 40;
+				break;
+			case INPUT:
+			case OUTPUT:
+				weight = 10;
 				break;
 			default:
 				break;
@@ -180,13 +185,16 @@ public class OrganismComposite extends AbstractTableComposite<ISymbiot> {
 				retval = String.format("%,.4f", symbiot.getStress());
 				break;
 			case STRESS_DELTA:
-				retval = String.format("%,.6f", symbiot.getDeltaStress());
+				retval = String.format("%,.4f", symbiot.getDeltaStress());
+				break;
+			case FACTOR:
+				retval = String.format("%,.4f", symbiot.getFactor());
 				break;
 			case NORM_OUTPUT:
 				if(!(symbiot instanceof IOutputSymbiot ))
 					break;
 				os = (IOutputSymbiot<?>) symbiot;
-				retval = String.format("%,.6f", os.getNormalisedOutput());
+				retval = String.format("%,.4f", os.getNormalisedOutput());
 				break;
 			case OUTPUT:
 				if((symbiot instanceof IOutputSymbiot )) {

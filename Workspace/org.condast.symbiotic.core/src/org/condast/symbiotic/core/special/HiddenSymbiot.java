@@ -9,7 +9,7 @@ import org.condast.symbiotic.core.def.IStressData;
  * @param <I>
  * @param <O>
  */
-public class HiddenSymbiot extends AbstractInputSymbiot<Double>{
+public class HiddenSymbiot extends InputSymbiot<Double>{
 
 	public static int DEFAULT_THRESHOLD_PERCENT = 10;
 

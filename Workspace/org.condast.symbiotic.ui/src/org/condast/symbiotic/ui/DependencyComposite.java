@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Display;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+
+import org.condast.commons.strings.StringUtils;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.AbstractTableComposite;
@@ -77,7 +79,7 @@ public class DependencyComposite extends AbstractTableComposite<ISymbiot> {
 			tcol = super.registerColum("ORGANISM", SWT.CENTER, 20, index++);
 			tcol.getColumn().setText(symbiot.getId());
 			getTableColumnLayout().setColumnData( tcol.getColumn(), new ColumnWeightData( 20 ));
-			columns.add(symbiot.getId());
+			columns.add( StringUtils.prettyString( symbiot.getId()));
 		}
 	}
 	

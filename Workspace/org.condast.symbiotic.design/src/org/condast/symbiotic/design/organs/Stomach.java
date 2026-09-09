@@ -1,10 +1,10 @@
 package org.condast.symbiotic.design.organs;
 
 import org.condast.commons.number.NumberUtils;
-import org.condast.symbiotic.core.special.AbstractInputSymbiot;
+import org.condast.symbiotic.core.special.InputSymbiot;
 import org.condast.symbiotic.design.Organism2D;
 
-public class Stomach extends AbstractInputSymbiot<Integer> {
+public class Stomach extends InputSymbiot<Integer> {
 
 	public static final int FULL_STOMACH = 100;
 	

@@ -10,6 +10,7 @@ import org.condast.commons.strings.StringStyler;
 import org.condast.commons.ui.session.AbstractSessionHandler;
 import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.AbstractTableComposite;
+import org.condast.symbiotic.core.Symbiot;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.IStressListener;
 import org.condast.symbiotic.core.def.ISymbiot;
@@ -35,7 +36,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		WEIGHT_DELTA,
 		STRESS,
 		STRESS_DELTA,
-		FACTOR,
+		ISOLATED,
 		ACTIVE,
 		LEARNING;
 
@@ -45,10 +46,12 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		}
 		
 		public int getWeight() {
-			int weight = 10;
+			int weight = 20;
 			switch( this ) {
-			case NAME:
-				weight = 20;
+			case ISOLATED:
+			case ACTIVE:
+			case LEARNING:
+				weight = 10;
 				break;
 			default:
 				break;
@@ -160,10 +163,10 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 				retval = String.format("%,.4f", stress.getStress());
 				break;
 			case STRESS_DELTA:
-				retval = String.format("%,.8f", stress.getDelta());
+				retval = String.format("%,.4f", stress.getDelta());
 				break;
-			case FACTOR:
-				retval = String.format("%,.6f", target.getFactor());
+			case ISOLATED:
+				retval = Symbiot.isIsolated( target)?"1":"0";
 				break;
 			case ACTIVE:
 				retval =target.isActive()?"1":"0";

@@ -258,7 +258,14 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public int compareTo(ISymbiot arg0) {
 		return this.id.compareTo(arg0.getId());
 	}	
-	
+
+	/**
+	 * Get the ratio of the isolation between symbiots, based on the given threshold 
+	 */
+	public static boolean isIsolated( ISymbiot symbiot) {
+		return isIsolated(symbiot, IStressData.DEFAULT_ISOLATION_THRESHOLD);
+	}
+
 	/**
 	 * Returns true if the symbiot is isolated from the others, by the given threshold factor (0..100)
 	 */
@@ -272,6 +279,13 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Get the ratio of the isolation between symbiots, based on the given threshold 
+	 */
+	public static double getIsolationRatio( ISymbiot symbiot) {
+		return getIsolationRatio(symbiot, IStressData.DEFAULT_ISOLATION_THRESHOLD);
 	}
 
 	/**

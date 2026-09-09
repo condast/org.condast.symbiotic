@@ -4,14 +4,13 @@ import org.condast.commons.number.NumberUtils;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.special.AbstractOutputSymbiot;
 import org.condast.symbiotic.design.Organism2D;
-import org.condast.symbiotic.design.Organism2D.Form;
 
 public class Flagellum extends AbstractOutputSymbiot<Integer> {
 
 	public static final double DEFAULT_FACTOR_STEP = 0.00001d;
 	
 	private double step;
-	private boolean oneEye;
+	//private boolean oneEye;
 	
 	public Flagellum( Organism2D.Form form, boolean active) {
 		this( form, false, DEFAULT_FACTOR_STEP, active );
@@ -19,13 +18,14 @@ public class Flagellum extends AbstractOutputSymbiot<Integer> {
 	
 	public Flagellum( Organism2D.Form form, boolean oneEye, double step, boolean active) {
 		super( form.name(), active);
-		this.oneEye = oneEye;
+		//this.oneEye = oneEye;
 		this.step = step;
 	}
 
 	@Override
 	public boolean enableUpdate( IStressData data ) {
 		boolean retval = super.enableUpdate(data);
+	/*	
 		if(!retval )
 			return retval;
 		if( !Organism2D.Form.isForm( data.getReference()) )
@@ -43,6 +43,7 @@ public class Flagellum extends AbstractOutputSymbiot<Integer> {
 		default:
 			break;
 		}
+		*/
 		return retval;
 	}
 	

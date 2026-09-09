@@ -2,7 +2,7 @@ package org.condast.symbiotic.core.special;
 
 import org.condast.symbiotic.core.def.IOutputSymbiot;
 
-public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object, O extends Object> extends AbstractInputSymbiot<I> implements IOutputSymbiot<O>{
+public abstract class AbstractProcessSymbiot<E extends Enum<E>, I extends Object, O extends Object> extends InputSymbiot<I> implements IOutputSymbiot<O>{
 
 	private O output;
 	

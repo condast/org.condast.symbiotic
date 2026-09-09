@@ -13,15 +13,14 @@ public class StressData implements IStressData {
 	private double weightStep; //The increase or decrease of stress per cycle
 
 	private double stress;
-	private double previousStress;
 	private ISymbiot target;
 
 	public StressData(ISymbiot target) {
-		this( target, IStressData.DEFAULT_WEIGHT_STEP, IStressData.DEFAULT_WEIGHT_STEP );
+		this( target, IStressData.DEFAULT_WEIGHT_STEP, IStressData.DEFAULT_INITIAL_WEIGHT );
 	}
 
 	public StressData(ISymbiot target, double weightStep) {
-		this( target, weightStep, IStressData.DEFAULT_WEIGHT_STEP );
+		this( target, weightStep, IStressData.DEFAULT_INITIAL_WEIGHT );
 	}
 	
 	public StressData(ISymbiot target, double weightStep, double weight) {
@@ -29,7 +28,6 @@ public class StressData implements IStressData {
 		this.weightStep = weightStep;
 		this.weight = weight;
 		this.previousWeight = 0;
-		this.previousStress = 0;
 		this.target = target;
 	}
 
@@ -45,10 +43,9 @@ public class StressData implements IStressData {
 
 	@Override
 	public void clear() {
-		this.weight = 0;
+		this.weight = IStressData.DEFAULT_INITIAL_WEIGHT;
 		this.previousWeight = 0;
 		this.stress = 0;
-		this.previousStress = 0;
 	}
 
 	@Override
@@ -69,21 +66,9 @@ public class StressData implements IStressData {
 	 */
 	@Override
 	public boolean isZero() {
-		return Math.abs( this.previousStress ) < Double.MIN_VALUE;
+		return Math.abs( this.stress ) < Double.MIN_VALUE;
 	}
 
-	/**
-	 * if true, then the change in stress is larger than the factor. This happens, for instance
-	 * at the first iteration
-	 * @param factor
-	 * @return
-	 */
-	@Override
-	public boolean isJump( double factor ) {
-		double jump = this.getDelta() /  this.stress;
-		return Math.abs(jump ) > factor;
-	}
-	
 	@Override
 	public double getWeight() {
 		return weight;
@@ -108,7 +93,7 @@ public class StressData implements IStressData {
 	 */
 	@Override
 	public double getDelta(){
-		return this.stress - this.previousStress;
+		return this.target.getStress() - this.stress;
 	}
 
 	/**
@@ -122,8 +107,10 @@ public class StressData implements IStressData {
 
 		double th = ((double)threshold)/MAX_PERCENT;
 		IStressData data = target.getStressData( symbiot.getId());
+		if( data == null )
+			return true;
 		double weight = Math.abs( data.getWeight());
-		return ( weight >= th);
+		return ( weight < th);
 	}
 
 	/**
@@ -132,7 +119,7 @@ public class StressData implements IStressData {
 	 * @param data
 	 */
 	protected void updateWeight() {
-		double step = isJump(0.5) ? weightStep/DEFAULT_ZERO_ADJUST: this.weightStep;
+		double step = this.weightStep;
 		double stressDelta = getDelta();
 		
 		//stressDelta <=0 is good, because this means that the stress is decreasing
@@ -157,7 +144,6 @@ public class StressData implements IStressData {
 			this.weight = NumberUtils.clipRange(0,  1,this.weight + this.weightStep );
 			return false;
 		}
-		this.previousStress = this.stress;
 		this.stress = this.target.getStress();
 		this.updateWeight();
 		return true;
