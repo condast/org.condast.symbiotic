@@ -28,10 +28,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	private double oldStress, stress;
 	private boolean active;
 	
-	//If true, the symbiot will actively change its stress, based on the input stress signals.
-	//By default learning starts if stress increaeses
-	private boolean learning;
-	
 	private Map<String, IStressData> signals;
 
 	public Symbiot( String id ) {
@@ -39,15 +35,10 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	}
 
 	public Symbiot( String id,  boolean active ) {
-		this( id, true, active );
-	}
-	
-	public Symbiot( String id, boolean learning, boolean active ) {
 		if( id == null )
 			throw new NullPointerException( S_ERR_NO_ID);
 		this.id = id;
 		this.active = active;
-		this.learning = learning;
 		this.stress = 0; 
 		this.oldStress = 0;
 		this.signals = new HashMap<String, IStressData>();
@@ -62,16 +53,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	@Override
 	public boolean isActive() {
 		return active;
-	}
-
-	@Override
-	public boolean isLearning() {
-		return learning;
-	}
-
-	@Override
-	public void setLearning(boolean learning) {
-		this.learning = learning;
 	}
 
 	@Override
@@ -118,7 +99,6 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	protected void setStress(double stress) {
 		if( Math.abs(stress) > 1d)
 			throw new NumberFormatException( S_ERR_INVALID_STRESS + stress);
-		this.learning = (Math.abs(this.stress) > Math.abs(this.oldStress));
 		this.oldStress = this.stress;
 		this.stress = stress;
 	}
@@ -238,18 +218,13 @@ public class Symbiot implements ISymbiot, Comparable<ISymbiot>{
 	public void update() {
 		if(!this.active )
 			return;
-		if( !this.learning )
-			this.learning = isIsolated(this, IStressData.DEFAULT_ISOLATION_THRESHOLD);
 
-		//The stress is decreasing and the symbiot is not isolated
-		if( !this.learning )
-			return;
 		double newStress = this.onUpdateStress( this.stress, this.getFactor() );
 		setStress(newStress);
 		
 		signals.values().forEach(d-> {
 			if( this.enableUpdate(d))	
-				d.update( this.learning);
+				d.update();
 		});
 		this.notifySymbiotChanged(new StressEvent (this));
 	}

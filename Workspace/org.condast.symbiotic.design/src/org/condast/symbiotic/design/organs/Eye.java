@@ -50,12 +50,11 @@ public class Eye<E extends Enum<E>> extends AbstractInputSymbiot<Integer> {
 
 	@Override
 	protected boolean enableUpdate(IStressData data) {
-		setLearning( Math.abs( getStress()) > 0.1);
 		return super.enableUpdate(data);
 	}
 
 	@Override
 	protected double createStress(Integer input) {
-		return (input == null )?0: Math.abs( input.doubleValue()/maxVision);
+		return (input == null )?0: Math.abs(-0.5d + input.doubleValue()/maxVision);
 	}
 }

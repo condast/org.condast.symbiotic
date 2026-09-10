@@ -37,8 +37,7 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 		STRESS,
 		STRESS_DELTA,
 		ISOLATED,
-		ACTIVE,
-		LEARNING;
+		ACTIVE;
 
 		@Override
 		public String toString() {
@@ -50,7 +49,6 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 			switch( this ) {
 			case ISOLATED:
 			case ACTIVE:
-			case LEARNING:
 				weight = 10;
 				break;
 			default:
@@ -170,9 +168,6 @@ public class SymbiotComposite extends AbstractTableComposite<IStressData> {
 				break;
 			case ACTIVE:
 				retval =target.isActive()?"1":"0";
-				break;
-			case LEARNING:
-				retval =target.isLearning()?"1":"0";
 				break;
 			default:
 				break;

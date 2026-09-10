@@ -15,16 +15,6 @@ public interface ISymbiot{
 	public boolean isActive();
 
 	/**
-	 * If true, reinforcement learning has started. By default, learning
-	 * is true if the stress increases (delta(stress)>0,
-	 * but it can be externally influenced
-	 * @return
-	 */
-	boolean isLearning();
-
-	void setLearning(boolean learning);
-
-	/**
 	 * clear the stress and stress data
 	 */
 	void clear();

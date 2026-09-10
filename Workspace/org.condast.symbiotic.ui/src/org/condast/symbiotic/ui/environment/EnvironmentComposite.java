@@ -222,6 +222,7 @@ public class EnvironmentComposite<E extends Enum<E>> extends Composite {
 						switch( image ){
 						case START:
 							//environment.addListener( handler);
+							canvas.clear();
 							logComposite.clear();
 							dashboard.enableAngleCombo(false);
 							executor.start();

@@ -12,12 +12,12 @@ public interface IStressData {
 	/**
 	 * the default initial weight when starting
 	 */
-	public static double DEFAULT_INITIAL_WEIGHT = 0.5d;
+	public static double DEFAULT_INITIAL_WEIGHT = 0d;
 
 	/**
 	 * the default step for increasing or decreasing the weight of stress signals
 	 */
-	public static double DEFAULT_WEIGHT_STEP = 0.02d;
+	public static double DEFAULT_WEIGHT_STEP = 0.3d;
 
 	//The weights change in smaller steps near the zero value
 	public static double DEFAULT_ZERO_ADJUST = 4;
@@ -76,9 +76,8 @@ public interface IStressData {
 	boolean isIsolated(ISymbiot symbiot, int threshold);
 
 	/**
-	 * Update the stress data. Returns false if everything stays the same. If the symbiot is learning, then update may be 
-	 * enforced
+	 * Update the stress data. Returns false if everything stays the same. 
 	 * @return
 	 */
-	boolean update( boolean learning );
+	boolean update();
 }

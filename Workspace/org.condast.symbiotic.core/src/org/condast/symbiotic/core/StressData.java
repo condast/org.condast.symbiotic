@@ -97,6 +97,14 @@ public class StressData implements IStressData {
 	}
 
 	/**
+	 * Returns true if the stress is increasing
+	 * @return
+	 */
+	public boolean isIncreasing(){
+		return Math.abs( target.getStress() ) > Math.abs( this.stress );
+	}
+
+	/**
 	 * Returns true if the given symbiot is isolated from the target, by the given threshold factor (0..100)
 	 */
 	@Override
@@ -118,32 +126,43 @@ public class StressData implements IStressData {
 	 * In this case the weight is adjusted according to the local stress delta
 	 * @param data
 	 */
-	protected void updateWeight() {
-		double step = this.weightStep;
+	protected void updateWeightOld() {
 		double stressDelta = getDelta();
 		
 		//stressDelta <=0 is good, because this means that the stress is decreasing
-		if( weight < 0) {
-			weight += step * stressDelta;
+		if( weight <= 0) {
+			weight -= this.weightStep * stressDelta;
 		}else {
-			weight -= step * stressDelta;
+			weight += this.weightStep * stressDelta;
 		}
 		weight = NumberUtils.clipRange(-1, 1, weight);				
 	}
 
+	/**
+	 * Update the specific weight.
+	 * In this case the weight is adjusted according to the local stress delta
+	 * @param data
+	 */
+	protected void updateWeight() {
+		double sign = isIncreasing()?-1d:1d;
+		
+		double offset = sign * this.weightStep * Math.abs( stress ); 
+		if( weight <= 0) {
+			weight -= offset;
+		}else {
+			weight += offset;
+		}
+		weight = NumberUtils.clipRange(-1, 1, weight);				
+	}
 
 	/**
 	 * The weights are updated if the stress is not zero
 	 */
 	@Override
-	public boolean update ( boolean learning ) {
+	public boolean update () {
 		boolean retval = Math.abs( getDelta()) > Double.MIN_VALUE;
-		if( !retval && !learning )
+		if( !retval )
 			return false;
-		if( learning ) {
-			this.weight = NumberUtils.clipRange(0,  1,this.weight + this.weightStep );
-			return false;
-		}
 		this.stress = this.target.getStress();
 		this.updateWeight();
 		return true;

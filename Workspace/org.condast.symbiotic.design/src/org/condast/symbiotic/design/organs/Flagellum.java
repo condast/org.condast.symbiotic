@@ -65,7 +65,6 @@ public class Flagellum extends AbstractOutputSymbiot<Integer> {
 	
 	@Override
 	public Integer onUpdate(double factor) {
-		this.setLearning(true);
 		if( factor > step)
 			return 1;
 		return ( factor < -step)? -1: 0;

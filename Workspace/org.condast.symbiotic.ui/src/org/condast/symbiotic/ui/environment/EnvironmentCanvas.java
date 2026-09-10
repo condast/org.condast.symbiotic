@@ -53,6 +53,10 @@ public class EnvironmentCanvas<E extends Enum<E>> extends Canvas{
 		super.addPaintListener( e->onPaintControl(e));
 	}
 
+	public void clear() {
+		this.trail.clear();
+	}
+	
 	public boolean isTrail() {
 		return isTrail;
 	}
