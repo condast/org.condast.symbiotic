@@ -7,12 +7,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.condast.commons.thread.AbstractExecuteThread;
-import org.condast.commons.ui.widgets.logger.LogComposite;
 import org.condast.commons.ui.player.PlayerComposite;
 import org.condast.commons.ui.player.PlayerImages;
 import org.condast.commons.ui.player.PlayerImages.Images;
-import org.condast.commons.ui.session.AbstractSessionHandler;
-import org.condast.commons.ui.session.SessionEvent;
+import org.condast.js.commons.session.AbstractSessionHandler;
+import org.condast.js.commons.session.SessionEvent;
+import org.condast.js.commons.ui.widgets.logger.LogComposite;
 import org.condast.symbiotic.design.Organism2D.Form;
 import org.condast.symbiotic.ecosystem.environment.EnvironmentEvent;
 import org.condast.symbiotic.ecosystem.environment.IEnvironment;

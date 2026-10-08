@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.condast.commons.strings.StringUtils;
-import org.condast.commons.ui.session.AbstractSessionHandler;
-import org.condast.commons.ui.session.SessionEvent;
-import org.condast.commons.ui.widgets.table.AbstractTableComposite;
+import org.condast.js.commons.session.AbstractSessionHandler;
+import org.condast.js.commons.session.SessionEvent;
+import org.condast.js.commons.ui.widgets.table.AbstractTableComposite;
 import org.condast.symbiotic.core.def.IStressData;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.ecosystem.organism.IOrganism;

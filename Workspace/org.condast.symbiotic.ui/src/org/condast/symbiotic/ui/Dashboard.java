@@ -1,10 +1,10 @@
 package org.condast.symbiotic.ui;
 
 import org.condast.commons.strings.StringStyler;
-import org.condast.commons.ui.session.AbstractSessionHandler;
-import org.condast.commons.ui.session.SessionEvent;
 import org.condast.commons.ui.widgets.table.ITableEventListener;
 import org.condast.commons.ui.widgets.table.TableEvent;
+import org.condast.js.commons.session.AbstractSessionHandler;
+import org.condast.js.commons.session.SessionEvent;
 import org.condast.symbiotic.core.def.ISymbiot;
 import org.condast.symbiotic.design.AngleControl;
 import org.condast.symbiotic.design.Organism2D;
