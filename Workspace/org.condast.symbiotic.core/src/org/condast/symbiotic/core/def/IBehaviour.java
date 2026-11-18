@@ -1,6 +1,6 @@
 package org.condast.symbiotic.core.def;
 
-public interface IBehaviour {
+public interface IBehaviour extends ISymbiot {
 
 
 	/**
@@ -19,4 +19,16 @@ public interface IBehaviour {
 	void setStress(double stress);
 
 	public void updateWeights( ISymbiot symbiot );
+
+	void addStressListener(IStressListener listener);
+
+	String getId();
+
+	char[] getRange();
+
+	int getValue();
+
+	ISymbiot getOwner();
+
+	int calculate(boolean equals);
 }

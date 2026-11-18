@@ -55,6 +55,7 @@ public class Transformation<I,O extends Object> implements ITransformation<I,O> 
 		return this.transformer.addInput(input);
 	}
 
+	
 	@Override
 	public void removeInput( I input ){
 		this.transformer.removeInput(input);

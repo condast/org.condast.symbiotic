@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Automatic-Module-Name: org.condast.symbiot
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.rap.rwt;bundle-version="[4.0.0,5.0.0)"
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="[3.0.0,4.0.0)"
 Service-Component: OSGI-INF/contribution.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: org.condast.symbiotic.design,
@@ -15,4 +15,8 @@ Import-Package: org.condast.symbiotic.design,
  org.condast.symbiotic.ecosystem.environment,
  org.condast.symbiotic.ecosystem.organism,
  org.condast.symbiotic.ui,
- org.condast.symbiotic.ui.environment
+ org.condast.symbiotic.ui.environment,
+ org.eclipse.rap.rwt.application;version="[3.0.0,4.0.0)",
+ org.eclipse.swt,
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets
